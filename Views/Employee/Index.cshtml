@@ -5,7 +5,9 @@
 }
 
 @foreach(Employee employee in @Model) {
-    <h1>@employee.Name</h1>
+    <h1>
+        @Html.ActionLink(@employee.Name, "details", "employee", new { id = @employee.Id }, null)
+    </h1>
     <h3>Id: @employee.Id</h3>
     <hr />
 }

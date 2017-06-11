@@ -16,15 +16,13 @@ namespace SkillsMatrix.Controllers
 
         public IActionResult Index(int id)
         {
-            return View(db.Employees.ToList());
+            List<Employee> employees = db.Employees.ToList();
+            return View(employees);
         }
 
         public IActionResult Details(int id)
         {
-            Employee employee = new Employee{
-                Id = id,
-                Name = "Random one"
-            };
+            Employee employee = db.Employees.Find(id);
             return View(employee);
         }
     }

@@ -3,5 +3,12 @@
     ViewData["Title"] = "Employee details";
 }
 
-<h1>@Model.Name</h1>
-<h3>Id: @Model.Id</h3>
+@if(@Model != null) {
+    <h1>@Model.Name</h1>
+    <h3>Id: @Model.Id</h3>
+}
+else {
+    <h1>Employee not found</h1>
+}
+
+@Html.ActionLink("Back to list", "index", "employee")
