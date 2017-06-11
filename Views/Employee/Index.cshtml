@@ -1,0 +1,11 @@
+﻿@using SkillsMatrix.Models
+@model List<Employee>
+@{
+    ViewData["Title"] = "Employees";
+}
+
+@foreach(Employee employee in @Model) {
+    <h1>@employee.Name</h1>
+    <h3>Id: @employee.Id</h3>
+    <hr />
+}

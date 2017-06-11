@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace skills_matrix.Controllers
+namespace SkillsMatrix.Controllers
 {
     public class HomeController : Controller
     {

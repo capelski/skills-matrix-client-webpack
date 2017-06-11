@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 
-namespace skills_matrix
+namespace SkillsMatrix
 {
     public class Program
     {

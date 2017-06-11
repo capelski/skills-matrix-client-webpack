@@ -7,8 +7,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SkillsMatrix.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace skills_matrix
+namespace SkillsMatrix
 {
     public class Startup
     {
@@ -29,10 +31,12 @@ namespace skills_matrix
         {
             // Add framework services.
             services.AddMvc();
+            services.AddDbContext<SkillsMatrixContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("SkillsMatrixDatabase")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, SkillsMatrixContext context)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -55,6 +59,8 @@ namespace skills_matrix
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+            
+            DbInitializer.Initialize(context);
         }
     }
 }
