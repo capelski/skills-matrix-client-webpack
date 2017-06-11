@@ -14,16 +14,39 @@ namespace SkillsMatrix.Controllers
         {
         }
 
+        [HttpGet]
         public IActionResult Index(int id)
         {
             List<Employee> employees = db.Employees.ToList();
             return View(employees);
         }
 
+        [HttpGet]
         public IActionResult Details(int id)
         {
             Employee employee = db.Employees.Find(id);
             return View(employee);
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            Employee employee = db.Employees.Find(id);
+            return View(employee);
+        }
+
+        [HttpPost]
+        public IActionResult Post(Employee employee)
+        {
+            if (employee == null)
+            {
+                return BadRequest();
+            }
+
+            db.Employees.Add(employee);
+            db.SaveChanges();
+            
+            return CreatedAtRoute("GetTodo", new { id = employee.Id }, employee);
         }
     }
 }

@@ -4,6 +4,8 @@
     ViewData["Title"] = "Employees";
 }
 
+@Html.ActionLink("Add", "edit", "employee")
+
 @foreach(Employee employee in @Model) {
     <h1>
         @Html.ActionLink(@employee.Name, "details", "employee", new { id = @employee.Id }, null)
