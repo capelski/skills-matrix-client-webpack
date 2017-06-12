@@ -4,7 +4,7 @@
     ViewData["Title"] = "Employees";
 }
 
-@Html.ActionLink("Add", "edit", "employee")
+@Html.ActionLink("Add", "edit", "employee", null, new { @class = "btn btn-primary" })
 
 @foreach(Employee employee in @Model) {
     <h1>

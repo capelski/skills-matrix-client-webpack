@@ -3,10 +3,7 @@
     var idInput = $('#id');
     var nameInput = $('#name');
 
-    window.application = window.application ||  {};
-    window.application.employees = window.application.employees || {};
-
-    window.application.employees.save = function() {
+    function save() {
         var elementId = parseInt(idInput.val());
         var request = {
             type: 'POST',
@@ -29,5 +26,5 @@
         });
     };
 
-    saveButton.on('click', window.application.employees.save);
+    saveButton.on('click', save);
 })();

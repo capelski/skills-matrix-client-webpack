@@ -5,9 +5,14 @@
 
 <input value="@(Model != null ? @Model.Id : 0)" type="hidden" id="id" />
 <input value="@(Model != null ? @Model.Name : "")" id="name" />
-<button type="button" id="save-button">Save</button>
+<button type="button" id="save-button" class="btn btn-primary">Save</button>
 
-@Html.ActionLink("Back to list", "index", "employee")
+@if(@Model != null) {
+    @Html.ActionLink("Cancel", "details", "employee", new { id = @Model.Id}, new { @class = "btn btn-default" })    
+}
+else {
+    @Html.ActionLink("Cancel", "index", "employee", null, new { @class = "btn btn-default" })
+}
 
 @section scripts {
     <script src="~/js/employee/edit.js"></script>

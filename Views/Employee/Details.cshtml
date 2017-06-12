@@ -4,12 +4,18 @@
 }
 
 @if(@Model != null) {
+    <input value="@(Model != null ? @Model.Id : 0)" type="hidden" id="id" />
     <h1>@Model.Name</h1>
     <h3>Id: @Model.Id</h3>
-    @Html.ActionLink("Edit", "edit", "employee", new {id = @Model.Id})
+    @Html.ActionLink("Edit", "edit", "employee", new {id = @Model.Id}, new { @class = "btn btn-primary" })
+    <button type="button" class="btn btn-danger" id="delete-button">Delete</button>
 }
 else {
     <h1>Employee not found</h1>
 }
 
-@Html.ActionLink("Back to list", "index", "employee")
+@Html.ActionLink("Back to list", "index", "employee", null, new { @class = "btn btn-default" })
+
+@section scripts {
+    <script src="~/js/employee/delete.js"></script>
+}

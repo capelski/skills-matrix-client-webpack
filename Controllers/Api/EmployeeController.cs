@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+//using Microsoft.EntityFrameworkCore;
 using SkillsMatrix.Models;
 
 namespace SkillsMatrix.Controllers.Api
@@ -26,7 +27,7 @@ namespace SkillsMatrix.Controllers.Api
         [HttpGet]
         public IActionResult GetById(int id)
         {
-            if (id > 1)
+            if (id < 1)
             {
                 return BadRequest();
             }
@@ -69,6 +70,27 @@ namespace SkillsMatrix.Controllers.Api
             }
 
             result.Name = employee.Name;
+            db.SaveChanges();
+            
+            return Ok(employee);
+        }
+                
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            if (id < 1)
+            {
+                return BadRequest();
+            }
+
+            var employee = db.Employees.Find(id);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            //db.Entry(employee).State = EntityState.Deleted;
+            db.Employees.Remove(employee);
             db.SaveChanges();
             
             return Ok(employee);
