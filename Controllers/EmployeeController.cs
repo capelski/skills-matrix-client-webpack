@@ -7,7 +7,7 @@ using SkillsMatrix.Models;
 
 namespace SkillsMatrix.Controllers
 {
-    public class EmployeeController : BaseController
+    public partial class EmployeeController : BaseController
     {
         public EmployeeController(SkillsMatrixContext context)
             :base(context)
@@ -33,40 +33,6 @@ namespace SkillsMatrix.Controllers
         {
             Employee employee = db.Employees.Find(id);
             return View(employee);
-        }
-
-        [HttpPost]
-        public IActionResult Create([FromBody] Employee employee)
-        {
-            if (employee == null || String.IsNullOrEmpty(employee.Name))
-            {
-                return BadRequest();
-            }
-
-            db.Employees.Add(employee);
-            db.SaveChanges();
-            
-            return Ok(employee);
-        }
-
-        [HttpPut]
-        public IActionResult Update([FromBody] Employee employee)
-        {
-            if (employee == null)
-            {
-                return BadRequest();
-            }
-
-            var result = db.Employees.Find(employee.Id);
-            if (result == null)
-            {
-                return NotFound();
-            }
-
-            result.Name = employee.Name;
-            db.SaveChanges();
-            
-            return Ok(employee);
         }
     }
 }
