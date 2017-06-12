@@ -1,21 +1,52 @@
 ﻿@model SkillsMatrix.Models.Employee
 @{
     ViewData["Title"] = "Employee details";
+    var readMode = ViewData["Mode"] == "Read";
+    var editMode = ViewData["Mode"] == "Edit";
+    var existing = Model != null;
+
+    var pageTitle = "Employee not found";
+    if (existing) {
+        pageTitle = @Model.Name;
+    }
+    else if(editMode) {
+        pageTitle = "New employee";
+    }
 }
 
-@if(@Model != null) {
-    <input value="@(Model != null ? @Model.Id : 0)" type="hidden" id="id" />
-    <h1>@Model.Name</h1>
-    <h3>Id: @Model.Id</h3>
-    @Html.ActionLink("Edit", "edit", "employee", new {id = @Model.Id}, new { @class = "btn btn-primary" })
-    <button type="button" class="btn btn-danger" id="delete-button">Delete</button>
-}
-else {
-    <h1>Employee not found</h1>
-}
+<div class="page-header">
+    <h2>@pageTitle</h2>
+</div>
 
-@Html.ActionLink("Back to list", "index", "employee", null, new { @class = "btn btn-default" })
+<form class="form-horizontal">
+    <input value="@(existing ? @Model.Id : 0)" type="hidden" id="id" />
+
+    <div class="form-group no-margin">
+        <label for="Name">Name</label>
+        <input value="@(existing ? @Model.Name : "")" id="name" class="form-control" @(readMode ? "disabled" : "")/>
+    </div>
+
+    @if(readMode && existing) {
+        @Html.ActionLink("Edit", "edit", "employee", new {id = @Model.Id}, new { @class = "btn btn-primary" })
+        <button type="button" class="btn btn-danger" id="delete-button">Delete</button>
+    }
+    else if(editMode) {
+        <button type="button" id="save-button" class="btn btn-primary">Save</button>
+        if (existing) {
+            @Html.ActionLink("Cancel", "details", "employee", new { id = @Model.Id}, new { @class = "btn btn-default" })
+        }
+        else {
+            @Html.ActionLink("Cancel", "index", "employee", null, new { @class = "btn btn-default" })
+        }
+    }
+</form>
+
+@if(existing) {
+    <hr />
+    @Html.ActionLink("Employees list", "index", "employee", null, new { @class = "btn btn-default" })
+}
 
 @section scripts {
     <script src="~/js/employee/delete.js"></script>
+    <script src="~/js/employee/edit.js"></script>
 }

@@ -4,12 +4,21 @@
     ViewData["Title"] = "Employees";
 }
 
-@Html.ActionLink("Add", "edit", "employee", null, new { @class = "btn btn-primary" })
+<div class="page-header">
+    <div class="row bottom">
+        <div class="col-sm-6">
+            <h2>Employees</h2>
+        </div>
+        <div class="col-sm-6 text-right m-top-10">
+            @Html.ActionLink("Add", "edit", "employee", null, new { @class = "btn btn-primary" })
+        </div>
+    </div>
+</div>
 
-@foreach(Employee employee in @Model) {
-    <h1>
-        @Html.ActionLink(@employee.Name, "details", "employee", new { id = @employee.Id }, null)
-    </h1>
-    <h3>Id: @employee.Id</h3>
-    <hr />
-}
+<ul class="list-group">
+    @foreach(Employee employee in @Model) {
+        <li class="list-group-item">
+            @Html.ActionLink(@employee.Name, "details", "employee", new { id = @employee.Id }, new { @class = "reset" })
+        </li>
+    }
+</ul>

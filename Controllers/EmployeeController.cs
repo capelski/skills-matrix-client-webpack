@@ -25,6 +25,7 @@ namespace SkillsMatrix.Controllers
         public IActionResult Details(int id)
         {
             Employee employee = db.Employees.Find(id);
+            ViewData["Mode"] = "Read";
             return View(employee);
         }
 
@@ -32,7 +33,8 @@ namespace SkillsMatrix.Controllers
         public IActionResult Edit(int id)
         {
             Employee employee = db.Employees.Find(id);
-            return View(employee);
+            ViewData["Mode"] = "Edit";
+            return View("Details", employee);
         }
     }
 }
