@@ -3,6 +3,7 @@
     ViewData["Title"] = "Employee details";
 }
 
+<input value="@(Model != null ? @Model.Id : 0)" type="hidden" id="id" />
 <input value="@(Model != null ? @Model.Name : "")" id="name" />
 <button type="button" id="save-button">Save</button>
 

@@ -6,6 +6,7 @@
 @if(@Model != null) {
     <h1>@Model.Name</h1>
     <h3>Id: @Model.Id</h3>
+    @Html.ActionLink("Edit", "edit", "employee", new {id = @Model.Id})
 }
 else {
     <h1>Employee not found</h1>

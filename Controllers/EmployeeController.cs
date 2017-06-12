@@ -46,7 +46,27 @@ namespace SkillsMatrix.Controllers
             db.Employees.Add(employee);
             db.SaveChanges();
             
-            return CreatedAtRoute(new { id = employee.Id }, employee);
+            return Ok(employee);
+        }
+
+        [HttpPut]
+        public IActionResult Update([FromBody] Employee employee)
+        {
+            if (employee == null)
+            {
+                return BadRequest();
+            }
+
+            var result = db.Employees.Find(employee.Id);
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            result.Name = employee.Name;
+            db.SaveChanges();
+            
+            return Ok(employee);
         }
     }
 }
