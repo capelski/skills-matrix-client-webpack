@@ -12,5 +12,25 @@
         });
     };
 
-    deleteButton.on('click', remove);
+    function removePopup() {
+        basicModal.show({
+            body: `<div>
+                        Are you sure you want to delete @Model.Name?
+                </div>`,
+            buttons: {
+                cancel: {
+                    title: 'Cancel',
+                    fn: function() {
+                        basicModal.close();
+                    }
+                },
+                action: {
+                    title: 'Delete',
+                    fn: remove
+                }
+            }
+        });
+    }
+    
+    deleteButton.on('click', removePopup);
 })();
