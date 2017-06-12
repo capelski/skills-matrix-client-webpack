@@ -36,9 +36,9 @@ namespace SkillsMatrix.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(Employee employee)
+        public IActionResult Create([FromBody] Employee employee)
         {
-            if (employee == null)
+            if (employee == null || String.IsNullOrEmpty(employee.Name))
             {
                 return BadRequest();
             }
@@ -46,7 +46,7 @@ namespace SkillsMatrix.Controllers
             db.Employees.Add(employee);
             db.SaveChanges();
             
-            return CreatedAtRoute("GetTodo", new { id = employee.Id }, employee);
+            return CreatedAtRoute(new { id = employee.Id }, employee);
         }
     }
 }

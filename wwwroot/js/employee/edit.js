@@ -8,12 +8,15 @@
     window.application.employees.save = function() {
         $.ajax({
             type: 'POST',
-            url: '/employee',
+            url: '/employee/create',
             contentType: 'application/json',
             data: JSON.stringify({
                 Id: 0,
                 Name: nameInput.val()
             })
+        })
+        .then(function() {
+            document.location.href = '/employee';
         });
     };
 
