@@ -6,6 +6,7 @@
     "jquery": "2.2.0",
     "jquery-validation": "1.14.0",
     "jquery-validation-unobtrusive": "3.2.6",
-    "basicModal": "^3.3.8"
+    "basicModal": "^3.3.8",
+    "toastr": "^2.1.3"
   }
 }

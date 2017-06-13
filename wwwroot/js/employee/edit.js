@@ -23,6 +23,9 @@
         $.ajax(request)
         .then(function(employee) {
             document.location.href = '/employee/details/' + employee.id;
+        })
+        .fail(function(response) {
+            toastr.error('An error ocurred', 'Oops!', {timeOut: 5000})
         });
     };
 

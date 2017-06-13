@@ -9,6 +9,9 @@
         })
         .then(function(employee) {
             document.location.href = '/employee/';
+        })
+        .fail(function(response) {
+            toastr.error('An error ocurred', 'Oops!', {timeOut: 5000})
         });
     };
 
