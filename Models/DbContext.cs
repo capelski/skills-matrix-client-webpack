@@ -9,14 +9,27 @@ namespace SkillsMatrix.Models
 
         public DbSet<Skill> Skills { get; set; }
 
+        public DbSet<EmployeeSkill> Employee_Skill { get; set; }
+
         public SkillsMatrixContext(DbContextOptions<SkillsMatrixContext> options)
             : base(options)
         { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Employee>().ToTable("Employee");
-            modelBuilder.Entity<Skill>().ToTable("Skill");
+            modelBuilder.Entity<Employee>().Ignore(e => e.Skills).ToTable("Employee");
+            modelBuilder.Entity<Skill>().Ignore(s => s.Employees).ToTable("Skill");
+            modelBuilder.Entity<EmployeeSkill>().ToTable("Employee_Skill").HasKey(es => new { es.EmployeeId, es.SkillId});
+
+            modelBuilder.Entity<EmployeeSkill>()
+                .HasOne(es => es.Employee)
+                .WithMany(employee => employee.EmployeeSkills)
+                .HasForeignKey(es => es.EmployeeId);
+
+            modelBuilder.Entity<EmployeeSkill>()
+                .HasOne(es => es.Skill)
+                .WithMany(skill => skill.SkillEmployees)
+                .HasForeignKey(es => es.SkillId);
         }
     }
 }

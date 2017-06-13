@@ -8,9 +8,10 @@ using SkillsMatrix.Models;
 namespace SkillsMatrix.Migrations
 {
     [DbContext(typeof(SkillsMatrixContext))]
-    partial class SkillsMatrixContextModelSnapshot : ModelSnapshot
+    [Migration("20170613135443_EmployeeSkill")]
+    partial class EmployeeSkill
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")

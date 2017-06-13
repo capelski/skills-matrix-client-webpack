@@ -4,14 +4,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SkillsMatrix.Models;
+using SkillsMatrix.Services;
 
 namespace SkillsMatrix.Controllers.Api
 {
     public partial class EmployeeController : BaseController
     {
+        private EmployeeService _employeeService {get; set;}
+
         public EmployeeController(SkillsMatrixContext context)
             :base(context)
         {
+            _employeeService = new EmployeeService(context);
         }
                 
         [HttpGet]
@@ -31,7 +35,7 @@ namespace SkillsMatrix.Controllers.Api
                 return BadRequest();
             }
 
-            var employee = db.Employees.Find(id);
+            var employee = _employeeService.GetById(id);            
             if (employee == null)
             {
                 return NotFound();

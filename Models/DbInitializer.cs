@@ -37,7 +37,6 @@ namespace SkillsMatrix.Models
                     new Skill{Name = "JavaScript"},
                     new Skill{Name = "Angular JS"},
                     new Skill{Name = "React JS"},
-                    new Skill{Name = "Node JS"},
                     new Skill{Name = "ASP.NET"}
                 };
                 foreach (Skill s in skills)
