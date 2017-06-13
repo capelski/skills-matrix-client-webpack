@@ -7,9 +7,9 @@ using SkillsMatrix.Models;
 
 namespace SkillsMatrix.Controllers.Api
 {
-    public partial class EmployeeController : BaseController
+    public partial class SkillController : BaseController
     {
-        public EmployeeController(SkillsMatrixContext context)
+        public SkillController(SkillsMatrixContext context)
             :base(context)
         {
         }
@@ -19,8 +19,8 @@ namespace SkillsMatrix.Controllers.Api
         {
             int pageSize = 10;
             var offset = page * pageSize;
-            var employees = db.Employees.Skip(offset).Take(pageSize).ToList();
-            return Ok(employees);
+            var skills = db.Skills.Skip(offset).Take(pageSize).ToList();
+            return Ok(skills);
         }
                 
         [HttpGet]
@@ -31,47 +31,47 @@ namespace SkillsMatrix.Controllers.Api
                 return BadRequest();
             }
 
-            var employee = db.Employees.Find(id);
-            if (employee == null)
+            var skill = db.Skills.Find(id);
+            if (skill == null)
             {
                 return NotFound();
             }
             
-            return Ok(employee);
+            return Ok(skill);
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] Employee employee)
+        public IActionResult Create([FromBody] Skill skill)
         {
-            if (employee == null || String.IsNullOrEmpty(employee.Name))
+            if (skill == null || String.IsNullOrEmpty(skill.Name))
             {
                 return BadRequest();
             }
 
-            db.Employees.Add(employee);
+            db.Skills.Add(skill);
             db.SaveChanges();
             
-            return Ok(employee);
+            return Ok(skill);
         }
 
         [HttpPut]
-        public IActionResult Update([FromBody] Employee employee)
+        public IActionResult Update([FromBody] Skill skill)
         {
-            if (employee == null)
+            if (skill == null)
             {
                 return BadRequest();
             }
 
-            var result = db.Employees.Find(employee.Id);
+            var result = db.Skills.Find(skill.Id);
             if (result == null)
             {
                 return NotFound();
             }
 
-            result.Name = employee.Name;
+            result.Name = skill.Name;
             db.SaveChanges();
             
-            return Ok(employee);
+            return Ok(skill);
         }
                 
         [HttpDelete]
@@ -82,16 +82,16 @@ namespace SkillsMatrix.Controllers.Api
                 return BadRequest();
             }
 
-            var employee = db.Employees.Find(id);
-            if (employee == null)
+            var skill = db.Skills.Find(id);
+            if (skill == null)
             {
                 return NotFound();
             }
 
-            db.Employees.Remove(employee);
+            db.Skills.Remove(skill);
             db.SaveChanges();
             
-            return Ok(employee);
+            return Ok(skill);
         }
     }
 }

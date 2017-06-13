@@ -1,6 +1,7 @@
 (function() {
     var deleteButton = $('#delete-button');
     var elementId = parseInt($('#id').val());
+    var elementName = $('#name').val();
 
     function remove() {
         $.ajax({
@@ -17,9 +18,7 @@
 
     function removePopup() {
         basicModal.show({
-            body: `<div>
-                        Are you sure you want to delete @Model.Name?
-                </div>`,
+            body: '<div>Are you sure you want to delete ' + elementName + '?</div>',
             buttons: {
                 cancel: {
                     title: 'Cancel',

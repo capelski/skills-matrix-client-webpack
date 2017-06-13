@@ -1,17 +1,17 @@
 ﻿@using SkillsMatrix.Models
-@model Employee
+@model Skill
 @{
-    ViewData["Title"] = "Employee details";
+    ViewData["Title"] = "Skill details";
     var readMode = ViewData["Mode"] == "Read";
     var editMode = ViewData["Mode"] == "Edit";
     var existing = Model != null;
 
-    var pageTitle = "Employee not found";
+    var pageTitle = "Skill not found";
     if (existing) {
         pageTitle = @Model.Name;
     }
     else if(editMode) {
-        pageTitle = "New employee";
+        pageTitle = "New skill";
     }
 }
 
@@ -28,26 +28,26 @@
     </div>
 
     @if(readMode && existing) {
-        @Html.ActionLink("Edit", "edit", "employee", new {id = @Model.Id}, new { @class = "btn btn-primary" })
+        @Html.ActionLink("Edit", "edit", "skill", new {id = @Model.Id}, new { @class = "btn btn-primary" })
         <button type="button" class="btn btn-danger" id="delete-button">Delete</button>
     }
     else if(editMode) {
         <button type="button" id="save-button" class="btn btn-primary">Save</button>
         if (existing) {
-            @Html.ActionLink("Cancel", "details", "employee", new { id = @Model.Id}, new { @class = "btn btn-default" })
+            @Html.ActionLink("Cancel", "details", "skill", new { id = @Model.Id}, new { @class = "btn btn-default" })
         }
         else {
-            @Html.ActionLink("Cancel", "index", "employee", null, new { @class = "btn btn-default" })
+            @Html.ActionLink("Cancel", "index", "skill", null, new { @class = "btn btn-default" })
         }
     }
 </form>
 
 @if(existing) {
     <hr />
-    @Html.ActionLink("Employees list", "index", "employee", null, new { @class = "btn btn-default" })
+    @Html.ActionLink("Skills list", "index", "skill", null, new { @class = "btn btn-default" })
 }
 
 @section scripts {
-    <script src="~/js/employees/delete.js"></script>
-    <script src="~/js/employees/edit.js"></script>
+    <script src="~/js/skills/delete.js"></script>
+    <script src="~/js/skills/edit.js"></script>
 }

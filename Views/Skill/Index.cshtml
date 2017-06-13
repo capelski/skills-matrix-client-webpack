@@ -1,0 +1,24 @@
+﻿@using SkillsMatrix.Models
+@model List<Skill>
+@{
+    ViewData["Title"] = "Skills";
+}
+
+<div class="page-header">
+    <div class="row bottom">
+        <div class="col-sm-6">
+            <h2>Skills</h2>
+        </div>
+        <div class="col-sm-6 text-right m-top-10">
+            @Html.ActionLink("Add", "edit", "skill", null, new { @class = "btn btn-primary" })
+        </div>
+    </div>
+</div>
+
+<ul class="list-group">
+    @foreach(Skill skill in @Model) {
+        <li class="list-group-item">
+            @Html.ActionLink(@skill.Name, "details", "skill", new { id = @skill.Id }, new { @class = "reset" })
+        </li>
+    }
+</ul>
