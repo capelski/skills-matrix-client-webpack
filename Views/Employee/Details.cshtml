@@ -27,6 +27,15 @@
         <input value="@(existing ? @Model.Name : "")" id="name" class="form-control" @(readMode ? "disabled" : "")/>
     </div>
 
+    <h3>Skills</h3>
+    <ul class="list-group">
+        @foreach(Skill skill in Model.Skills) {
+            <li class="list-group-item">
+                @Html.ActionLink(@skill.Name, "details", "skill", new { id = @skill.Id }, new { @class = "reset" })
+            </li>
+        }
+    </ul>
+
     @if(readMode && existing) {
         @Html.ActionLink("Edit", "edit", "employee", new {id = @Model.Id}, new { @class = "btn btn-primary" })
         <button type="button" class="btn btn-danger" id="delete-button">Delete</button>

@@ -4,14 +4,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SkillsMatrix.Models;
+using SkillsMatrix.Services;
 
 namespace SkillsMatrix.Controllers
 {
-    public partial class EmployeeController : BaseController
+    public class EmployeeController : BaseController
     {
+        private EmployeeService _employeeService {get; set;}
+
         public EmployeeController(SkillsMatrixContext context)
             :base(context)
         {
+            _employeeService = new EmployeeService(context);
         }
 
         [HttpGet]
@@ -24,7 +28,7 @@ namespace SkillsMatrix.Controllers
         [HttpGet]
         public IActionResult Details(int id)
         {
-            Employee employee = db.Employees.Find(id);
+            Employee employee = _employeeService.GetById(id);
             ViewData["Mode"] = "Read";
             return View("Details", employee);
         }
@@ -32,7 +36,7 @@ namespace SkillsMatrix.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            Employee employee = db.Employees.Find(id);
+            Employee employee = _employeeService.GetById(id);
             ViewData["Mode"] = "Edit";
             return View("Details", employee);
         }
