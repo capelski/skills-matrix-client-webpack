@@ -1,4 +1,5 @@
 - Request entities from client side with AJAX
+- Add view loaders
 - Skills Edit on employee details view & Viceversa
 - Lists Pagination
 - DynamicController
