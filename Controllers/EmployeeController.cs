@@ -5,23 +5,23 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SkillsMatrix.Models;
 using SkillsMatrix.Services;
+using SkillsMatrix.Services.Interfaces;
 
 namespace SkillsMatrix.Controllers
 {
-    public class EmployeeController : BaseController
+    public class EmployeeController : Controller
     {
-        private EmployeeService _employeeService {get; set;}
+        private IEntityService<Employee, int> _employeeService {get; set;}
 
-        public EmployeeController(SkillsMatrixContext context)
-            :base(context)
+        public EmployeeController(IEntityService<Employee, int> employeeService)
         {
-            _employeeService = new EmployeeService(context);
+            _employeeService = employeeService;
         }
 
         [HttpGet]
         public IActionResult Index()
         {
-            List<Employee> employees = db.Employees.ToList();
+            IEnumerable<Employee> employees = _employeeService.GetAll();
             return View(employees);
         }
 

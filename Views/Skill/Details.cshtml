@@ -29,10 +29,12 @@
 
     <h3>Employees</h3>
     <ul class="list-group">
-        @foreach(Employee employee in Model.Employees) {
-            <li class="list-group-item">
-                @Html.ActionLink(@employee.Name, "details", "employee", new { id = @employee.Id }, new { @class = "reset" })
-            </li>
+        @if(existing) {
+            @foreach(Employee employee in Model.Employees) {
+                <li class="list-group-item">
+                    @Html.ActionLink(@employee.Name, "details", "employee", new { id = @employee.Id }, new { @class = "reset" })
+                </li>
+            }
         }
     </ul>
 

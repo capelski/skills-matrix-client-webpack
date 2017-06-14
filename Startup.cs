@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SkillsMatrix.Models;
 using Microsoft.EntityFrameworkCore;
+using SkillsMatrix.Services.Interfaces;
+using SkillsMatrix.Services;
 
 namespace SkillsMatrix
 {
@@ -29,10 +31,12 @@ namespace SkillsMatrix
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add framework services.
             services.AddMvc();
             services.AddDbContext<SkillsMatrixContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("SkillsMatrixDatabase")));
+
+            services.AddTransient<IEntityService<Employee, int>, EmployeeService>();
+            services.AddTransient<IEntityService<Skill, int>, SkillService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

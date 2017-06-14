@@ -5,36 +5,29 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SkillsMatrix.Models;
 using SkillsMatrix.Services;
+using SkillsMatrix.Services.Interfaces;
 
 namespace SkillsMatrix.Controllers.Api
 {
-    public partial class EmployeeController : BaseController
+    public partial class EmployeeController : Controller
     {
-        private EmployeeService _employeeService {get; set;}
+        private IEntityService<Employee, int> _employeeService {get; set;}
 
-        public EmployeeController(SkillsMatrixContext context)
-            :base(context)
+        public EmployeeController(IEntityService<Employee, int> employeeService)
         {
-            _employeeService = new EmployeeService(context);
+            _employeeService = employeeService;
         }
                 
         [HttpGet]
-        public IActionResult Get(int page = 0)
+        public IActionResult Get(int page = 0, int pageSize = 10)
         {
-            int pageSize = 10;
-            var offset = page * pageSize;
-            var employees = db.Employees.Skip(offset).Take(pageSize).ToList();
+            var employees = _employeeService.GetAll(page, pageSize);
             return Ok(employees);
         }
                 
         [HttpGet]
         public IActionResult GetById(int id)
         {
-            if (id < 1)
-            {
-                return BadRequest();
-            }
-
             var employee = _employeeService.GetById(id);            
             if (employee == null)
             {
@@ -52,8 +45,7 @@ namespace SkillsMatrix.Controllers.Api
                 return BadRequest();
             }
 
-            db.Employees.Add(employee);
-            db.SaveChanges();
+            employee = _employeeService.Create(employee);
             
             return Ok(employee);
         }
@@ -66,34 +58,23 @@ namespace SkillsMatrix.Controllers.Api
                 return BadRequest();
             }
 
-            var result = db.Employees.Find(employee.Id);
+            var result = _employeeService.Update(employee);
             if (result == null)
             {
                 return NotFound();
             }
-
-            result.Name = employee.Name;
-            db.SaveChanges();
             
-            return Ok(employee);
+            return Ok(result);
         }
                 
         [HttpDelete]
         public IActionResult Delete(int id)
         {
-            if (id < 1)
-            {
-                return BadRequest();
-            }
-
-            var employee = db.Employees.Find(id);
+            var employee = _employeeService.Delete(id);
             if (employee == null)
             {
                 return NotFound();
             }
-
-            db.Employees.Remove(employee);
-            db.SaveChanges();
             
             return Ok(employee);
         }

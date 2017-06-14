@@ -5,36 +5,29 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SkillsMatrix.Models;
 using SkillsMatrix.Services;
+using SkillsMatrix.Services.Interfaces;
 
 namespace SkillsMatrix.Controllers.Api
 {
-    public partial class SkillController : BaseController
+    public partial class SkillController : Controller
     {
-        private SkillService _skillService {get; set;}
+        private IEntityService<Skill, int> _skillService {get; set;}
 
-        public SkillController(SkillsMatrixContext context)
-            :base(context)
+        public SkillController(IEntityService<Skill, int> skillService)
         {
-            _skillService = new SkillService(context);
+            _skillService = skillService;
         }
                 
         [HttpGet]
-        public IActionResult Get(int page = 0)
+        public IActionResult Get(int page = 0, int pageSize = 10)
         {
-            int pageSize = 10;
-            var offset = page * pageSize;
-            var skills = db.Skills.Skip(offset).Take(pageSize).ToList();
+            var skills = _skillService.GetAll(page, pageSize);
             return Ok(skills);
         }
                 
         [HttpGet]
         public IActionResult GetById(int id)
         {
-            if (id < 1)
-            {
-                return BadRequest();
-            }
-
             var skill = _skillService.GetById(id);
             if (skill == null)
             {
@@ -52,8 +45,7 @@ namespace SkillsMatrix.Controllers.Api
                 return BadRequest();
             }
 
-            db.Skills.Add(skill);
-            db.SaveChanges();
+            skill = _skillService.Create(skill);
             
             return Ok(skill);
         }
@@ -66,34 +58,23 @@ namespace SkillsMatrix.Controllers.Api
                 return BadRequest();
             }
 
-            var result = db.Skills.Find(skill.Id);
+            var result = _skillService.Update(skill);
             if (result == null)
             {
                 return NotFound();
             }
-
-            result.Name = skill.Name;
-            db.SaveChanges();
             
-            return Ok(skill);
+            return Ok(result);
         }
                 
         [HttpDelete]
         public IActionResult Delete(int id)
         {
-            if (id < 1)
-            {
-                return BadRequest();
-            }
-
-            var skill = db.Skills.Find(id);
+            var skill = _skillService.Delete(id);
             if (skill == null)
             {
                 return NotFound();
             }
-
-            db.Skills.Remove(skill);
-            db.SaveChanges();
             
             return Ok(skill);
         }
