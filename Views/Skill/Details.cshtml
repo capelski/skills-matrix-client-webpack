@@ -59,6 +59,10 @@
 }
 
 @section scripts {
-    <script src="~/js/skills/delete.js"></script>
-    <script src="~/js/skills/edit.js"></script>
+    @if(readMode) {
+        <script src="~/js/skills/details.js"></script>
+    }
+    else if(editMode) {
+        <script src="~/js/skills/edit.js"></script>
+    }
 }
