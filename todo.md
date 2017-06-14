@@ -1,4 +1,5 @@
-- Request entities from client side with AJAX (for Skill)
+- Replace the views model with just the id
+- Fix: edit/123 -> Should be not found
 - Add view loaders
 - Skills Edit on employee details view & Viceversa
 - Lists Pagination

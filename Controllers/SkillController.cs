@@ -26,7 +26,7 @@ namespace SkillsMatrix.Controllers
         public IActionResult Details(int id)
         {
             Skill skill = _skillService.GetById(id);
-            ViewData["Mode"] = "Read";
+            ViewData["ReadOnly"] = true;
             return View("Details", skill);
         }
 
@@ -34,7 +34,7 @@ namespace SkillsMatrix.Controllers
         public IActionResult Edit(int id)
         {
             Skill skill = _skillService.GetById(id);
-            ViewData["Mode"] = "Edit";
+            ViewData["ReadOnly"] = false;
             return View("Details", skill);
         }
     }

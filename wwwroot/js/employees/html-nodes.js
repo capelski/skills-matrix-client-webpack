@@ -72,7 +72,7 @@
             if(!values.readOnly) {
                 htmlNodes.cancelButton.attr('href', '/employee/');
                 if (employee) {
-                    htmlNodes.cancelButton.attr('href', '/employee/edit?id=' + employee.Id);
+                    htmlNodes.cancelButton.attr('href', '/employee/details?id=' + employee.Id);
                 }
                 htmlNodes.cancelButton.show();            
             }
