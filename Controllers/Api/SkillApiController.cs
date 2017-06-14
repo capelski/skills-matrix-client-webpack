@@ -9,56 +9,57 @@ using SkillsMatrix.Services.Interfaces;
 
 namespace SkillsMatrix.Controllers.Api
 {
-    public partial class EmployeeController : Controller
+    [Route("api/skill")]
+    public class SkillApiController : Controller
     {
-        private IEntityService<Employee, int> _employeeService {get; set;}
+        private IEntityService<Skill, int> _skillService {get; set;}
 
-        public EmployeeController(IEntityService<Employee, int> employeeService)
+        public SkillApiController(IEntityService<Skill, int> skillService)
         {
-            _employeeService = employeeService;
+            _skillService = skillService;
         }
                 
         [HttpGet]
         public IActionResult Get(int page = 0, int pageSize = 10)
         {
-            var employees = _employeeService.GetAll(page, pageSize);
-            return Ok(employees);
+            var skills = _skillService.GetAll(page, pageSize);
+            return Ok(skills);
         }
                 
-        [HttpGet]
+        [HttpGet("getById")]
         public IActionResult GetById(int id)
         {
-            var employee = _employeeService.GetById(id);            
-            if (employee == null)
+            var skill = _skillService.GetById(id);
+            if (skill == null)
             {
                 return NotFound();
             }
             
-            return Ok(employee);
+            return Ok(skill);
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] Employee employee)
+        public IActionResult Create([FromBody] Skill skill)
         {
-            if (employee == null || String.IsNullOrEmpty(employee.Name))
+            if (skill == null || String.IsNullOrEmpty(skill.Name))
             {
                 return BadRequest();
             }
 
-            employee = _employeeService.Create(employee);
+            skill = _skillService.Create(skill);
             
-            return Ok(employee);
+            return Ok(skill);
         }
 
         [HttpPut]
-        public IActionResult Update([FromBody] Employee employee)
+        public IActionResult Update([FromBody] Skill skill)
         {
-            if (employee == null)
+            if (skill == null)
             {
                 return BadRequest();
             }
 
-            var result = _employeeService.Update(employee);
+            var result = _skillService.Update(skill);
             if (result == null)
             {
                 return NotFound();
@@ -70,13 +71,13 @@ namespace SkillsMatrix.Controllers.Api
         [HttpDelete]
         public IActionResult Delete(int id)
         {
-            var employee = _employeeService.Delete(id);
-            if (employee == null)
+            var skill = _skillService.Delete(id);
+            if (skill == null)
             {
                 return NotFound();
             }
             
-            return Ok(employee);
+            return Ok(skill);
         }
     }
 }

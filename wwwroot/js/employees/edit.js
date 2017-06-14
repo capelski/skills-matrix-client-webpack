@@ -7,7 +7,7 @@
         var elementId = parseInt(idInput.val());
         var request = {
             type: 'POST',
-            url: '/employee/create',
+            url: '/api/employee',
             contentType: 'application/json',
             data: JSON.stringify({
                 Id: elementId,
@@ -17,7 +17,7 @@
 
         if (elementId !== 0) {
             request.type = 'PUT';
-            request.url = '/employee/update';
+            request.url = '/api/employee/';
         }
 
         $.ajax(request)

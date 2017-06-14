@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SkillsMatrix.Models;
-using SkillsMatrix.Services;
 using SkillsMatrix.Services.Interfaces;
 
 namespace SkillsMatrix.Controllers
 {
-    public partial class SkillController : Controller
+    public class SkillController : Controller
     {
         private IEntityService<Skill, int> _skillService {get; set;}
 

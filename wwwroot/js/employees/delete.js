@@ -6,7 +6,7 @@
     function remove() {
         $.ajax({
             type: 'DELETE',
-            url: '/employee/delete?id=' + elementId
+            url: '/api/employee?id=' + elementId
         })
         .then(function(employee) {
             document.location.href = '/employee/';
