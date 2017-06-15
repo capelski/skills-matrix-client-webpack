@@ -1,4 +1,4 @@
-- Replace the views model with just the id
+- Replace the views model with just the id + Validate JS result
 - Fix: edit/123 -> Should be not found
 - Add view loaders
 - Skills Edit on employee details view & Viceversa

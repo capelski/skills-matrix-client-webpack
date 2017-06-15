@@ -12,7 +12,7 @@ namespace SkillsMatrix.Services.Interfaces
 
         T Delete(TKey id);
         
-        IEnumerable<T> GetAll(int page = 0, int pageSize = 10);
+        IEnumerable<T> GetAll(string keywords = "", int page = 0, int pageSize = 10);
 
         T GetById(TKey id);
 

@@ -33,10 +33,14 @@ namespace SkillsMatrix.Services
             return employee;
         }
 
-        public IEnumerable<Employee> GetAll(int page = 0, int pageSize = 10)
+        public IEnumerable<Employee> GetAll(string keywords = "", int page = 0, int pageSize = 10)
         {
             var offset = page * pageSize;
-            var employees = db.Employees.Skip(offset).Take(pageSize).ToList();
+            IEnumerable<Employee> source = db.Employees;
+            if (!String.IsNullOrEmpty(keywords)) {
+                source = source.Where(e => e.Name.Contains(keywords));
+            }
+            var employees = source.Skip(offset).Take(pageSize).ToList();
             return employees;
         }
 

@@ -20,9 +20,9 @@ namespace SkillsMatrix.Controllers.Api
         }
                 
         [HttpGet]
-        public IActionResult Get(int page = 0, int pageSize = 10)
+        public IActionResult Get(string keywords = "", int page = 0, int pageSize = 10)
         {
-            var skills = _skillService.GetAll(page, pageSize);
+            var skills = _skillService.GetAll(keywords, page, pageSize);
             return Ok(skills);
         }
                 
