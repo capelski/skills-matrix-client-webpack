@@ -5,22 +5,25 @@
 
     htmlNodes.deleteButton.on('click', removePopup);
     htmlNodes.saveButton.on('click', save);
+    loadView();
 
-    if (values.elementId != 0) {
-        $.ajax({
-            type: 'GET',
-            url: '/api/employee/getById?id=' + values.elementId
-        })
-        .then(function(employee) {
-            viewUpdater(employee, values.readOnly);
-        })
-        .fail(function(response) {
-            toastr.error('An error ocurred', 'Oops!', {timeOut: 5000});
-            viewUpdater(null, true);
-        });
-    }
-    else {
-        viewUpdater(null, values.readOnly);
+    function loadView() {
+        if (values.elementId != 0) {
+            $.ajax({
+                type: 'GET',
+                url: '/api/employee/getById?id=' + values.elementId
+            })
+            .then(function(employee) {
+                viewUpdater(employee, values.readOnly);
+            })
+            .fail(function(response) {
+                toastr.error('An error ocurred', 'Oops!', {timeOut: 5000});
+                viewUpdater(null, true);
+            });
+        }
+        else {
+            viewUpdater(null, values.readOnly);
+        }
     }
 
     function remove() {

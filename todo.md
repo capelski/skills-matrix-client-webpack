@@ -1,8 +1,8 @@
-- Replace the list model in Index views and retrieve the data thorugh JS
-- Remove services from views controllers
 - Add view loaders
+- Generate entity URLs in server side?
 - Skills Edit on employee details view & Viceversa
 - Lists Pagination
+- Lists Search
 - DynamicController
 - Permissons
 - Hide connection strings from Source Control

@@ -1,6 +1,4 @@
-﻿@using SkillsMatrix.Models
-@model IEnumerable<Skill>
-@{
+﻿@{
     ViewData["Title"] = "Skills";
 }
 
@@ -15,10 +13,9 @@
     </div>
 </div>
 
-<ul class="list-group">
-    @foreach(Skill skill in @Model) {
-        <li class="list-group-item">
-            @Html.ActionLink(@skill.Name, "details", "skill", new { id = @skill.Id }, new { @class = "reset" })
-        </li>
-    }
+<ul id="skills-list" class="list-group">
 </ul>
+
+@section scripts {
+    <script src="~/js/skills/list.js"></script>
+}
