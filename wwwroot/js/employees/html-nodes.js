@@ -18,26 +18,25 @@
         elementId: parseInt(htmlNodes.elementId.val()),
         readOnly: htmlNodes.readOnly.val() == 'true'
     };
-    var values = window.application.employee.values;
     
     window.application.employee.updaters = {
-        pageTitle: function(employee) {
-            var title = values.readOnly ? 'Employee not found' : 'New empoyee';
+        pageTitle: function(employee, readOnly) {
+            var title = readOnly ? 'Employee not found' : 'New empoyee';
             if (employee) {
                 title = employee.Name;
             }
             htmlNodes.pageTitle.text(title);
         },
-        elementName: function(employee) {
+        elementName: function(employee, readOnly) {
             htmlNodes.elementName.val(employee ? employee.Name : '');
-            if(values.readOnly) {
+            if(readOnly) {
                 htmlNodes.elementName.attr('disabled', 'disabled');            
             }
             else {
                 htmlNodes.elementName.removeAttr('disabled')                        
             }
         },
-        skillsList: function(employee) {
+        skillsList: function(employee, readOnly) {
             htmlNodes.skillsList.empty();
             if (employee) {
                 for(var key in employee.Skills) {
@@ -46,30 +45,30 @@
                 }
             }
         },
-        editButton: function(employee) {
+        editButton: function(employee, readOnly) {
             htmlNodes.editButton.hide();
             htmlNodes.editButton.attr('href', '#');
-            if(employee && values.readOnly) {
+            if(employee && readOnly) {
                 htmlNodes.editButton.attr('href', '/employee/edit?id=' + employee.Id);            
                 htmlNodes.editButton.show();            
             }
         },
-        deleteButton: function(employee) {
+        deleteButton: function(employee, readOnly) {
             htmlNodes.deleteButton.hide();
-            if (employee && values.readOnly) {
+            if (employee && readOnly) {
                 htmlNodes.deleteButton.show();
             }
         },
-        saveButton: function(employee) {
+        saveButton: function(employee, readOnly) {
             htmlNodes.saveButton.hide();
-            if (!values.readOnly) {
+            if (!readOnly) {
                 htmlNodes.saveButton.show();
             }
         },
-        cancelButton: function(employee) {
+        cancelButton: function(employee, readOnly) {
             htmlNodes.cancelButton.hide();
             htmlNodes.cancelButton.attr('href', '#');
-            if(!values.readOnly) {
+            if(!readOnly) {
                 htmlNodes.cancelButton.attr('href', '/employee/');
                 if (employee) {
                     htmlNodes.cancelButton.attr('href', '/employee/details?id=' + employee.Id);
@@ -80,10 +79,10 @@
     };
     var updaters = window.application.employee.updaters;
 
-    window.application.employee.viewUpdater = function(employee) {
+    window.application.employee.viewUpdater = function(employee, readOnly) {
         for (var key in updaters) {
             var updater = updaters[key];
-            updater(employee);
+            updater(employee, readOnly);
         }
     };
 })();

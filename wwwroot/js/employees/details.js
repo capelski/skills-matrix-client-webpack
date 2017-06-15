@@ -11,13 +11,16 @@
             type: 'GET',
             url: '/api/employee/getById?id=' + values.elementId
         })
-        .then(viewUpdater)
+        .then(function(employee) {
+            viewUpdater(employee, values.readOnly);
+        })
         .fail(function(response) {
-            toastr.error('An error ocurred', 'Oops!', {timeOut: 5000})
+            toastr.error('An error ocurred', 'Oops!', {timeOut: 5000});
+            viewUpdater(null, true);
         });
     }
     else {
-        viewUpdater(null);
+        viewUpdater(null, values.readOnly);
     }
 
     function remove() {

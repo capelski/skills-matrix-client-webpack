@@ -18,26 +18,25 @@
         elementId: parseInt(htmlNodes.elementId.val()),
         readOnly: htmlNodes.readOnly.val() == 'true'
     };
-    var values = window.application.skill.values;
     
     window.application.skill.updaters = {
-        pageTitle: function(skill) {
-            var title = values.readOnly ? 'Skill not found' : 'New skill';
+        pageTitle: function(skill, readOnly) {
+            var title = readOnly ? 'Skill not found' : 'New skill';
             if (skill) {
                 title = skill.Name;
             }
             htmlNodes.pageTitle.text(title);
         },
-        elementName: function(skill) {
+        elementName: function(skill, readOnly) {
             htmlNodes.elementName.val(skill ? skill.Name : '');
-            if(values.readOnly) {
+            if(readOnly) {
                 htmlNodes.elementName.attr('disabled', 'disabled');            
             }
             else {
                 htmlNodes.elementName.removeAttr('disabled')                        
             }
         },
-        employeesList: function(skill) {
+        employeesList: function(skill, readOnly) {
             htmlNodes.employeesList.empty();
             if (skill) {
                 for(var key in skill.Employees) {
@@ -46,30 +45,30 @@
                 }
             }
         },
-        editButton: function(skill) {
+        editButton: function(skill, readOnly) {
             htmlNodes.editButton.hide();
             htmlNodes.editButton.attr('href', '#');
-            if(skill && values.readOnly) {
+            if(skill && readOnly) {
                 htmlNodes.editButton.attr('href', '/skill/edit?id=' + skill.Id);            
                 htmlNodes.editButton.show();            
             }
         },
-        deleteButton: function(skill) {
+        deleteButton: function(skill, readOnly) {
             htmlNodes.deleteButton.hide();
-            if (skill && values.readOnly) {
+            if (skill && readOnly) {
                 htmlNodes.deleteButton.show();
             }
         },
-        saveButton: function(skill) {
+        saveButton: function(skill, readOnly) {
             htmlNodes.saveButton.hide();
-            if (!values.readOnly) {
+            if (!readOnly) {
                 htmlNodes.saveButton.show();
             }
         },
-        cancelButton: function(skill) {
+        cancelButton: function(skill, readOnly) {
             htmlNodes.cancelButton.hide();
             htmlNodes.cancelButton.attr('href', '#');
-            if(!values.readOnly) {
+            if(!readOnly) {
                 htmlNodes.cancelButton.attr('href', '/skill/');
                 if (skill) {
                     htmlNodes.cancelButton.attr('href', '/skill/details?id=' + skill.Id);
@@ -80,10 +79,10 @@
     };
     var updaters = window.application.skill.updaters;
 
-    window.application.skill.viewUpdater = function(skill) {
+    window.application.skill.viewUpdater = function(skill, readOnly) {
         for (var key in updaters) {
             var updater = updaters[key];
-            updater(skill);
+            updater(skill, readOnly);
         }
     };
 })();
