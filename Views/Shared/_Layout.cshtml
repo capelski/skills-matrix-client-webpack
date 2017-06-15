@@ -16,7 +16,8 @@
         <link rel="stylesheet" href="~/css/main.css" asp-append-version="true" />
     </environment>
     <link rel="stylesheet" href="~/lib/basicModal/dist/basicModal.min.css" asp-append-version="true" />
-    <link href="~/lib/toastr/toastr.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="~/lib/toastr/toastr.min.css"  asp-append-version="true"/>
+    <link rel="stylesheet" href="~/lib/SpinKit/css/spinkit.css"  asp-append-version="true"/>
 </head>
 <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -39,7 +40,9 @@
         </div>
     </nav>
     <div class="container body-content">
-        @RenderBody()
+        <div class="view-content">
+            @RenderBody()
+        </div>
         <hr />
         <footer>
             <p>&copy; 2017 - Skills Matrix</p>
@@ -67,6 +70,7 @@
 
     <script src="~/lib/basicModal/dist/basicModal.min.js" asp-append-version="true"></script>
     <script src="~/lib/toastr/toastr.min.js" asp-append-version="true"></script>
+    <script src="~/js/utils.js" asp-append-version="true"></script>
 
     @RenderSection("Scripts", required: false)
 </body>

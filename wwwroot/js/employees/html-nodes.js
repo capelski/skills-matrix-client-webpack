@@ -3,6 +3,7 @@
     window.application = window.application || {};
     window.application.employee = window.application.employee || {};
     window.application.employee.htmlNodes = {
+        loader : $('#loader'),
         elementId : $('#model-id'),
         readOnly : $('#read-only'),
         pageTitle : $('#page-title'),

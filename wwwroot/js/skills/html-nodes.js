@@ -3,6 +3,7 @@
     window.application = window.application || {};
     window.application.skill = window.application.skill || {};
     window.application.skill.htmlNodes = {
+        loader : $('#loader'),
         elementId : $('#model-id'),
         readOnly : $('#read-only'),
         pageTitle : $('#page-title'),

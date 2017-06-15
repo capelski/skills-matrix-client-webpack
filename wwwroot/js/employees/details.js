@@ -8,6 +8,7 @@
     loadView();
 
     function loadView() {
+        window.application.utils.loader.show(htmlNodes.loader);
         if (values.elementId != 0) {
             $.ajax({
                 type: 'GET',
@@ -19,10 +20,14 @@
             .fail(function(response) {
                 toastr.error('An error ocurred', 'Oops!', {timeOut: 5000});
                 viewUpdater(null, true);
+            })
+            .always(function() {
+                window.application.utils.loader.hide(htmlNodes.loader);
             });
         }
         else {
             viewUpdater(null, values.readOnly);
+            window.application.utils.loader.hide(htmlNodes.loader);
         }
     }
 

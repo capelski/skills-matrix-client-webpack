@@ -25,3 +25,19 @@ a.reset:hover {
     margin-left: 0;
     margin-right: 0;
 }
+
+.view-content {
+    position: relative;
+}
+
+.loader {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    z-index: 10;
+}
