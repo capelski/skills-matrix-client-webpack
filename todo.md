@@ -1,7 +1,5 @@
-- Inject readOnly in the updaters
-- Replace the views model with just the id + Validate JS result
 - Replace the list model in Index views and retrieve the data thorugh JS
-- Fix: edit/123 -> Should be not found
+- Remove services from views controllers
 - Add view loaders
 - Skills Edit on employee details view & Viceversa
 - Lists Pagination

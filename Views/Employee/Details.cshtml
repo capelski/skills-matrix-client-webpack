@@ -1,4 +1,4 @@
-﻿@model SkillsMatrix.Models.Employee
+﻿@model int
 @{
     ViewData["Title"] = "Employee details";
     var readOnly = ViewData["ReadOnly"].ToString().ToLower();
@@ -9,7 +9,7 @@
 </div>
 
 <form class="form-horizontal">
-    <input id="model-id" type="hidden" value="@(Model != null ? Model.Id : 0)" />
+    <input id="model-id" type="hidden" value="@Model" />
     <input id="read-only" type="hidden" value="@readOnly" />
 
     <div class="form-group no-margin">

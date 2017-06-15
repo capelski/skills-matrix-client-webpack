@@ -25,17 +25,15 @@ namespace SkillsMatrix.Controllers
         [HttpGet]
         public IActionResult Details(int id)
         {
-            Employee employee = _employeeService.GetById(id);
             ViewData["ReadOnly"] = true;
-            return View("Details", employee);
+            return View("Details", id);
         }
 
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            Employee employee = _employeeService.GetById(id);
             ViewData["ReadOnly"] = false;
-            return View("Details", employee);
+            return View("Details", id);
         }
     }
 }
