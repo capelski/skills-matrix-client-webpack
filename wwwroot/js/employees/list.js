@@ -9,6 +9,7 @@
         employeesList: $('#employees-list'),
         keywords: $('#keywords')
     };
+    var searchTimeout;
 
     htmlNodes.keywords.on('keyup', search);
     loadView();
@@ -29,8 +30,14 @@
     }
 
     function search(event) {
-        values.keywords = event.target.value;
-        loadView();
+        if (searchTimeout) {
+            clearTimeout(searchTimeout);
+        }
+        searchTimeout = setTimeout(function() {
+            values.keywords = event.target.value;
+            loadView();
+            searchTimeout = null;
+        }, 300);
     }
 
     function viewUpdater(employees) {

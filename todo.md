@@ -1,5 +1,3 @@
-- Lists Search
-	- Include setInterval to avoid too much requests
 - View controllers should be plural
 - Include zoom icon in searcher
 - Skills Edit on employee details view & Viceversa
