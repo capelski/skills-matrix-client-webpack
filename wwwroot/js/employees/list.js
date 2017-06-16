@@ -43,7 +43,7 @@
     function viewUpdater(employees) {
         htmlNodes.employeesList.empty();
         employees.forEach(function(employee) {
-            htmlNodes.employeesList.append('<li class="list-group-item"><a class="reset" href="/employee/details?id=' + employee.Id + '">' + employee.Name + '</a></li>');
+            htmlNodes.employeesList.append('<li class="list-group-item"><a class="reset" href="/employees/details?id=' + employee.Id + '">' + employee.Name + '</a></li>');
         });
     }
 })();

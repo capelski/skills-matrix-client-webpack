@@ -1,5 +1,3 @@
-- View controllers should be plural
-- Include zoom icon in searcher
 - Skills Edit on employee details view & Viceversa
 - Lists Pagination
 - DynamicController
@@ -8,6 +6,9 @@
 	- Include an ORderBy clause in GetAll method
 	- Most skilled employees
 	- Rarest skills
+- Fade In/Out when loading/leaving
+- Include zoom icon in searcher and cross to delete the text
+- _Loader -> Accept ID and initial State as parameters
 - Hide connection strings from Source Control
 	https://www.hanselman.com/blog/BestPracticesForPrivateConfigDataAndConnectionStringsInConfigurationInASPNETAndAzure.aspx
 - Migrate DB to Azure

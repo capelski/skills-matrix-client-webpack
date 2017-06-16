@@ -35,7 +35,7 @@
             url: '/api/employee?id=' + values.elementId
         })
         .then(function(employee) {
-            document.location.href = '/employee/';
+            document.location.href = '/employees/';
         })
         .fail(function(response) {
             toastr.error('An error ocurred', 'Oops!', {timeOut: 5000})
@@ -78,7 +78,7 @@
 
         $.ajax(request)
         .then(function(employee) {
-            document.location.href = '/employee/details/' + employee.Id;
+            document.location.href = '/employees/details/' + employee.Id;
         })
         .fail(function(response) {
             toastr.error('An error ocurred', 'Oops!', {timeOut: 5000})

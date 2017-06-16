@@ -42,7 +42,7 @@
             if (skill) {
                 for(var key in skill.Employees) {
                     var employee = skill.Employees[key];
-                    htmlNodes.employeesList.append('<li class="list-group-item"><a class="reset" href="/employee/details?id=' + employee.Id + '">' + employee.Name + '</a></li>');
+                    htmlNodes.employeesList.append('<li class="list-group-item"><a class="reset" href="/employees/details?id=' + employee.Id + '">' + employee.Name + '</a></li>');
                 }
             }
         },
@@ -50,7 +50,7 @@
             htmlNodes.editButton.hide();
             htmlNodes.editButton.attr('href', '#');
             if(skill && readOnly) {
-                htmlNodes.editButton.attr('href', '/skill/edit?id=' + skill.Id);            
+                htmlNodes.editButton.attr('href', '/skills/edit?id=' + skill.Id);            
                 htmlNodes.editButton.show();            
             }
         },
@@ -70,9 +70,9 @@
             htmlNodes.cancelButton.hide();
             htmlNodes.cancelButton.attr('href', '#');
             if(!readOnly) {
-                htmlNodes.cancelButton.attr('href', '/skill/');
+                htmlNodes.cancelButton.attr('href', '/skills/');
                 if (skill) {
-                    htmlNodes.cancelButton.attr('href', '/skill/details?id=' + skill.Id);
+                    htmlNodes.cancelButton.attr('href', '/skills/details?id=' + skill.Id);
                 }
                 htmlNodes.cancelButton.show();            
             }

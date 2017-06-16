@@ -43,7 +43,7 @@
     function viewUpdater(skills) {
         htmlNodes.skillsList.empty();
         skills.forEach(function(skill) {
-            htmlNodes.skillsList.append('<li class="list-group-item"><a class="reset" href="/skill/details?id=' + skill.Id + '">' + skill.Name + '</a></li>');
+            htmlNodes.skillsList.append('<li class="list-group-item"><a class="reset" href="/skills/details?id=' + skill.Id + '">' + skill.Name + '</a></li>');
         });
     }
 })();

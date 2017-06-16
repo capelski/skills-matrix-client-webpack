@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SkillsMatrix.Controllers
 {
-    public class SkillController : Controller
+    public class SkillsController : Controller
     {
         [HttpGet]
         public IActionResult Index()
