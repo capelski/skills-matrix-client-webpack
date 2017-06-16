@@ -38,7 +38,7 @@ namespace SkillsMatrix.Services
             var offset = page * pageSize;
             IEnumerable<Skill> source = db.Skills;
             if (!String.IsNullOrEmpty(keywords)) {
-                source = source.Where(s => s.Name.Contains(keywords));
+                source = source.Where(s => s.Name.ToLower().Contains(keywords.ToLower()));
             }
             var skills = source.Skip(offset).Take(pageSize).ToList();
             return skills;

@@ -2,8 +2,6 @@
     ViewData["Title"] = "Skills";
 }
 
-@Html.Partial("_Loader")
-
 <div class="page-header">
     <div class="row bottom">
         <div class="col-sm-6">
@@ -15,8 +13,14 @@
     </div>
 </div>
 
-<ul id="skills-list" class="list-group">
-</ul>
+<div class="form-group">
+    <input id="keywords" class="form-control" placeholder="Search..." />
+</div>
+
+<div class="dynamic-content">
+    <ul id="skills-list" class="list-group"></ul>
+    @Html.Partial("_Loader")
+</div>
 
 @section scripts {
     <script src="~/js/skills/list.js"></script>

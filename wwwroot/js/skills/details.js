@@ -8,26 +8,24 @@
     loadView();
 
     function loadView() {
-        window.application.utils.loader.show(htmlNodes.loader);
         if (values.elementId != 0) {
-            $.ajax({
-                type: 'GET',
-                url: '/api/skill/getById?id=' + values.elementId
-            })
-            .then(function(skill) {
-                viewUpdater(skill, values.readOnly);
-            })
-            .fail(function(response) {
-                toastr.error('An error ocurred', 'Oops!', {timeOut: 5000});
-                viewUpdater(null, true);
-            })
-            .always(function() {
-                window.application.utils.loader.hide(htmlNodes.loader);
-            });
+            var promiseBuilder = function() {
+                return $.ajax({
+                    type: 'GET',
+                    url: '/api/skill/getById?id=' + values.elementId
+                })
+                .then(function(skill) {
+                    viewUpdater(skill, values.readOnly);
+                })
+                .fail(function(response) {
+                    toastr.error('An error ocurred', 'Oops!', {timeOut: 5000});
+                    viewUpdater(null, true);
+                });
+            }
+            window.application.utils.longOperation(promiseBuilder, htmlNodes.loader);
         }
         else {
             viewUpdater(null, values.readOnly);
-            window.application.utils.loader.hide(htmlNodes.loader);
         }
     }
 

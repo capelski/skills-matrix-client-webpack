@@ -1,16 +1,20 @@
+- Lists Search
+	- Include setInterval to avoid too much requests
+- View controllers should be plural
+- Include zoom icon in searcher
 - Skills Edit on employee details view & Viceversa
 - Lists Pagination
-- Lists Search
 - DynamicController
 - Generate entity URLs in server side?
 - Design a Home page
+	- Include an ORderBy clause in GetAll method
 	- Most skilled employees
 	- Rarest skills
 - Hide connection strings from Source Control
 	https://www.hanselman.com/blog/BestPracticesForPrivateConfigDataAndConnectionStringsInConfigurationInASPNETAndAzure.aspx
 - Migrate DB to Azure
-- Permissons
 - Include Identity
+- Permissons
 
 LINKS
 

@@ -1,22 +1,15 @@
 (function() {
-    var loaderPromise = null;
+    var isLoaderVisible = false;
+    var lastLoaderPromise = Promise.resolve();
     
     window.application = window.application || {};
     window.application.utils = {
-        loader: {
-            show: function(loader) {
-                if (loaderPromise) {
-                    return loaderPromise.done(function() {
-                        loader.fadeIn().promise();
-                    });
-                } else {
-                    return loader.fadeIn().promise();
-                }
-            },
-            hide: function(loader) {
-                loaderPromise = loader.delay(200).fadeOut().promise();
-                return loaderPromise;
-            }
+        longOperation: function (promiseBuilder, loader) {
+            loader.fadeIn().promise().done(function() {
+                return promiseBuilder().always(function() {
+                    return loader.delay(400).fadeOut().promise();
+                });
+            });
         }
     };
 })();

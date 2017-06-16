@@ -26,8 +26,9 @@ a.reset:hover {
     margin-right: 0;
 }
 
-.view-content {
+.dynamic-content {
     position: relative;
+    min-height: 200px;
 }
 
 .loader {
