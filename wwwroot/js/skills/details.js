@@ -2,7 +2,12 @@
     var htmlNodes = window.application.skill.htmlNodes;
     var values = window.application.skill.values;
     var viewUpdater = window.application.skill.viewUpdater;
+    var searchTimeout;
 
+    window.addEmployee = addEmployee;
+    window.removeEmployee = removeEmployee;
+
+    htmlNodes.employeeKeywords.on('keyup', search);
     htmlNodes.deleteButton.on('click', removePopup);
     htmlNodes.saveButton.on('click', save);
     loadView();
@@ -15,6 +20,7 @@
                     url: '/api/skill/getById?id=' + values.elementId
                 })
                 .then(function(skill) {
+                    values.skill = skill;
                     viewUpdater(skill, values.readOnly);
                 })
                 .fail(function(response) {
@@ -84,4 +90,63 @@
             toastr.error('An error ocurred', 'Oops!', {timeOut: 5000})
         });
     };
+
+    function search(event) {
+        if (searchTimeout) {
+            clearTimeout(searchTimeout);
+        }
+        searchTimeout = setTimeout(function() {
+            var keywords = event.target.value;
+            if (keywords.length > 0) {
+                var promiseBuilder = function() {
+                    return $.ajax({
+                        type: 'GET',
+                        url: '/api/employee?keywords=' + keywords
+                    })
+                    .then(updateEmployees)
+                    .fail(function(response) {
+                        toastr.error('An error ocurred', 'Oops!', {timeOut: 5000});
+                        updateEmployees([]);
+                    });
+                }
+                window.application.utils.longOperation(promiseBuilder, htmlNodes.addEmployeeLoader);
+            }
+            else {
+                updateEmployees([]);                
+            }
+            searchTimeout = null;
+        }, 300);
+    }
+
+    function updateEmployees(employees) {
+        htmlNodes.addEmployeeList.empty();
+        values.employees = employees.filter(function(candidate) {
+            return values.skill.Employees.filter(function(employee) {
+                return candidate.Id === employee.Id;
+            }).length === 0;
+        });
+        values.employees.forEach(function(employee) {
+            var html = '<li class="list-group-item" onclick="addEmployee(' + employee.Id + ')"><i class="fa fa-plus text-success"></i> ' + employee.Name + '</li>';
+            htmlNodes.addEmployeeList.append(html);
+        });
+    }
+
+    function addEmployee(employeeId) {
+        htmlNodes.addEmployeeList.empty();
+        var employee = values.employees.find(function(employee) {
+            return employee.Id === employeeId;
+        });
+        if (employee) {
+            values.skill.Employees.push(employee);
+            viewUpdater(values.skill, values.readOnly);
+        }
+    }
+
+    function removeEmployee(employeeId) {
+        htmlNodes.addEmployeeList.empty();
+        values.skill.Employees = values.skill.Employees.filter(function(employee) {
+            return employee.Id !== employeeId;
+        });
+        viewUpdater(values.skill, values.readOnly);
+    }
 })();

@@ -1,4 +1,4 @@
-<div id="loader" class="loader">
+<div id="@(ViewData["loaderId"])" class="loader" style="display: @(ViewData["show"] != null && (bool) ViewData["show"] ? "block" : "none");">
     <div class="sk-chasing-dots">
         <div class="sk-child sk-dot1"></div>
         <div class="sk-child sk-dot2"></div>

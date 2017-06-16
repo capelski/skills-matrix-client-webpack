@@ -1,4 +1,9 @@
 - Skills Edit on employee details view & Viceversa
+	+ Delete Icons
+	+ Add Icons
+	- Persist
+- Refactor common JS code
+- No results message
 - Lists Pagination
 - DynamicController
 - Generate entity URLs in server side?
@@ -8,7 +13,6 @@
 	- Rarest skills
 - Fade In/Out when loading/leaving
 - Include zoom icon in searcher and cross to delete the text
-- _Loader -> Accept ID and initial State as parameters
 - Hide connection strings from Source Control
 	https://www.hanselman.com/blog/BestPracticesForPrivateConfigDataAndConnectionStringsInConfigurationInASPNETAndAzure.aspx
 - Migrate DB to Azure

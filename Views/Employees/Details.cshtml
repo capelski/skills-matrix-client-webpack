@@ -6,7 +6,10 @@
 
 <div class="dynamic-content">
 
-    @Html.Partial("_Loader")
+    @Html.Partial("_Loader", new ViewDataDictionary(ViewData) {
+        {"loaderId", "loader"},
+        {"show", true}
+    })
 
     <div class="page-header">
         <h2 id="page-title">Employee not found</h2>
@@ -22,8 +25,7 @@
         </div>
 
         <h3>Skills</h3>
-        <ul id="skills-list" class="list-group">
-        </ul>
+        <ul id="skills-list" class="list-group"></ul>
 
         <!-- Read actions -->
         <a id="edit-button" class="btn btn-primary" href="#">Edit</a>

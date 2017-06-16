@@ -19,7 +19,10 @@
 
 <div class="dynamic-content">
     <ul id="employees-list" class="list-group"></ul>
-    @Html.Partial("_Loader")
+    @Html.Partial("_Loader", new ViewDataDictionary(ViewData) {
+        {"loaderId", "loader"},
+        {"show", true}
+    })
 </div>
 
 @section scripts {
