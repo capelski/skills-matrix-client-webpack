@@ -2,6 +2,7 @@
 	+ Delete Icons
 	+ Add Icons
 	- Persist
+	- Duplicate for employee
 - Refactor common JS code
 - No results message
 - Lists Pagination

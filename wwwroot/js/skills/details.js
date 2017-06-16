@@ -73,7 +73,8 @@
             contentType: 'application/json',
             data: JSON.stringify({
                 Id: values.elementId,
-                Name: htmlNodes.elementName.val()
+                Name: htmlNodes.elementName.val(),
+                Employees: values.skill.Employees || []
             })
         };
 
