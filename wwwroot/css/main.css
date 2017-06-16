@@ -29,6 +29,7 @@ a.reset:hover {
 .dynamic-content {
     position: relative;
     min-height: 200px;
+    transition: height 0.3s;
 }
 
 .loader {
@@ -38,7 +39,5 @@ a.reset:hover {
     left: 0;
     right: 0;
     background-color: white;
-    display: flex;
-    align-items: center;
     z-index: 10;
 }
