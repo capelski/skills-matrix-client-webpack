@@ -60,10 +60,13 @@ namespace SkillsMatrix.Services
 
         public Employee Update(Employee entity)
         {
-            var employee = db.Employees.Find(entity.Id);
+            var employee = GetById(entity.Id);
             if (employee != null)
             {
                 employee.Name = entity.Name;
+                List<EmployeeSkill> employeeSkills = entity.Skills.Select(s => new EmployeeSkill { EmployeeId = employee.Id, SkillId = s.Id }).ToList();
+                db.Employee_Skill.RemoveRange(employee.EmployeeSkills);
+                db.Employee_Skill.AddRange(employeeSkills);
                 db.SaveChanges();
             }
 

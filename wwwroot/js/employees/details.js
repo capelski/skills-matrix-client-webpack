@@ -2,7 +2,12 @@
     var htmlNodes = window.application.employee.htmlNodes;
     var values = window.application.employee.values;
     var viewUpdater = window.application.employee.viewUpdater;
+    var searchTimeout;
 
+    window.addSkill = addSkill;
+    window.removeSkill = removeSkill;
+
+    htmlNodes.skillKeywords.on('keyup', search);
     htmlNodes.deleteButton.on('click', removePopup);
     htmlNodes.saveButton.on('click', save);
     loadView();
@@ -15,6 +20,7 @@
                     url: '/api/employee/getById?id=' + values.elementId
                 })
                 .then(function(employee) {
+                    values.employee = employee;
                     viewUpdater(employee, values.readOnly);
                 })
                 .fail(function(response) {
@@ -67,7 +73,8 @@
             contentType: 'application/json',
             data: JSON.stringify({
                 Id: values.elementId,
-                Name: htmlNodes.elementName.val()
+                Name: htmlNodes.elementName.val(),
+                Skills: values.employee.Skills || []
             })
         };
 
@@ -83,5 +90,64 @@
         .fail(function(response) {
             toastr.error('An error ocurred', 'Oops!', {timeOut: 5000})
         });
-    };
+    }
+
+    function search(event) {
+        if (searchTimeout) {
+            clearTimeout(searchTimeout);
+        }
+        searchTimeout = setTimeout(function() {
+            var keywords = event.target.value;
+            if (keywords.length > 0) {
+                var promiseBuilder = function() {
+                    return $.ajax({
+                        type: 'GET',
+                        url: '/api/skill?keywords=' + keywords
+                    })
+                    .then(updateSkills)
+                    .fail(function(response) {
+                        toastr.error('An error ocurred', 'Oops!', {timeOut: 5000});
+                        updateSkills([]);
+                    });
+                }
+                window.application.utils.longOperation(promiseBuilder, htmlNodes.addSkillLoader);
+            }
+            else {
+                updateSkills([]);                
+            }
+            searchTimeout = null;
+        }, 300);
+    }
+
+    function updateSkills(skills) {
+        htmlNodes.addSkillList.empty();
+        values.skills = skills.filter(function(candidate) {
+            return values.employee.Skills.filter(function(skill) {
+                return candidate.Id === skill.Id;
+            }).length === 0;
+        });
+        values.skills.forEach(function(skill) {
+            var html = '<li class="list-group-item" onclick="addSkill(' + skill.Id + ')"><i class="fa fa-plus text-success"></i> ' + skill.Name + '</li>';
+            htmlNodes.addSkillList.append(html);
+        });
+    }
+
+    function addSkill(skillId) {
+        htmlNodes.addSkillList.empty();
+        var skill = values.skills.find(function(skill) {
+            return skill.Id === skillId;
+        });
+        if (skill) {
+            values.employee.Skills.push(skill);
+            viewUpdater(values.employee, values.readOnly);
+        }
+    }
+
+    function removeSkill(skillId) {
+        htmlNodes.addSkillList.empty();
+        values.employee.Skills = values.employee.Skills.filter(function(skill) {
+            return skill.Id !== skillId;
+        });
+        viewUpdater(values.employee, values.readOnly);
+    }
 })();

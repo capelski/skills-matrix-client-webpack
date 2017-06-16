@@ -1,9 +1,5 @@
-- Skills Edit on employee details view & Viceversa
-	+ Delete Icons
-	+ Add Icons
-	- Persist
-	- Duplicate for employee
 - Refactor common JS code
+- Adapt Create methods to persist Related entities
 - No results message
 - Lists Pagination
 - DynamicController

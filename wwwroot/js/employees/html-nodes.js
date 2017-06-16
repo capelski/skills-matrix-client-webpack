@@ -9,6 +9,9 @@
         pageTitle : $('#page-title'),
         elementName : $('#model-name'),
         skillsList : $('#skills-list'),
+        skillKeywords : $('#skill-keywords'),
+        addSkillLoader : $('#add-skill-loader'),
+        addSkillList : $('#add-skill-list'),
         editButton : $('#edit-button'),
         deleteButton : $('#delete-button'),
         saveButton : $('#save-button'),
@@ -42,8 +45,25 @@
             if (employee) {
                 for(var key in employee.Skills) {
                     var skill = employee.Skills[key];
-                    htmlNodes.skillsList.append('<li class="list-group-item"><a class="reset" href="/skills/details?id=' + skill.Id + '">' + skill.Name + '</a></li>');
+                    var html = '<li class="list-group-item"><a class="reset" href="/skills/details?id=' + skill.Id + '">' + skill.Name + '</a></li>';
+                    if (!readOnly) {
+                        html = '<li class="list-group-item" onclick="removeSkill(' + skill.Id + ')"><i class="fa fa-times text-danger"></i> ' + skill.Name + '</li>';
+                    }
+                    htmlNodes.skillsList.append(html);
                 }
+            }
+        },
+        skillKeywords: function(employee, readOnly) {
+            htmlNodes.skillKeywords.hide();
+            if (!readOnly) {
+                htmlNodes.skillKeywords.show();
+            }
+        },
+        addSkillList: function(skill, readOnly) {
+            htmlNodes.skillKeywords.hide();
+            htmlNodes.skillKeywords.empty();
+            if (!readOnly) {
+                htmlNodes.skillKeywords.show();
             }
         },
         editButton: function(employee, readOnly) {

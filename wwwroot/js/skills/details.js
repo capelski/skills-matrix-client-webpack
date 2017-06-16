@@ -90,7 +90,7 @@
         .fail(function(response) {
             toastr.error('An error ocurred', 'Oops!', {timeOut: 5000})
         });
-    };
+    }
 
     function search(event) {
         if (searchTimeout) {
