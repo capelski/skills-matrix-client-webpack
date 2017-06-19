@@ -9,7 +9,7 @@
         pageTitle : $('#page-title'),
         elementName : $('#model-name'),
         employeesList : $('#employees-list'),
-        employeeKeywords : $('#employee-keywords'),
+        addemployeeKeywords : $('#add-employee-keywords'),
         addEmployeeLoader : $('#add-employee-loader'),
         addEmployeeList : $('#add-employee-list'),
         editButton : $('#edit-button'),
@@ -53,17 +53,17 @@
                 }
             }
         },
-        employeeKeywords: function(skill, readOnly) {
-            htmlNodes.employeeKeywords.hide();
+        addemployeeKeywords: function(skill, readOnly) {
+            htmlNodes.addemployeeKeywords.hide();
             if (!readOnly) {
-                htmlNodes.employeeKeywords.show();
+                htmlNodes.addemployeeKeywords.show();
             }
         },
         addEmployeeList: function(skill, readOnly) {
-            htmlNodes.employeeKeywords.hide();
-            htmlNodes.employeeKeywords.empty();
+            htmlNodes.addEmployeeList.hide();
+            htmlNodes.addEmployeeList.empty();
             if (!readOnly) {
-                htmlNodes.employeeKeywords.show();
+                htmlNodes.addEmployeeList.show();
             }
         },
         editButton: function(skill, readOnly) {

@@ -1,6 +1,7 @@
 (function() {
+    var ajax = window.application.ajax;
     var values = {
-        keywords: "",
+        keywords: '',
         page: 0,
         pageSize: 10
     };
@@ -9,35 +10,15 @@
         employeesList: $('#employees-list'),
         keywords: $('#keywords')
     };
-    var searchTimeout;
 
-    htmlNodes.keywords.on('keyup', search);
-    loadView();
+    window.application.Searcher(htmlNodes.keywords, loadView);
+    loadView(values.keywords);
 
-    function loadView() {
-        var promiseBuilder = function() {
-            return $.ajax({
-                type: 'GET',
-                url: '/api/employee?keywords=' + values.keywords + '&page=' + values.page + '&pageSize=' + values.pageSize
-            })
-            .then(viewUpdater)
-            .fail(function(response) {
-                toastr.error('An error ocurred', 'Oops!', {timeOut: 5000});
-                viewUpdater([]);
-            });
-        }
+    function loadView(keywords) {
+        values.keywords = keywords;
+        var promiseBuilder = ajax.get(
+            '/api/employee?keywords=' + values.keywords + '&page=' + values.page + '&pageSize=' + values.pageSize, viewUpdater, []);
         window.application.utils.longOperation(promiseBuilder, htmlNodes.loader);        
-    }
-
-    function search(event) {
-        if (searchTimeout) {
-            clearTimeout(searchTimeout);
-        }
-        searchTimeout = setTimeout(function() {
-            values.keywords = event.target.value;
-            loadView();
-            searchTimeout = null;
-        }, 300);
     }
 
     function viewUpdater(employees) {

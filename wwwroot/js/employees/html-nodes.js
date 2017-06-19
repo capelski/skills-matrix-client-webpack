@@ -9,7 +9,7 @@
         pageTitle : $('#page-title'),
         elementName : $('#model-name'),
         skillsList : $('#skills-list'),
-        skillKeywords : $('#skill-keywords'),
+        addSkillKeywords : $('#add-skill-keywords'),
         addSkillLoader : $('#add-skill-loader'),
         addSkillList : $('#add-skill-list'),
         editButton : $('#edit-button'),
@@ -53,17 +53,17 @@
                 }
             }
         },
-        skillKeywords: function(employee, readOnly) {
-            htmlNodes.skillKeywords.hide();
+        addSkillKeywords: function(employee, readOnly) {
+            htmlNodes.addSkillKeywords.hide();
             if (!readOnly) {
-                htmlNodes.skillKeywords.show();
+                htmlNodes.addSkillKeywords.show();
             }
         },
         addSkillList: function(skill, readOnly) {
-            htmlNodes.skillKeywords.hide();
-            htmlNodes.skillKeywords.empty();
+            htmlNodes.addSkillList.hide();
+            htmlNodes.addSkillList.empty();
             if (!readOnly) {
-                htmlNodes.skillKeywords.show();
+                htmlNodes.addSkillList.show();
             }
         },
         editButton: function(employee, readOnly) {

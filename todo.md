@@ -1,11 +1,13 @@
 - Refactor common JS code
+	- Extend AJAX Helper
+- Error: PUT employee with a repeated skill
 - Adapt Create methods to persist Related entities
 - No results message
 - Lists Pagination
 - DynamicController
 - Generate entity URLs in server side?
 - Design a Home page
-	- Include an ORderBy clause in GetAll method
+	- Queries Service
 	- Most skilled employees
 	- Rarest skills
 - Fade In/Out when loading/leaving

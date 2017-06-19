@@ -2,12 +2,11 @@
     var htmlNodes = window.application.employee.htmlNodes;
     var values = window.application.employee.values;
     var viewUpdater = window.application.employee.viewUpdater;
-    var searchTimeout;
 
     window.addSkill = addSkill;
     window.removeSkill = removeSkill;
+    window.application.Searcher(htmlNodes.addSkillKeywords, addSkillSearcher);
 
-    htmlNodes.skillKeywords.on('keyup', search);
     htmlNodes.deleteButton.on('click', removePopup);
     htmlNodes.saveButton.on('click', save);
     loadView();
@@ -92,31 +91,24 @@
         });
     }
 
-    function search(event) {
-        if (searchTimeout) {
-            clearTimeout(searchTimeout);
+    function addSkillSearcher(keywords) {
+        if (keywords.length > 0) {
+            var promiseBuilder = function() {
+                return $.ajax({
+                    type: 'GET',
+                    url: '/api/skill?keywords=' + keywords
+                })
+                .then(updateSkills)
+                .fail(function(response) {
+                    toastr.error('An error ocurred', 'Oops!', {timeOut: 5000});
+                    updateSkills([]);
+                });
+            }
+            window.application.utils.longOperation(promiseBuilder, htmlNodes.addSkillLoader);
         }
-        searchTimeout = setTimeout(function() {
-            var keywords = event.target.value;
-            if (keywords.length > 0) {
-                var promiseBuilder = function() {
-                    return $.ajax({
-                        type: 'GET',
-                        url: '/api/skill?keywords=' + keywords
-                    })
-                    .then(updateSkills)
-                    .fail(function(response) {
-                        toastr.error('An error ocurred', 'Oops!', {timeOut: 5000});
-                        updateSkills([]);
-                    });
-                }
-                window.application.utils.longOperation(promiseBuilder, htmlNodes.addSkillLoader);
-            }
-            else {
-                updateSkills([]);                
-            }
-            searchTimeout = null;
-        }, 300);
+        else {
+            updateSkills([]);                
+        }
     }
 
     function updateSkills(skills) {

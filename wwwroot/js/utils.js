@@ -1,7 +1,4 @@
 (function() {
-    var isLoaderVisible = false;
-    var lastLoaderPromise = Promise.resolve();
-    
     window.application = window.application || {};
     window.application.utils = {
         longOperation: function (promiseBuilder, loader) {
@@ -16,6 +13,21 @@
                     return loader.delay(400).fadeOut().promise();
                 });
             });
+        }
+    };
+    window.application.ajax = {
+        get: function(url, handler, defaultValue) {
+            return function() {
+                return $.ajax({
+                    type: 'GET',
+                    url: url
+                })
+                .then(handler)
+                .fail(function(response) {
+                    toastr.error('An error ocurred', 'Oops!', {timeOut: 5000});
+                    handler(defaultValue);
+                });
+            }
         }
     };
 })();

@@ -2,12 +2,11 @@
     var htmlNodes = window.application.skill.htmlNodes;
     var values = window.application.skill.values;
     var viewUpdater = window.application.skill.viewUpdater;
-    var searchTimeout;
 
     window.addEmployee = addEmployee;
     window.removeEmployee = removeEmployee;
+    window.application.Searcher(htmlNodes.addemployeeKeywords, addEmployeeSearcher);
 
-    htmlNodes.employeeKeywords.on('keyup', search);
     htmlNodes.deleteButton.on('click', removePopup);
     htmlNodes.saveButton.on('click', save);
     loadView();
@@ -92,31 +91,24 @@
         });
     }
 
-    function search(event) {
-        if (searchTimeout) {
-            clearTimeout(searchTimeout);
+    function addEmployeeSearcher(keywords) {
+        if (keywords.length > 0) {
+            var promiseBuilder = function() {
+                return $.ajax({
+                    type: 'GET',
+                    url: '/api/employee?keywords=' + keywords
+                })
+                .then(updateEmployees)
+                .fail(function(response) {
+                    toastr.error('An error ocurred', 'Oops!', {timeOut: 5000});
+                    updateEmployees([]);
+                });
+            }
+            window.application.utils.longOperation(promiseBuilder, htmlNodes.addEmployeeLoader);
         }
-        searchTimeout = setTimeout(function() {
-            var keywords = event.target.value;
-            if (keywords.length > 0) {
-                var promiseBuilder = function() {
-                    return $.ajax({
-                        type: 'GET',
-                        url: '/api/employee?keywords=' + keywords
-                    })
-                    .then(updateEmployees)
-                    .fail(function(response) {
-                        toastr.error('An error ocurred', 'Oops!', {timeOut: 5000});
-                        updateEmployees([]);
-                    });
-                }
-                window.application.utils.longOperation(promiseBuilder, htmlNodes.addEmployeeLoader);
-            }
-            else {
-                updateEmployees([]);                
-            }
-            searchTimeout = null;
-        }, 300);
+        else {
+            updateEmployees([]);                
+        }
     }
 
     function updateEmployees(employees) {
