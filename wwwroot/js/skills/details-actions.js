@@ -8,6 +8,7 @@
         addEmployee: function (state, event) {
             var employeeId = getEmployeeId(event);
             htmlNodes.addEmployeeList.empty();
+            htmlNodes.addEmployeeKeywords.val('');
             var employee = state.employees.find(function(employee) {
                 return employee.Id === employeeId;
             });

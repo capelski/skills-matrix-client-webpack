@@ -63,8 +63,8 @@
         if (keywords.length > 0) {
             listPromise = ajax.get('/api/employee?keywords=' + keywords, [])
             .then(function(employees) {
-                state.employees = employees;
-                return employees;
+                state.employees = utils.arrayDifference(employees, state.skill.Employees, 'Id');
+                return state.employees;
             });
         }
         return listPromise;

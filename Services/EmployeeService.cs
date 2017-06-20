@@ -67,8 +67,7 @@ namespace SkillsMatrix.Services
             {
                 employee.Name = entity.Name;
                 List<EmployeeSkill> employeeSkills = entity.Skills.Select(s => new EmployeeSkill { EmployeeId = employee.Id, SkillId = s.Id }).ToList();
-                db.Employee_Skill.RemoveRange(employee.EmployeeSkills);
-                db.Employee_Skill.AddRange(employeeSkills);
+                Utils.UpdateDbSet(db.Employee_Skill, employeeSkills, employee.EmployeeSkills, (a, b) => a.EmployeeId == b.EmployeeId && a.SkillId == b.SkillId);
                 db.SaveChanges();
             }
 

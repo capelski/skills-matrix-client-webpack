@@ -8,6 +8,7 @@
         addSkill: function (state, event) {
             var skillId = getSkillId(event);
             htmlNodes.addSkillList.empty();
+            htmlNodes.addSkillKeywords.val('');
             var skill = state.skills.find(function(skill) {
                 return skill.Id === skillId;
             });
