@@ -17,6 +17,8 @@ namespace SkillsMatrix.Services
         public Skill Create(Skill entity)
         {
             db.Skills.Add(entity);
+            List<EmployeeSkill> skillEmployees = entity.Employees.Select(e => new EmployeeSkill { SkillId = entity.Id, EmployeeId = e.Id }).ToList();
+            db.Employee_Skill.AddRange(skillEmployees);
             db.SaveChanges();
             return entity;
         }
