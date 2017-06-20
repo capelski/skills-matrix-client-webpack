@@ -1,30 +1,30 @@
 (function() {
     var ajax = window.application.ajax;
-    var values = {
+    var state = {
         keywords: '',
         page: 0,
-        pageSize: 10
+        pageSize: 10,
+        skills: []
     };
     var htmlNodes = {
         loader : $('#loader'),
         skillsList: $('#skills-list'),
         keywords: $('#keywords')
     };
+    var searcher = window.application.Searcher(htmlNodes.keywords, htmlNodes.skillsList, htmlNodes.loader, skillsPromise, skillsDrawer);
 
-    window.application.Searcher(htmlNodes.keywords, loadView);
-    loadView(values.keywords);
+    searcher.reload();
 
-    function loadView(keywords) {
-        values.keywords = keywords;
-        var promiseBuilder = ajax.get(
-            '/api/skill?keywords=' + values.keywords + '&page=' + values.page + '&pageSize=' + values.pageSize, viewUpdater, []);
-        window.application.utils.longOperation(promiseBuilder, htmlNodes.loader); 
+    function skillsDrawer(skill) {
+        return '<li class="list-group-item"><a class="reset" href="/skills/details?id=' + skill.Id + '">' + skill.Name + '</a></li>';
     }
 
-    function viewUpdater(skills) {
-        htmlNodes.skillsList.empty();
-        skills.forEach(function(skill) {
-            htmlNodes.skillsList.append('<li class="list-group-item"><a class="reset" href="/skills/details?id=' + skill.Id + '">' + skill.Name + '</a></li>');
+    function skillsPromise(keywords) {
+        state.keywords = keywords;
+        return ajax.get('/api/skill?keywords=' + state.keywords + '&page=' + state.page + '&pageSize=' + state.pageSize, [])
+        .then(function(skills) {
+            state.skills = skills;
+            return skills;
         });
     }
 })();

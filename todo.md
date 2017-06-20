@@ -1,8 +1,5 @@
-- Refactor common JS code
-	- Extend AJAX Helper
-- Error: PUT employee with a repeated skill
 - Adapt Create methods to persist Related entities
-- No results message
+- Error: PUT employee with a repeated skill
 - Lists Pagination
 - DynamicController
 - Generate entity URLs in server side?
@@ -15,8 +12,7 @@
 - Hide connection strings from Source Control
 	https://www.hanselman.com/blog/BestPracticesForPrivateConfigDataAndConnectionStringsInConfigurationInASPNETAndAzure.aspx
 - Migrate DB to Azure
-- Include Identity
-- Permissons
+- Include Identity & Permissons
 
 LINKS
 

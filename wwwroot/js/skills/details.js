@@ -1,145 +1,72 @@
 (function() {
+    var ajax = window.application.ajax;
+    var utils = window.application.utils;
     var htmlNodes = window.application.skill.htmlNodes;
-    var values = window.application.skill.values;
-    var viewUpdater = window.application.skill.viewUpdater;
-
-    window.addEmployee = addEmployee;
-    window.removeEmployee = removeEmployee;
-    window.application.Searcher(htmlNodes.addemployeeKeywords, addEmployeeSearcher);
-
-    htmlNodes.deleteButton.on('click', removePopup);
-    htmlNodes.saveButton.on('click', save);
-    loadView();
-
-    function loadView() {
-        if (values.elementId != 0) {
-            var promiseBuilder = function() {
-                return $.ajax({
-                    type: 'GET',
-                    url: '/api/skill/getById?id=' + values.elementId
-                })
-                .then(function(skill) {
-                    values.skill = skill;
-                    viewUpdater(skill, values.readOnly);
-                })
-                .fail(function(response) {
-                    toastr.error('An error ocurred', 'Oops!', {timeOut: 5000});
-                    viewUpdater(null, true);
-                });
-            }
-            window.application.utils.longOperation(promiseBuilder, htmlNodes.loader);
-        }
-        else {
-            viewUpdater(null, values.readOnly);
-        }
-    }
-
-    function remove() {
-        $.ajax({
-            type: 'DELETE',
-            url: '/api/skill?id=' + values.elementId
-        })
-        .then(function(skill) {
-            document.location.href = '/skills/';
-        })
-        .fail(function(response) {
-            toastr.error('An error ocurred', 'Oops!', {timeOut: 5000})
-        });
+    var updateAll = window.application.skill.updateAll;
+    var actions = window.application.skill.actions;
+    var state = {
+        skill: {
+            Id: parseInt(htmlNodes.elementId.val()),
+            Name: '',
+            Employees: []
+        },
+        readOnly: htmlNodes.readOnly.val() == 'true',
+        employees: []
     };
 
-    function removePopup() {
-        basicModal.show({
-            body: '<div>Are you sure you want to delete ' + htmlNodes.elementName.val() + '?</div>',
-            buttons: {
-                cancel: {
-                    title: 'Cancel',
-                    fn: function() {
-                        basicModal.close();
-                    }
-                },
-                action: {
-                    title: 'Delete',
-                    fn: remove
-                }
-            }
-        });
-    }
+    htmlNodes.elementName.on('blur', utils.eventLinker(actions.skillName, state));
+    htmlNodes.deleteButton.on('click', utils.eventLinker(actions.removeSkill, state));
+    htmlNodes.saveButton.on('click', utils.eventLinker(actions.save, state));
+    htmlNodes.addEmployeeList.on('click', 'li.add-employee', utils.eventLinker(actions.addEmployee, state));
+    htmlNodes.employeesList.on('click', 'li.remove-employee', utils.eventLinker(actions.removeEmployee, state));
+    window.application.Searcher(htmlNodes.addEmployeeKeywords, htmlNodes.addEmployeeList, htmlNodes.addEmployeeLoader, employeesListPromise, employeesListDrawer);
 
-    function save() {
-        var request = {
-            type: 'POST',
-            url: '/api/skill',
-            contentType: 'application/json',
-            data: JSON.stringify({
-                Id: values.elementId,
-                Name: htmlNodes.elementName.val(),
-                Employees: values.skill.Employees || []
-            })
-        };
+    initialize();
 
-        if (values.elementId !== 0) {
-            request.type = 'PUT';
-            request.url = '/api/skill/';
+    window.application.skill.state = state;
+
+    function initialize() {
+        var skillPromise = createPromise;
+        if (state.skill.Id != 0) {
+            skillPromise = getPromise;
+        }
+        utils.longOperation(skillPromise, htmlNodes.loader);
+
+        function createPromise() {
+            return Promise.resolve(state.skill)
+            .then(loadHandler);
         }
 
-        $.ajax(request)
-        .then(function(skill) {
-            document.location.href = '/skills/details/' + skill.Id;
-        })
-        .fail(function(response) {
-            toastr.error('An error ocurred', 'Oops!', {timeOut: 5000})
-        });
+        function getPromise() {
+            return ajax.get('/api/skill/getById?id=' + state.skill.Id)
+            .then(loadHandler);
+        }
+
+        function loadHandler(skill) {
+            if (skill) {
+                state.skill = skill;
+            }
+            else {
+                state.skill.Id = -1;
+                state.readOnly = true;
+            }
+            updateAll(state);
+        }
     }
 
-    function addEmployeeSearcher(keywords) {
+    function employeesListDrawer(employee) {
+        return '<li class="list-group-item add-employee" data-employee-id="' + employee.Id + '"><i class="fa fa-plus text-success"></i> ' + employee.Name + '</li>';
+    }
+
+    function employeesListPromise(keywords) {
+        var listPromise = Promise.resolve([]);
         if (keywords.length > 0) {
-            var promiseBuilder = function() {
-                return $.ajax({
-                    type: 'GET',
-                    url: '/api/employee?keywords=' + keywords
-                })
-                .then(updateEmployees)
-                .fail(function(response) {
-                    toastr.error('An error ocurred', 'Oops!', {timeOut: 5000});
-                    updateEmployees([]);
-                });
-            }
-            window.application.utils.longOperation(promiseBuilder, htmlNodes.addEmployeeLoader);
+            listPromise = ajax.get('/api/employee?keywords=' + keywords, [])
+            .then(function(employees) {
+                state.employees = employees;
+                return employees;
+            });
         }
-        else {
-            updateEmployees([]);                
-        }
-    }
-
-    function updateEmployees(employees) {
-        htmlNodes.addEmployeeList.empty();
-        values.employees = employees.filter(function(candidate) {
-            return values.skill.Employees.filter(function(employee) {
-                return candidate.Id === employee.Id;
-            }).length === 0;
-        });
-        values.employees.forEach(function(employee) {
-            var html = '<li class="list-group-item" onclick="addEmployee(' + employee.Id + ')"><i class="fa fa-plus text-success"></i> ' + employee.Name + '</li>';
-            htmlNodes.addEmployeeList.append(html);
-        });
-    }
-
-    function addEmployee(employeeId) {
-        htmlNodes.addEmployeeList.empty();
-        var employee = values.employees.find(function(employee) {
-            return employee.Id === employeeId;
-        });
-        if (employee) {
-            values.skill.Employees.push(employee);
-            viewUpdater(values.skill, values.readOnly);
-        }
-    }
-
-    function removeEmployee(employeeId) {
-        htmlNodes.addEmployeeList.empty();
-        values.skill.Employees = values.skill.Employees.filter(function(employee) {
-            return employee.Id !== employeeId;
-        });
-        viewUpdater(values.skill, values.readOnly);
+        return listPromise;
     }
 })();

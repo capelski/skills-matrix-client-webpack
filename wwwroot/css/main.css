@@ -28,8 +28,13 @@ a.reset:hover {
 
 .dynamic-content {
     position: relative;
-    -webkit-transition: height 0.3s;
-    transition: height 0.3s;
+    min-height: 0;
+}
+
+.dynamic-content.loading {
+    min-height: 200px;
+    -webkit-transition: min-height 0.4s;
+    transition: min-height 0.4s;
 }
 
 .loader {
@@ -41,7 +46,6 @@ a.reset:hover {
     right: 0;
     background-color: white;
     z-index: 10;
-    min-height: 200px;
 }
 
 ul.clickable > li {

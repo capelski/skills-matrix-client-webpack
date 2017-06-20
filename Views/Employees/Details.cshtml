@@ -7,11 +7,12 @@
 <div class="dynamic-content">
 
     @Html.Partial("_Loader", new ViewDataDictionary(ViewData) {
-        {"loaderId", "loader"}
+        {"loaderId", "loader"},
+        {"show", true}
     })
 
     <div class="page-header">
-        <h2 id="page-title">Employee not found</h2>
+        <h2 id="page-title"></h2>
     </div>
 
     <form class="form-horizontal">
@@ -24,10 +25,10 @@
         </div>
 
         <h3>Skills</h3>
-        <ul id="skills-list" class="list-group"></ul>
+        <ul id="skills-list" class="list-group clickable"></ul>
 
         <div class="form-group no-margin">
-            <input id="add-skill-keywords" class="form-control" placeholder="Add employee..." />
+            <input id="add-skill-keywords" class="form-control" placeholder="Add skill..." />
         </div>
         <div class="dynamic-content">
             <ul id="add-skill-list" class="list-group clickable"></ul>
@@ -51,6 +52,7 @@
 </div>
 
 @section scripts {
-    <script src="~/js/employees/html-nodes.js"></script>
+    <script src="~/js/employees/details-html.js"></script>
+    <script src="~/js/employees/details-actions.js"></script>
     <script src="~/js/employees/details.js"></script>
 }
