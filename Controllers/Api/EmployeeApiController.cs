@@ -14,9 +14,12 @@ namespace SkillsMatrix.Controllers.Api
     {
         private IEntityService<Employee, int> _employeeService {get; set;}
 
-        public EmployeeApiController(IEntityService<Employee, int> employeeService)
+        private QueryService _queryService {get; set;}
+
+        public EmployeeApiController(IEntityService<Employee, int> employeeService, QueryService queryService)
         {
             _employeeService = employeeService;
+            _queryService = queryService;
         }
                 
         [HttpGet]
@@ -36,6 +39,13 @@ namespace SkillsMatrix.Controllers.Api
             }
             
             return Ok(employee);
+        }
+                
+        [HttpGet("getMostSkilled")]
+        public IActionResult GetMostSkilled()
+        {
+            var employees = _queryService.MostSkilledEmployees();
+            return Ok(employees);
         }
 
         [HttpPost]

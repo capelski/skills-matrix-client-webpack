@@ -1,14 +1,9 @@
-- Que es pugui clicar les creus a Edit
-
 - Design a Home page
-	- Queries Service
-	- Most skilled employees
-	- Rarest skills
-
 - Hide connection strings from Source Control
 	https://www.hanselman.com/blog/BestPracticesForPrivateConfigDataAndConnectionStringsInConfigurationInASPNETAndAzure.aspx
 - Migrate DB to Azure
 
+- Que es pugui clicar les creus a Edit
 - Searcher partial
 - Lists Pagination
 - DynamicController

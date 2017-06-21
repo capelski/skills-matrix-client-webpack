@@ -7,7 +7,7 @@ using SkillsMatrix.Services.Interfaces;
 
 namespace SkillsMatrix.Services
 {
-    public partial class EmployeeService: BaseService, IEntityService<Employee, int>
+    public class EmployeeService: BaseService, IEntityService<Employee, int>
     {
         public EmployeeService(SkillsMatrixContext context)
             :base(context)

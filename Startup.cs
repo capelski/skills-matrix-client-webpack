@@ -40,6 +40,7 @@ namespace SkillsMatrix
 
             services.AddTransient<IEntityService<Employee, int>, EmployeeService>();
             services.AddTransient<IEntityService<Skill, int>, SkillService>();
+            services.AddTransient<QueryService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

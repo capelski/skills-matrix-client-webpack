@@ -14,9 +14,12 @@ namespace SkillsMatrix.Controllers.Api
     {
         private IEntityService<Skill, int> _skillService {get; set;}
 
-        public SkillApiController(IEntityService<Skill, int> skillService)
+        private QueryService _queryService {get; set;}
+
+        public SkillApiController(IEntityService<Skill, int> skillService, QueryService queryService)
         {
             _skillService = skillService;
+            _queryService = queryService;
         }
                 
         [HttpGet]
@@ -36,6 +39,13 @@ namespace SkillsMatrix.Controllers.Api
             }
             
             return Ok(skill);
+        }
+                
+        [HttpGet("getRearest")]
+        public IActionResult GetRearest()
+        {
+            var skills = _queryService.RearestSkills();
+            return Ok(skills);
         }
 
         [HttpPost]
