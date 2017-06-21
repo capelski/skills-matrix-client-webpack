@@ -1,4 +1,3 @@
-- Design a Home page
 - Hide connection strings from Source Control
 	https://www.hanselman.com/blog/BestPracticesForPrivateConfigDataAndConnectionStringsInConfigurationInASPNETAndAzure.aspx
 - Migrate DB to Azure

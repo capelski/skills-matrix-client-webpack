@@ -19,7 +19,7 @@ namespace SkillsMatrix.Services
             .ThenInclude(es => es.Skill)
             .OrderByDescending(e => e.EmployeeSkills.Count)
             .ThenBy(e => e.Name)
-            .Take(10)
+            .Take(5)
             .ToList();
 
             employees.ForEach(employee => {
@@ -35,7 +35,7 @@ namespace SkillsMatrix.Services
             .ThenInclude(se => se.Employee)
             .OrderBy(s => s.SkillEmployees.Count)
             .ThenBy(s => s.Name)
-            .Take(10)
+            .Take(5)
             .ToList();
 
             skills.ForEach(skill => {

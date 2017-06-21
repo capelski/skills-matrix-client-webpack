@@ -8,7 +8,7 @@
     align-items: flex-end;
 }
 
-.m-top-10 {
+.m-bottom-10 {
     margin-bottom: 10px;
 }
 
@@ -50,4 +50,10 @@ a.reset:hover {
 
 ul.clickable > li {
     cursor: pointer;
+}
+
+.responsive-img {
+    max-width: 100%;
+    margin: auto;
+    display: block;
 }
