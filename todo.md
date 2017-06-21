@@ -14,8 +14,3 @@ LINKS
 
 Migrations > https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/migrations
 Dependency Injection > https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection
-
-
-52.166.12.205,1433
-sqlNunaDmin
-s6!Y2qv3tlkp
