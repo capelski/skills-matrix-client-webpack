@@ -1,6 +1,5 @@
-- Hide connection strings from Source Control
-	https://www.hanselman.com/blog/BestPracticesForPrivateConfigDataAndConnectionStringsInConfigurationInASPNETAndAzure.aspx
-- Migrate DB to Azure
+- Deploy project into azure
+- license.md / readme.md
 
 - Que es pugui clicar les creus a Edit
 - Searcher partial
@@ -15,3 +14,8 @@ LINKS
 
 Migrations > https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/migrations
 Dependency Injection > https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection
+
+
+52.166.12.205,1433
+sqlNunaDmin
+s6!Y2qv3tlkp
