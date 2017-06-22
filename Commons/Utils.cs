@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 
-namespace SkillsMatrix
+namespace SkillsMatrix.Commons
 {
     public static class Utils
     {
