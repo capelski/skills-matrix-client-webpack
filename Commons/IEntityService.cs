@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using SkillsMatrix.Models;
 
-namespace SkillsMatrix.Services.Interfaces
+namespace SkillsMatrix.Commons
 {
     public interface IEntityService<T, TKey>
     {

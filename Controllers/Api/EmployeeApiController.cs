@@ -5,40 +5,24 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SkillsMatrix.Models;
 using SkillsMatrix.Services;
-using SkillsMatrix.Services.Interfaces;
+using SkillsMatrix.Commons;
 
 namespace SkillsMatrix.Controllers.Api
 {
     [Route("api/employee")]
-    public class EmployeeApiController : Controller
+    public class EmployeeApiController : GenericApiController<Employee, int, IEntityService<Employee, int>>
     {
-        private IEntityService<Employee, int> _employeeService {get; set;}
-
         private QueryService _queryService {get; set;}
 
         public EmployeeApiController(IEntityService<Employee, int> employeeService, QueryService queryService)
+            :base(employeeService)
         {
-            _employeeService = employeeService;
             _queryService = queryService;
         }
-                
-        [HttpGet]
-        public IActionResult Get(string keywords = "", int page = 0, int pageSize = 10)
+
+        protected override bool CreateConditions(Employee entity)
         {
-            var employees = _employeeService.GetAll(keywords, page, pageSize);
-            return Ok(employees);
-        }
-                
-        [HttpGet("getById")]
-        public IActionResult GetById(int id)
-        {
-            var employee = _employeeService.GetById(id);            
-            if (employee == null)
-            {
-                return NotFound();
-            }
-            
-            return Ok(employee);
+            return entity != null && !String.IsNullOrEmpty(entity.Name);
         }
                 
         [HttpGet("getMostSkilled")]
@@ -46,48 +30,6 @@ namespace SkillsMatrix.Controllers.Api
         {
             var employees = _queryService.MostSkilledEmployees();
             return Ok(employees);
-        }
-
-        [HttpPost]
-        public IActionResult Create([FromBody] Employee employee)
-        {
-            if (employee == null || String.IsNullOrEmpty(employee.Name))
-            {
-                return BadRequest();
-            }
-
-            employee = _employeeService.Create(employee);
-            
-            return Ok(employee);
-        }
-
-        [HttpPut]
-        public IActionResult Update([FromBody] Employee employee)
-        {
-            if (employee == null)
-            {
-                return BadRequest();
-            }
-
-            var result = _employeeService.Update(employee);
-            if (result == null)
-            {
-                return NotFound();
-            }
-            
-            return Ok(result);
-        }
-                
-        [HttpDelete]
-        public IActionResult Delete(int id)
-        {
-            var employee = _employeeService.Delete(id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
-            
-            return Ok(employee);
         }
     }
 }

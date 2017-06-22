@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SkillsMatrix.Models;
 using Microsoft.EntityFrameworkCore;
-using SkillsMatrix.Services.Interfaces;
+using SkillsMatrix.Commons;
 using SkillsMatrix.Services;
 
 namespace SkillsMatrix

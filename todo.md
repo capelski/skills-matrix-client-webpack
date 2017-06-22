@@ -2,7 +2,6 @@
 - Que es pugui clicar les creus a Edit
 - Searcher partial
 - Lists Pagination
-- DynamicController
 - Generate entity URLs in server side?
 - Fade In/Out when loading/leaving
 - Include zoom icon in searcher and cross to delete the text
