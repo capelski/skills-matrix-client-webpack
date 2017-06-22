@@ -1,6 +1,6 @@
-- Deploy project into azure
+- Azure -> Bower plugins problems..
+	- Include plugins
 - license.md / readme.md
-
 - Que es pugui clicar les creus a Edit
 - Searcher partial
 - Lists Pagination

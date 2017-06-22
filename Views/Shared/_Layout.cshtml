@@ -5,20 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Skills Matrix</title>
 
-    <environment names="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="~/css/main.css" />
-    </environment>
-    <environment names="Staging,Production">
-        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
-              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
-              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
-        <link rel="stylesheet" href="~/css/main.css" asp-append-version="true" />
-    </environment>
-    <link rel="stylesheet" href="~/lib/basicModal/dist/basicModal.min.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/lib/toastr/toastr.min.css"  asp-append-version="true"/>
-    <link rel="stylesheet" href="~/lib/SpinKit/css/spinkit.css"  asp-append-version="true"/>
-    <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.min.css"  asp-append-version="true"/>
+    <link rel="stylesheet" href="~/plugins/basic-modal-3.3.8/basicModal.min.css" />
+    <link rel="stylesheet" href="~/plugins/bootstrap-3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/plugins/font-awesome-4.7.0/font-awesome.min.css" />
+    <link rel="stylesheet" href="~/plugins/spin-kit-1.2.5/spinkit.css" />
+    <link rel="stylesheet" href="~/plugins/toastr-2.1.3/toastr.min.css" />
+    <link rel="stylesheet" href="~/css/main.css" />
+
 </head>
 <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -48,29 +41,12 @@
         </footer>
     </div>
 
-    <environment names="Development">
-        <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-    </environment>
-    <environment names="Staging,Production">
-        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
-                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
-                asp-fallback-test="window.jQuery"
-                crossorigin="anonymous"
-                integrity="sha384-K+ctZQ+LL8q6tP7I94W+qzQsfRV2a+AfHIi9k8z8l9ggpc8X+Ytst4yBo/hH+8Fk">
-        </script>
-        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
-                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
-                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
-                crossorigin="anonymous"
-                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
-        </script>
-    </environment>
-
-    <script src="~/lib/basicModal/dist/basicModal.min.js" asp-append-version="true"></script>
-    <script src="~/lib/toastr/toastr.min.js" asp-append-version="true"></script>
-    <script src="~/js/utils.js" asp-append-version="true"></script>
-    <script src="~/js/searcher.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/plugins/jquery-2.2.0/jquery.min.js"></script>
+    <script type="text/javascript" src="~/plugins/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/plugins/basic-modal-3.3.8/dist/basic-modal.min.js"></script>
+    <script type="text/javascript" src="~/plugins/toastr-2.1.3/toastr.min.js"></script>
+    <script type="text/javascript" src="~/js/utils.js"></script>
+    <script type="text/javascript" src="~/js/searcher.js"></script>
 
     @RenderSection("Scripts", required: false)
 </body>
