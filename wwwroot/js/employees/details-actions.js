@@ -7,8 +7,8 @@
     window.application.employee.actions = {
         addSkill: function (state, event) {
             var skillId = getSkillId(event);
-            htmlNodes.addSkillList.empty();
-            htmlNodes.addSkillKeywords.val('');
+            htmlNodes.addSkillsList.empty();
+            htmlNodes.addSkillsKeywords.val('');
             var skill = state.skills.find(function(skill) {
                 return skill.Id === skillId;
             });
@@ -38,7 +38,7 @@
         },
         removeSkill: function (state, event) {
             var skillId = getSkillId(event);
-            htmlNodes.addSkillList.empty();
+            htmlNodes.addSkillsList.empty();
             state.employee.Skills = state.employee.Skills.filter(function(skill) {
                 return skill.Id !== skillId;
             });

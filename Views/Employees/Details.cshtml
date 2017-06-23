@@ -27,15 +27,10 @@
         <h3>Skills</h3>
         <ul id="skills-list" class="list-group clickable"></ul>
 
-        <div class="form-group no-margin">
-            <input id="add-skill-keywords" class="form-control" placeholder="Add skill..." />
-        </div>
-        <div class="dynamic-content">
-            <ul id="add-skill-list" class="list-group clickable"></ul>
-            @Html.Partial("_Loader", new ViewDataDictionary(ViewData) {
-                {"loaderId", "add-skill-loader"}
-            })
-        </div>
+        @Html.Partial("_SearchList", new ViewDataDictionary(ViewData) {
+            {"searchListId", "add-skills"},
+            {"placeholder", "Add skills..."}
+        })
 
         <!-- Read actions -->
         <a id="edit-button" class="btn btn-primary" href="#">Edit</a>

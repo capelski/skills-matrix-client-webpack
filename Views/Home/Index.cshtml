@@ -29,16 +29,10 @@
                 <a href="/employees">View all</a>  
             </div>
         </div>
-        <div class="form-group no-margin" style="display: none;">
-            <input id="employees-keywords" class="form-control" />
-        </div>
-        <div class="dynamic-content loading">
-            <ul id="employees-list" class="list-group clickable"></ul>
-            @Html.Partial("_Loader", new ViewDataDictionary(ViewData) {
-                {"loaderId", "employees-loader"},
-                {"show", true}
-            })
-        </div>
+        @Html.Partial("_SearchList", new ViewDataDictionary(ViewData) {
+            {"searchListId", "employees"},
+            {"searcher", false}
+        })
     </div>
     <div class="col-sm-6">
         <div class="row align-bottom">
@@ -49,16 +43,10 @@
                 <a href="/skills">View all</a>  
             </div>
         </div>
-        <div class="form-group no-margin" style="display: none;">
-            <input id="skills-keywords" class="form-control" />
-        </div>
-        <div class="dynamic-content loading">
-            <ul id="skills-list" class="list-group clickable"></ul>
-            @Html.Partial("_Loader", new ViewDataDictionary(ViewData) {
-                {"loaderId", "skills-loader"},
-                {"show", true}
-            })
-        </div>
+        @Html.Partial("_SearchList", new ViewDataDictionary(ViewData) {
+            {"searchListId", "skills"},
+            {"searcher", false}
+        })
     </div>
 </div>
 

@@ -63,3 +63,7 @@ ul.clickable > li {
     margin: auto;
     display: block;
 }
+
+.search-list .form-group {
+    margin-bottom: 5px;
+}

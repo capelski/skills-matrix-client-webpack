@@ -17,9 +17,13 @@
     htmlNodes.elementName.on('blur', utils.eventLinker(actions.skillName, state));
     htmlNodes.deleteButton.on('click', utils.eventLinker(actions.removeSkill, state));
     htmlNodes.saveButton.on('click', utils.eventLinker(actions.save, state));
-    htmlNodes.addEmployeeList.on('click', 'li.add-employee', utils.eventLinker(actions.addEmployee, state));
+    htmlNodes.addEmployeesList.on('click', 'li.add-employee', utils.eventLinker(actions.addEmployee, state));
     htmlNodes.employeesList.on('click', 'li.remove-employee', utils.eventLinker(actions.removeEmployee, state));
-    window.application.Searcher(htmlNodes.addEmployeeKeywords, htmlNodes.addEmployeeList, htmlNodes.addEmployeeLoader, employeesListPromise, employeesListDrawer);
+
+    var searchList = new window.application.SearchList('add-employees', employeesListPromise, {
+        elementDrawer: employeesListDrawer,
+        noResultsHtml: '<i>No employees found</i>'
+    });
 
     initialize();
 

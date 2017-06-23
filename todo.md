@@ -1,6 +1,6 @@
+- Use _SearchList partial for Details view list in read mode
 - readme.md
 - Que es pugui clicar les creus a Edit
-- Searcher partial
 - Lists Pagination
 - Generate entity URLs in server side?
 - Fade In/Out when loading/leaving

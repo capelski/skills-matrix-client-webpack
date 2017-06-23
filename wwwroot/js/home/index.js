@@ -12,11 +12,15 @@
         skillsList: $('#skills-list'),
         skillsKeywords: $('#skills-keywords')
     };
-    var employeesSearcher = window.application.Searcher(htmlNodes.employeesKeywords, htmlNodes.employeesList, htmlNodes.employeesLoader, employeesPromise, employeeDrawer);
-    var skillsSearcher = window.application.Searcher(htmlNodes.skillsKeywords, htmlNodes.skillsList, htmlNodes.skillsLoader, skillsPromise, skillDrawer);
+    var employeesSearchList = new window.application.SearchList('employees', employeesPromise, {
+        elementDrawer: employeeDrawer
+    });
+    var skillsSearchList = new window.application.SearchList('skills', skillsPromise, {
+        elementDrawer: skillDrawer
+    });
 
-    employeesSearcher.reload();
-    skillsSearcher.reload();
+    employeesSearchList.reload();
+    skillsSearchList.reload();
 
     function employeeDrawer(employee) {
         return '<li class="list-group-item"><a class="reset" href="/employees/details?id=' + employee.Id + '">' + employee.Name +

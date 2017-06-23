@@ -7,8 +7,8 @@
     window.application.skill.actions = {
         addEmployee: function (state, event) {
             var employeeId = getEmployeeId(event);
-            htmlNodes.addEmployeeList.empty();
-            htmlNodes.addEmployeeKeywords.val('');
+            htmlNodes.addEmployeesList.empty();
+            htmlNodes.addEmployeesKeywords.val('');
             var employee = state.employees.find(function(employee) {
                 return employee.Id === employeeId;
             });
@@ -33,7 +33,7 @@
         },
         removeEmployee: function (state, event) {
             var employeeId = getEmployeeId(event);
-            htmlNodes.addEmployeeList.empty();
+            htmlNodes.addEmployeesList.empty();
             state.skill.Employees = state.skill.Employees.filter(function(employee) {
                 return employee.Id !== employeeId;
             });

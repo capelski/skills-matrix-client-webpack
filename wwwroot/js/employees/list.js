@@ -6,14 +6,12 @@
         pageSize: 10,
         employees: []
     };
-    var htmlNodes = {
-        loader : $('#loader'),
-        employeesList: $('#employees-list'),
-        keywords: $('#keywords')
-    };
-    var searcher = window.application.Searcher(htmlNodes.keywords, htmlNodes.employeesList, htmlNodes.loader, employeesPromise, employeeDrawer);
+    var searchList = new window.application.SearchList('employees', employeesPromise, {
+        elementDrawer: employeeDrawer,
+        noResultsHtml: '<i>No employees found</i>'
+    });
 
-    searcher.reload();
+    searchList.reload();
 
     function employeeDrawer(employee) {
         return '<li class="list-group-item"><a class="reset" href="/employees/details?id=' + employee.Id + '">' + employee.Name + '</a></li>';

@@ -1,30 +1,36 @@
 (function() {
     var utils = window.application.utils;
 
-    function Searcher($searcherNode, $listNode, $loaderNode, resultsHandler, elementDrawer) {
+    function SearchList(searchListId, resultsPromise, options) {
         var self = this;
-        self.$searcher = $searcherNode;
-        self.$list = $listNode;
-        self.$loader = $loaderNode;
-        self.resultsHandler = resultsHandler;
-        self.keywords = '';
+        self.$kewyords = $('#' + searchListId + '-keywords');
+        self.$list = $('#' + searchListId + '-list');
+        self.$loader = $('#' + searchListId + '-loader');
+        self.resultsPromise = resultsPromise;
         self.searchTimeout = null;
+
+        options = options || {};
+        self.keywords = options.keywords || '';
+        self.noResultsHtml = options.noResultsHtml || '<i>No results found</i>';
+        self.elementDrawer = options.elementDrawer || function (element) {
+            return '<li class="list-group-item">' + element + '</li>';
+        };
 
         self.reload = function() {
             self.$list.empty();
             utils.longOperation(updatePromise, self.$loader);
-        }
+        };
 
-        self.$searcher.on('keyup', search);
+        self.$kewyords.on('keyup', search);
 
         function updatePromise() {
-            return self.resultsHandler(self.keywords)
+            return self.resultsPromise(self.keywords)
             .then(function(results) {
                 if (!results || !results.length) {
-                    self.$list.append('<i>No results found</i>');
+                    self.$list.append(self.noResultsHtml);
                 }
                 else {
-                    var htmlStrings = results.map(elementDrawer);
+                    var htmlStrings = results.map(self.elementDrawer);
                     htmlStrings.forEach(function(element) {
                         self.$list.append(element);
                     });
@@ -45,7 +51,5 @@
     }
 
     window.application = window.application || {};
-    window.application.Searcher = function($searcherNode, $listNode, $loaderNode, resultsHandler, elementDrawer) {
-        return new Searcher($searcherNode, $listNode, $loaderNode, resultsHandler, elementDrawer);
-    }
+    window.application.SearchList = SearchList;
 })();

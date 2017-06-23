@@ -6,9 +6,9 @@
         pageTitle : $('#page-title'),
         elementName : $('#model-name'),
         employeesList : $('#employees-list'),
-        addEmployeeKeywords : $('#add-employee-keywords'),
-        addEmployeeLoader : $('#add-employee-loader'),
-        addEmployeeList : $('#add-employee-list'),
+        addEmployeesKeywords : $('#add-employees-keywords'),
+        addEmployeesLoader : $('#add-employees-loader'),
+        addEmployeesList : $('#add-employees-list'),
         editButton : $('#edit-button'),
         deleteButton : $('#delete-button'),
         saveButton : $('#save-button'),
@@ -17,8 +17,8 @@
 
     var updaters = {
         readOnly: function(state) {
-            htmlNodes.addEmployeeKeywords.hide();
-            htmlNodes.addEmployeeList.hide();
+            htmlNodes.addEmployeesKeywords.hide();
+            htmlNodes.addEmployeesList.hide();
             htmlNodes.editButton.hide();
             htmlNodes.editButton.attr('href', '#');
             htmlNodes.deleteButton.hide();
@@ -40,8 +40,8 @@
                 htmlNodes.elementName.removeAttr('disabled');                
                 if (state.skill.Id >= 0) {
                     htmlNodes.pageTitle.text('New skill');
-                    htmlNodes.addEmployeeKeywords.show();
-                    htmlNodes.addEmployeeList.show();
+                    htmlNodes.addEmployeesKeywords.show();
+                    htmlNodes.addEmployeesList.show();
                     htmlNodes.saveButton.show();
                     htmlNodes.cancelButton.show();
                     htmlNodes.cancelButton.attr('href', '/skills/');

@@ -6,14 +6,12 @@
         pageSize: 10,
         skills: []
     };
-    var htmlNodes = {
-        loader : $('#loader'),
-        skillsList: $('#skills-list'),
-        keywords: $('#keywords')
-    };
-    var searcher = window.application.Searcher(htmlNodes.keywords, htmlNodes.skillsList, htmlNodes.loader, skillsPromise, skillsDrawer);
+    var searchList = new window.application.SearchList('skills', skillsPromise, {
+        elementDrawer: skillsDrawer,
+        noResultsHtml: '<i>No skills found</i>'
+    });
 
-    searcher.reload();
+    searchList.reload();
 
     function skillsDrawer(skill) {
         return '<li class="list-group-item"><a class="reset" href="/skills/details?id=' + skill.Id + '">' + skill.Name + '</a></li>';
