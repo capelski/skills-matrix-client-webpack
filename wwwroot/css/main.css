@@ -67,3 +67,7 @@ ul.clickable > li {
 .search-list .form-group {
     margin-bottom: 5px;
 }
+
+.search-list .search-box {
+    background-color: #f9f9f9;
+}

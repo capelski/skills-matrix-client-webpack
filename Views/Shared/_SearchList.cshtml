@@ -1,6 +1,6 @@
 <div id="@(ViewData["searchListId"])-search-list" class="search-list">
     <div class="form-group no-margin @(ViewData["searcher"] != null && !(bool) ViewData["searcher"] ? "hidden" : "")">
-        <input id="@(ViewData["searchListId"])-keywords" class="form-control"
+        <input id="@(ViewData["searchListId"])-keywords" class="form-control search-box"
         placeholder="@(ViewData["placeholder"] != null ? ViewData["placeholder"] : "Search...")" />
     </div>
     <div class="dynamic-content">
