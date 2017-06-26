@@ -1,4 +1,3 @@
-- readme.md
 - Que es pugui clicar les creus a Edit
 - Lists Pagination
 - Fade In/Out when loading/leaving
