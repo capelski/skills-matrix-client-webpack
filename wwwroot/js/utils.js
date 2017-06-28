@@ -28,10 +28,41 @@
             });
             return result;
         },
+        eventDelayer: function(eventHandler, delay) {
+            var timeOut = null;
+            delay = delay || 300;
+            return function (event) {
+                if (timeOut) {
+                    clearTimeout(timeOut);
+                }
+                timeOut = setTimeout(function() {
+                    timeOut = null;
+                    eventHandler(event);
+                }, delay);
+            }
+        },
         eventLinker: function (action, state) {
             return function(event) {
                 action(state, event);
             };
+        },
+        fillList: function(listNode, results, options) {
+            options = options || {};
+            options.noResultsHtml = options.noResultsHtml || '<i>No results found</i>';
+            options.elementDrawer = options.elementDrawer || function (element) {
+                return '<li class="list-group-item">' + element + '</li>';
+            };
+
+            listNode.empty();
+            if (!results || !results.length) {
+                listNode.append(options.noResultsHtml);
+            }
+            else {
+                results.map(options.elementDrawer)
+                .forEach(function(element) {
+                    listNode.append(element);
+                });
+            }
         },
         longOperation: function (promiseBuilder, loader) {
             return new Promise(function(resolve, reject) {
@@ -47,6 +78,7 @@
             });
         }
     };
+
     window.application.ajax = {
         get: function(url, defaultValue) {
             return new Promise(function(resolve, reject) {

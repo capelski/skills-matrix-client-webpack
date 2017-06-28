@@ -7,7 +7,6 @@
         self.$list = $('#' + searchListId + '-list');
         self.$loader = $('#' + searchListId + '-loader');
         self.resultsPromise = resultsPromise;
-        self.searchTimeout = null;
 
         options = options || {};
         self.keywords = options.keywords || '';
@@ -21,7 +20,7 @@
             utils.longOperation(updatePromise, self.$loader);
         };
 
-        self.$kewyords.on('keyup', search);
+        self.$kewyords.on('keyup', utils.eventDelayer(search));
 
         function updatePromise() {
             return self.resultsPromise(self.keywords)
@@ -39,14 +38,8 @@
         }
 
         function search(event) {
-            if (self.searchTimeout) {
-                clearTimeout(self.searchTimeout);
-            }
-            self.searchTimeout = setTimeout(function() {
-                self.searchTimeout = null;
-                self.keywords = event.target.value;
-                self.reload();
-            }, 300);
+            self.keywords = event.target.value;
+            self.reload();
         }
     }
 
