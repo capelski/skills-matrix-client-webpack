@@ -7,8 +7,8 @@
             Employees: []
         },
         readOnly: htmlNodes.readOnly.val() == 'true',
-        keywords: '',
-        employees: []
+        searchKeywords: '',
+        foundEmployees: []
     };
 
     window.application.skill.attachEvents(window.application.skill.state);

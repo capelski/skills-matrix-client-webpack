@@ -18,7 +18,7 @@
         var skillId = getSkillId(event);
         htmlNodes.addSkillsList.empty();
         htmlNodes.addSkillsKeywords.val('');
-        var skill = state.skills.find(function(skill) {
+        var skill = state.foundSkills.find(function(skill) {
             return skill.Id === skillId;
         });
         if (skill) {
@@ -39,16 +39,16 @@
     }
 
     function getSkills(state, event) {
-        state.keywords = event.target.value;
+        state.searchKeywords = event.target.value;
         utils.longOperation(skillsPromise, htmlNodes.addSkillsLoader);
 
         function skillsPromise() {
             var listPromise = Promise.resolve([]);
-            if (state.keywords.length > 0) {
-                listPromise = ajax.get('/api/skill?keywords=' + state.keywords, []);
+            if (state.searchKeywords.length > 0) {
+                listPromise = ajax.get('/api/skill?keywords=' + state.searchKeywords, []);
             }
             return listPromise.then(function(skills) {
-                state.skills = utils.arrayDifference(skills, state.employee.Skills, 'Id');
+                state.foundSkills = utils.arrayDifference(skills, state.employee.Skills, 'Id');
                 update.addSkillsList(state);
             });
         }

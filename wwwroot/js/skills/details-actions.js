@@ -18,9 +18,9 @@
         var employeeId = getEmployeeId(event);
         htmlNodes.addEmployeesList.empty();
         htmlNodes.addEmployeesKeywords.val('');
-        // state.employees = []; INSTEAD
-        // state.keywords = '';
-        var employee = state.employees.find(function(employee) {
+        // state.foundEmployees = []; INSTEAD
+        // state.searchKeywords = '';
+        var employee = state.foundEmployees.find(function(employee) {
             return employee.Id === employeeId;
         });
         if (employee) {
@@ -35,16 +35,16 @@
     }
 
     function getEmployees(state, event) {
-        state.keywords = event.target.value;
+        state.searchKeywords = event.target.value;
         utils.longOperation(employeesPromise, htmlNodes.addEmployeesLoader);
 
         function employeesPromise() {
             var listPromise = Promise.resolve([]);
-            if (state.keywords.length > 0) {
-                listPromise = ajax.get('/api/employee?keywords=' + state.keywords, []);
+            if (state.searchKeywords.length > 0) {
+                listPromise = ajax.get('/api/employee?keywords=' + state.searchKeywords, []);
             }
             return listPromise.then(function(employees) {
-                state.employees = utils.arrayDifference(employees, state.skill.Employees, 'Id');
+                state.foundEmployees = utils.arrayDifference(employees, state.skill.Employees, 'Id');
                 update.addEmployeesList(state);
             });
         }

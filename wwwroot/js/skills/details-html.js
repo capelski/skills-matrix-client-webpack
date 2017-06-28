@@ -24,7 +24,7 @@
     }
 
     update.addEmployeesList = function (state) {
-        utils.fillList(htmlNodes.addEmployeesList, state.employees, {
+        utils.fillList(htmlNodes.addEmployeesList, state.foundEmployees, {
             elementDrawer: function (employee) {
                 return '<li class="list-group-item add-employee" data-employee-id="' + employee.Id + '"><i class="fa fa-plus text-success"></i> '
                 + employee.Name + '</li>';

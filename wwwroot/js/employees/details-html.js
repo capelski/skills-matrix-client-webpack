@@ -24,7 +24,7 @@
     }
 
     update.addSkillsList = function (state) {
-        utils.fillList(htmlNodes.addSkillsList, state.skills, {
+        utils.fillList(htmlNodes.addSkillsList, state.foundSkills, {
             elementDrawer: function (skill) {
                 return '<li class="list-group-item add-skill" data-skill-id="' + skill.Id + '"><i class="fa fa-plus text-success"></i> '
                 + skill.Name + '</li>';
