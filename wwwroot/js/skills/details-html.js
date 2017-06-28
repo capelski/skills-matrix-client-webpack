@@ -26,8 +26,8 @@
     update.foundEmployees = function (state) {
         utils.fillList(htmlNodes.addEmployeesList, state.foundEmployees, {
             elementDrawer: function (employee) {
-                return '<li class="list-group-item add-employee" data-employee-id="' + employee.Id + '"><i class="fa fa-plus text-success"></i> '
-                + employee.Name + '</li>';
+                return '<li class="list-group-item"><span class="add-employee" data-employee-id="' + employee.Id + '"><i class="fa fa-plus text-success"></i> '
+                + employee.Name + '</span></li>';
             },
             noResultsHtml: '<i>No employees found</i>'
         });
@@ -90,8 +90,8 @@
             var employee = state.skill.Employees[key];
             var html = '<li class="list-group-item"><a class="reset" href="/employees/details?id=' + employee.Id + '">' + employee.Name + '</a></li>';
             if (!state.readOnly) {
-                html = '<li class="list-group-item remove-employee" data-employee-id="' + employee.Id + '"><i class="fa fa-times text-danger"></i> '
-                + employee.Name + '</li>';
+                html = '<li class="list-group-item"><span class="remove-employee" data-employee-id="' + employee.Id + '"><i class="fa fa-times text-danger"></i> '
+                + employee.Name + '</span></li>';
             }
             htmlNodes.employeesList.append(html);
         }

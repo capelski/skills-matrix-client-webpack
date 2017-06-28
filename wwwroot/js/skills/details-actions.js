@@ -9,8 +9,8 @@
         htmlNodes.deleteButton.on('click', utils.eventLinker(removeSkill, state));
         htmlNodes.saveButton.on('click', utils.eventLinker(save, state));
         htmlNodes.addEmployeesKeywords.on('keyup', utils.eventDelayer(utils.eventLinker(getEmployees, state)));
-        htmlNodes.addEmployeesList.on('click', 'li.add-employee', utils.eventLinker(addEmployee, state));
-        htmlNodes.employeesList.on('click', 'li.remove-employee', utils.eventLinker(removeEmployee, state));
+        htmlNodes.addEmployeesList.on('click', '.add-employee', utils.eventLinker(addEmployee, state));
+        htmlNodes.employeesList.on('click', '.remove-employee', utils.eventLinker(removeEmployee, state));
         $().ready(utils.eventLinker(initializeView, state));
     };    
 

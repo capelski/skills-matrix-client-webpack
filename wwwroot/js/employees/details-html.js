@@ -26,8 +26,8 @@
     update.foundSkills = function (state) {
         utils.fillList(htmlNodes.addSkillsList, state.foundSkills, {
             elementDrawer: function (skill) {
-                return '<li class="list-group-item add-skill" data-skill-id="' + skill.Id + '"><i class="fa fa-plus text-success"></i> '
-                + skill.Name + '</li>';
+                return '<li class="list-group-item"><span class="add-skill" data-skill-id="' + skill.Id + '"><i class="fa fa-plus text-success"></i> '
+                + skill.Name + '</span></li>';
             },
             noResultsHtml: '<i>No skills found</i>'
         });
@@ -86,7 +86,8 @@
             var skill = state.employee.Skills[key];
             var html = '<li class="list-group-item"><a class="reset" href="/skills/details?id=' + skill.Id + '">' + skill.Name + '</a></li>';
             if (!state.readOnly) {
-                html = '<li class="list-group-item remove-skill" data-skill-id="' + skill.Id + '"><i class="fa fa-times text-danger"></i> ' + skill.Name + '</li>';
+                html = '<li class="list-group-item"><span class="remove-skill" data-skill-id="' + skill.Id + '"><i class="fa fa-times text-danger"></i> '
+                + skill.Name + '</span></li>';
             }
             htmlNodes.skillsList.append(html);
         }

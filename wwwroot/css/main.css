@@ -19,12 +19,13 @@
 }
 
 a.reset {
-  color: inherit;
-  text-decoration: inherit;
+    color: inherit;
+    text-decoration: inherit;
 }
+
 a.reset:hover {
-  color: inherit;
-  text-decoration: inherit;
+    color: inherit;
+    text-decoration: inherit;
 }
 
 .form-group.no-margin {
@@ -56,6 +57,20 @@ a.reset:hover {
 
 ul.clickable > li {
     cursor: pointer;
+    padding: 0;
+}
+
+ul.clickable > li > a,
+ul.clickable > li > span {
+    display: block;
+    padding: 10px 15px;
+}
+
+.badge.floating {
+    float: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
 }
 
 .responsive-img {
