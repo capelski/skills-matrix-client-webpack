@@ -1,6 +1,7 @@
 - Lists Pagination
-- Fade In/Out when loading/leaving
 - Include zoom icon in searcher and cross to delete the text
+- Branch jQueryState & Redux
+- React
 - Include Identity & Permissons
 - JS API Test?
 

@@ -24,7 +24,7 @@ window.application.home = window.application.home || {};
         utils.fillList(htmlNodes.employeesList, state.employees, {
             elementDrawer: function (employee) {
                 return '<li class="list-group-item"><a class="reset" href="/employees/details?id=' + employee.Id + '">' + employee.Name +
-                '</a><span class="badge floating">' + employee.Skills.length + '</span></li>';
+                '<span class="badge floating">' + employee.Skills.length + '</span></a></li>';
             },
             noResultsHtml: '<i>No employees found</i>'
         });
@@ -34,7 +34,7 @@ window.application.home = window.application.home || {};
         utils.fillList(htmlNodes.skillsList, state.skills, {
             elementDrawer: function (skill) {
                 return '<li class="list-group-item"><a class="reset" href="/skills/details?id=' + skill.Id + '">' + skill.Name +
-                '</a><span class="badge floating">' + skill.Employees.length + '</span></li>';
+                '<span class="badge floating">' + skill.Employees.length + '</span></a></li>';
             },
             noResultsHtml: '<i>No skills found</i>'
         });
