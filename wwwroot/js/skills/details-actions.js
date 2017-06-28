@@ -31,7 +31,11 @@
 
     function getEmployeeId(event) {
         var $element = $(event.target);
-        return $element.data('employee-id');
+        if ($element.hasClass('fa')) {
+            $element = $element.parent();
+        }
+        var employeeId = $element.data('employee-id');
+        return employeeId;
     }
 
     function getEmployees(state, event) {

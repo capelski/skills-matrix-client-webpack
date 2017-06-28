@@ -1,4 +1,3 @@
-- Que es pugui clicar les creus a Edit
 - Lists Pagination
 - Fade In/Out when loading/leaving
 - Include zoom icon in searcher and cross to delete the text

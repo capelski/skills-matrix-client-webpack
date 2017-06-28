@@ -37,7 +37,11 @@
 
     function getSkillId(event) {
         var $element = $(event.target);
-        return $element.data('skill-id');
+        if ($element.hasClass('fa')) {
+            $element = $element.parent();
+        }
+        var skillId = $element.data('skill-id');
+        return skillId;
     }
 
     function getSkills(state, event) {
