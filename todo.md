@@ -1,6 +1,4 @@
 - Refactor Search-List to fit the Elm Architecture Pattern
-	- Rename state keywords => searchKeywords, employees => foundEmployees, skills => foundSkills
-	- Add updaters for searchKeywords, foundEmployees & foundSkills && call them from actions
     - Replace search-list in indexes; Remove it
     
 - Que es pugui clicar les creus a Edit

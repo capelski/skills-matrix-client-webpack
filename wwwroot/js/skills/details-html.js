@@ -23,7 +23,7 @@
         }
     }
 
-    update.addEmployeesList = function (state) {
+    update.foundEmployees = function (state) {
         utils.fillList(htmlNodes.addEmployeesList, state.foundEmployees, {
             elementDrawer: function (employee) {
                 return '<li class="list-group-item add-employee" data-employee-id="' + employee.Id + '"><i class="fa fa-plus text-success"></i> '
@@ -71,6 +71,10 @@
         }
 
         update.skillEmployees(state);
+    };
+
+    update.searchKeywords = function (state) {
+        htmlNodes.addEmployeesKeywords.val(state.searchKeywords);
     };
 
     update.skillName = function (state) {

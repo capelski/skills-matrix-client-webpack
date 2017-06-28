@@ -23,7 +23,7 @@
         }
     }
 
-    update.addSkillsList = function (state) {
+    update.foundSkills = function (state) {
         utils.fillList(htmlNodes.addSkillsList, state.foundSkills, {
             elementDrawer: function (skill) {
                 return '<li class="list-group-item add-skill" data-skill-id="' + skill.Id + '"><i class="fa fa-plus text-success"></i> '
@@ -90,6 +90,10 @@
             }
             htmlNodes.skillsList.append(html);
         }
+    };
+
+    update.searchKeywords = function (state) {
+        htmlNodes.addSkillsKeywords.val(state.searchKeywords);
     };
 
     window.application = window.application || {};

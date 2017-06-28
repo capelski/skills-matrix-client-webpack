@@ -16,15 +16,17 @@
 
     function addSkill (state, event) {
         var skillId = getSkillId(event);
-        htmlNodes.addSkillsList.empty();
-        htmlNodes.addSkillsKeywords.val('');
         var skill = state.foundSkills.find(function(skill) {
             return skill.Id === skillId;
         });
+        state.foundSkills = [];
+        state.searchKeywords = '';
         if (skill) {
             state.employee.Skills.push(skill);
             update.employeeSkills(state);
         }
+        update.searchKeywords(state);
+        update.foundSkills(state);
     }
 
     function employeeName (state, event) {
@@ -49,7 +51,7 @@
             }
             return listPromise.then(function(skills) {
                 state.foundSkills = utils.arrayDifference(skills, state.employee.Skills, 'Id');
-                update.addSkillsList(state);
+                update.foundSkills(state);
             });
         }
     }
@@ -100,8 +102,6 @@
 
     function removeSkill(state, event) {
         var skillId = getSkillId(event);
-        htmlNodes.addSkillsList.empty();
-        htmlNodes.addSkillsKeywords.val('');
         state.employee.Skills = state.employee.Skills.filter(function(skill) {
             return skill.Id !== skillId;
         });

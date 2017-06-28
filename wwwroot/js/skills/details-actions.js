@@ -16,17 +16,17 @@
 
     function addEmployee (state, event) {
         var employeeId = getEmployeeId(event);
-        htmlNodes.addEmployeesList.empty();
-        htmlNodes.addEmployeesKeywords.val('');
-        // state.foundEmployees = []; INSTEAD
-        // state.searchKeywords = '';
         var employee = state.foundEmployees.find(function(employee) {
             return employee.Id === employeeId;
         });
+        state.foundEmployees = [];
+        state.searchKeywords = '';
         if (employee) {
             state.skill.Employees.push(employee);
             update.skillEmployees(state);
         }
+        update.searchKeywords(state);
+        update.foundEmployees(state);
     }
 
     function getEmployeeId(event) {
@@ -45,7 +45,7 @@
             }
             return listPromise.then(function(employees) {
                 state.foundEmployees = utils.arrayDifference(employees, state.skill.Employees, 'Id');
-                update.addEmployeesList(state);
+                update.foundEmployees(state);
             });
         }
     }
@@ -81,8 +81,6 @@
 
     function removeEmployee(state, event) {
         var employeeId = getEmployeeId(event);
-        htmlNodes.addEmployeesList.empty();
-        htmlNodes.addEmployeesKeywords.val('');
         state.skill.Employees = state.skill.Employees.filter(function(employee) {
             return employee.Id !== employeeId;
         });
