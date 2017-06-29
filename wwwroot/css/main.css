@@ -83,3 +83,22 @@ ul.clickable > li > span {
 .search-list .search-box {
     background-color: #f9f9f9;
 }
+
+.search-list .pagination-bar .pagination {
+    margin: 0;
+}
+
+.search-list .dropdown-menu {
+    min-width: auto;
+}
+
+.pagination-bar ul.clickable > li > a,
+.pagination-bar ul.clickable > li > span {
+    padding: 6px 12px;
+}
+
+.pagination-bar ul.dropdown-menu > li > span {
+    padding: 3px 20px;
+    cursor: pointer;
+    display: block;
+}

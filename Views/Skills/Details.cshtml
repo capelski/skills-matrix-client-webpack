@@ -29,7 +29,8 @@
 
         @Html.Partial("_SearchList", new ViewDataDictionary(ViewData) {
             {"searchListId", "add-employees"},
-            {"placeholder", "Add employees..."}
+            {"placeholder", "Add employees..."},
+            {"searcher", true}
         })
 
         <!-- Read actions -->

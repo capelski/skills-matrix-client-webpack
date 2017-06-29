@@ -22,7 +22,9 @@
 </div>
 
 @Html.Partial("_SearchList", new ViewDataDictionary(ViewData) {
-    {"searchListId", "employees"}
+    {"searchListId", "employees"},
+    {"searcher", true},
+    {"pagination", true}
 })
 
 @section scripts {
