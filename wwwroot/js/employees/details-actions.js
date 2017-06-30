@@ -49,12 +49,12 @@
         utils.longOperation(skillsPromise, htmlNodes.addSkillsLoader);
 
         function skillsPromise() {
-            var listPromise = Promise.resolve([]);
+            var listPromise = Promise.resolve(utils.paginatedList.default);
             if (state.searchKeywords.length > 0) {
-                listPromise = ajax.get('/api/skill?keywords=' + state.searchKeywords, []);
+                listPromise = ajax.get('/api/skill?keywords=' + state.searchKeywords, utils.paginatedList.default);
             }
-            return listPromise.then(function(skills) {
-                state.foundSkills = utils.arrayDifference(skills, state.employee.Skills, 'Id');
+            return listPromise.then(function(paginatedList) {
+                state.foundSkills = utils.arrayDifference(paginatedList.Items, state.employee.Skills, 'Id');
                 update.foundSkills(state);
             });
         }

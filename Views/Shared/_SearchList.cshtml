@@ -12,20 +12,21 @@
         @Html.Partial("_Loader", new ViewDataDictionary(ViewData) {
             {"loaderId", listId + "-loader"}
         })
-    </div>
 
-    <div class="pagination-bar @(ViewData["pagination"] != null && (bool) ViewData["pagination"] ? "" : "hidden")">
-        <ul id="@listId-pages" class="pagination clickable">
-        </ul>
-        <div class="dropdown pull-right">
-            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                <span id="@listId-page-size">10</span>
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                <li class="text-right"><span class="dropdown-option" data-size="10">10</span></li>
-                <li class="text-right"><span class="dropdown-option" data-size="25">25</span></li>
-                <li class="text-right"><span class="dropdown-option" data-size="50">50</span></li>
+        <div class="pagination-bar @(ViewData["pagination"] != null && (bool) ViewData["pagination"] ? "" : "hidden")">
+            <ul id="@listId-pages" class="pagination clickable">
             </ul>
+            <div class="dropdown pull-right">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <span id="@listId-page-size">10</span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li class="text-right"><span class="dropdown-option" data-size="10">10</span></li>
+                    <li class="text-right"><span class="dropdown-option" data-size="25">25</span></li>
+                    <li class="text-right"><span class="dropdown-option" data-size="50">50</span></li>
+                </ul>
+            </div>
         </div>
+    </div>
 </div>

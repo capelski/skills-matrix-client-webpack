@@ -3,17 +3,13 @@ window.application.employeesList = window.application.employeesList || {};
     
 // View
 (function() {
+    var utils = window.application.utils;
     var htmlNodes = {
         keywords : $('#employees-keywords'),
         loader : $('#employees-loader'),
         list : $('#employees-list'),
-        paginationBar: {
-            pages: $('#employees-pages'),
-            pageSize: $('#employees-page-size'),
-            pageSizeOptions: $('#employees-search-list .dropdown-option')
-        }
+        paginationBar: utils.paginatedList.getHtmlNodes('employees')
     };
-    var utils = window.application.utils;
 
     function update(state) {
         for (var key in update) {
@@ -36,16 +32,7 @@ window.application.employeesList = window.application.employeesList || {};
     };
 
     update.paginationBar = function(state) {
-        var pagination = '<li><span class="page-button" data-page-action="previous">&laquo;</span></li>';
-        for(var i = 0; i < state.pagesNumber; ++i) {
-            pagination += '<li' + (state.page === i ? ' class="active"' : '') + '><span class="page-button" data-page-action="' +
-            i + '">' + (state.pageOffset + i + 1) + '</span></li>';
-        }
-        pagination += '<li><span class="page-button" data-page-action="following">&raquo;</span></li>';
-        // TODO Enable/Disable previous pages
-        // TODO Enable/Disable following pages
-        htmlNodes.paginationBar.pages.html(pagination);
-        htmlNodes.paginationBar.pageSize.text(state.pageSize);
+        utils.paginatedList.htmlUpdater(htmlNodes.paginationBar, state)
     };
 
     window.application.employeesList.htmlNodes = htmlNodes;
@@ -62,7 +49,7 @@ window.application.employeesList = window.application.employeesList || {};
     function attachEvents(state) {
         htmlNodes.keywords.on('keyup', utils.eventDelayer(utils.eventLinker(getEmployees, state)));
         htmlNodes.paginationBar.pageSizeOptions.on('click', utils.eventLinker(paginationBar.pageSizeOptions, state));
-        htmlNodes.paginationBar.pages.on('click', '.page-button', utils.eventLinker(paginationBar.pages, state));
+        htmlNodes.paginationBar.pages.on('click', '.enabled > .page-button', utils.eventLinker(paginationBar.pages, state));
         $().ready(utils.eventLinker(initializeView, state));
     }
 
@@ -79,9 +66,11 @@ window.application.employeesList = window.application.employeesList || {};
         utils.longOperation(employeesPromise, htmlNodes.loader);
 
         function employeesPromise() {
-            return ajax.get('/api/employee?keywords=' + state.keywords + '&page=' + (state.page + state.pageOffset) + '&pageSize=' + state.pageSize, [])
-            .then(function(employees) {
-                state.employees = employees;
+            return ajax.get('/api/employee?keywords=' + state.keywords + '&page=' + (state.paginatedList.page + state.paginatedList.pageOffset) +
+            '&pageSize=' + state.paginatedList.pageSize, utils.paginatedList.default)
+            .then(function(paginatedList) {
+                state.employees = paginatedList.Items;
+                state.paginatedList.totalPages = paginatedList.TotalPages;
                 update.paginationBar(state);
                 update.employees(state);
             });
@@ -90,29 +79,11 @@ window.application.employeesList = window.application.employeesList || {};
 
     var paginationBar = {
         pages: function(state, event) {
-            var action = $(event.target).data('page-action');
-            if (!isNaN(action)) {
-                state.page = parseInt(action);
-            }
-            else if (action === 'previous') {
-                state.pageOffset -= state.pagesNumber;
-                if (state.pageOffset < 0) {
-                    state.pageOffset = 0;
-                }
-                state.page = 0;
-            }
-            else if (action === 'following') {
-                state.pageOffset += state.pagesNumber;
-                // TODO Control the maximum
-                state.page = 0;
-            }
+            utils.paginatedList.stateUpdaters.pages(state, event);
             _loadEmployees(state);
         },
         pageSizeOptions: function(state, event) {
-            var element = $(event.target);
-            state.pageSize = element.data('size');
-            state.page = 0;
-            state.pageOffset = 0;
+            utils.paginatedList.stateUpdaters.pageSize(state, event);
             _loadEmployees(state);
         }
     };
@@ -122,13 +93,11 @@ window.application.employeesList = window.application.employeesList || {};
 
 // Model
 (function() {
+    var utils = window.application.utils;    
     var state = {
+        employees: [],
         keywords: '',
-        page: 0,
-        pageSize: 10,
-        pageOffset: 0,
-        pagesNumber: 5,
-        employees: []
+        paginatedList: utils.paginatedList.getState()
     };
 
     window.application.employeesList.attachEvents(state);

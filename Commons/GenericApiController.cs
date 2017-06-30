@@ -48,8 +48,8 @@ namespace SkillsMatrix.Commons
         [HttpGet]
         public IActionResult Get(string keywords = "", int page = 0, int pageSize = 10)
         {
-            var list = _entityService.GetAll(keywords, page, pageSize);
-            return Ok(list);
+            var paginatedList = _entityService.GetAll(keywords, page, pageSize);
+            return Ok(paginatedList);
         }
                 
         [HttpGet("getById")]

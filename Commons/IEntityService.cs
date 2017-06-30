@@ -12,7 +12,7 @@ namespace SkillsMatrix.Commons
 
         T Delete(TKey id);
         
-        IEnumerable<T> GetAll(string keywords = "", int page = 0, int pageSize = 10);
+        PaginatedList<T> GetAll(string keywords = "", int page = 0, int pageSize = 10);
 
         T GetById(TKey id);
 

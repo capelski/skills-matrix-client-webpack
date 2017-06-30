@@ -35,7 +35,7 @@ namespace SkillsMatrix.Services
             return skill;
         }
 
-        public IEnumerable<Skill> GetAll(string keywords = "", int page = 0, int pageSize = 10)
+        public PaginatedList<Skill> GetAll(string keywords = "", int page = 0, int pageSize = 10)
         {
             var offset = page * pageSize;
             IEnumerable<Skill> source = db.Skills;
@@ -43,7 +43,8 @@ namespace SkillsMatrix.Services
                 source = source.Where(s => s.Name.ToLower().Contains(keywords.ToLower()));
             }
             var skills = source.Skip(offset).Take(pageSize).ToList();
-            return skills;
+            var totalRecords = source.Count();
+            return new PaginatedList<Skill>(skills, totalRecords, page, pageSize);
         }
 
         public Skill GetById(int id)

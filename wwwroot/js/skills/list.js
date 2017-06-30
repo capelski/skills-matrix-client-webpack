@@ -3,12 +3,13 @@ window.application.skillsList = window.application.skillsList || {};
     
 // View
 (function() {
+    var utils = window.application.utils;
     var htmlNodes = {
         keywords : $('#skills-keywords'),
         loader : $('#skills-loader'),
-        list : $('#skills-list')
+        list : $('#skills-list'),
+        paginationBar: utils.paginatedList.getHtmlNodes('skills')
     };
-    var utils = window.application.utils;
 
     function update(state) {
         for (var key in update) {
@@ -30,6 +31,10 @@ window.application.skillsList = window.application.skillsList || {};
         htmlNodes.keywords.val(state.keywords);
     };
 
+    update.paginationBar = function(state) {
+        utils.paginatedList.htmlUpdater(htmlNodes.paginationBar, state)
+    };
+
     window.application.skillsList.htmlNodes = htmlNodes;
     window.application.skillsList.update = update;
 })();
@@ -43,6 +48,8 @@ window.application.skillsList = window.application.skillsList || {};
 
     function attachEvents(state) {
         htmlNodes.keywords.on('keyup', utils.eventDelayer(utils.eventLinker(getSkills, state)));
+        htmlNodes.paginationBar.pageSizeOptions.on('click', utils.eventLinker(paginationBar.pageSizeOptions, state));
+        htmlNodes.paginationBar.pages.on('click', '.enabled > .page-button', utils.eventLinker(paginationBar.pages, state));
         $().ready(utils.eventLinker(initializeView, state));
     }
 
@@ -59,23 +66,37 @@ window.application.skillsList = window.application.skillsList || {};
         utils.longOperation(skillsPromise, htmlNodes.loader);
 
         function skillsPromise() {
-            return ajax.get('/api/skill?keywords=' + state.keywords + '&page=' + state.page + '&pageSize=' + state.pageSize, [])
-            .then(function(skills) {
-                state.skills = skills;
+            return ajax.get('/api/skill?keywords=' + state.keywords + '&page=' + (state.paginatedList.page + state.paginatedList.pageOffset) +
+            '&pageSize=' + state.paginatedList.pageSize, utils.paginatedList.default)
+            .then(function(paginatedList) {
+                state.skills = paginatedList.Items;
+                state.paginatedList.totalPages = paginatedList.TotalPages;
+                update.paginationBar(state);
                 update.skills(state);
             });
         }
     }
+
+    var paginationBar = {
+        pages: function(state, event) {
+            utils.paginatedList.stateUpdaters.pages(state, event);
+            _loadSkills(state);
+        },
+        pageSizeOptions: function(state, event) {
+            utils.paginatedList.stateUpdaters.pageSize(state, event);
+            _loadSkills(state);
+        }
+    };
 
     window.application.skillsList.attachEvents = attachEvents;
 })();
 
 // Model
 (function() {
+    var utils = window.application.utils;    
     var state = {
         keywords: '',
-        page: 0,
-        pageSize: 10,
+        paginatedList: utils.paginatedList.getState(),
         skills: []
     };
 

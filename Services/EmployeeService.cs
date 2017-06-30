@@ -35,7 +35,7 @@ namespace SkillsMatrix.Services
             return employee;
         }
 
-        public IEnumerable<Employee> GetAll(string keywords = "", int page = 0, int pageSize = 10)
+        public PaginatedList<Employee> GetAll(string keywords = "", int page = 0, int pageSize = 10)
         {
             var offset = page * pageSize;
             IEnumerable<Employee> source = db.Employees;
@@ -43,7 +43,8 @@ namespace SkillsMatrix.Services
                 source = source.Where(e => e.Name.ToLower().Contains(keywords.ToLower()));
             }
             var employees = source.Skip(offset).Take(pageSize).ToList();
-            return employees;
+            var totalRecords = source.Count();
+            return new PaginatedList<Employee>(employees, totalRecords, page, pageSize);
         }
 
         public Employee GetById(int id)

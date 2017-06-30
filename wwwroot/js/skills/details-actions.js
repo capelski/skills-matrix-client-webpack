@@ -43,12 +43,12 @@
         utils.longOperation(employeesPromise, htmlNodes.addEmployeesLoader);
 
         function employeesPromise() {
-            var listPromise = Promise.resolve([]);
+            var listPromise = Promise.resolve(utils.paginatedList.default);
             if (state.searchKeywords.length > 0) {
-                listPromise = ajax.get('/api/employee?keywords=' + state.searchKeywords, []);
+                listPromise = ajax.get('/api/employee?keywords=' + state.searchKeywords, utils.paginatedList.default);
             }
-            return listPromise.then(function(employees) {
-                state.foundEmployees = utils.arrayDifference(employees, state.skill.Employees, 'Id');
+            return listPromise.then(function(paginatedList) {
+                state.foundEmployees = utils.arrayDifference(paginatedList.Items, state.skill.Employees, 'Id');
                 update.foundEmployees(state);
             });
         }
