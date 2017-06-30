@@ -13,7 +13,7 @@
             {"loaderId", listId + "-loader"}
         })
 
-        <div class="pagination-bar @(ViewData["pagination"] != null && (bool) ViewData["pagination"] ? "" : "hidden")">
+        <div id="@listId-pagination" class="pagination-bar @(ViewData["pagination"] != null && (bool) ViewData["pagination"] ? "" : "hidden")">
             <ul id="@listId-pages" class="pagination clickable">
             </ul>
             <div class="dropdown pull-right">

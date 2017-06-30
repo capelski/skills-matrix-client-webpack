@@ -1,5 +1,4 @@
 - Lists Pagination
-	- Add pagination to Details view
 	- Let the pageSizes be user defined
 	- Convert utils.js in a folder with multiple stuff. Pass fillList to paginated-list.js
 	- Increase number of records

@@ -84,6 +84,7 @@
             },
             getHtmlNodes: function(listId) {
                 return {
+                    paginationBar: $('#'+ listId + '-pagination'),
                     pages: $('#'+ listId + '-pages'),
                     pageSize: $('#'+ listId + '-page-size'),
                     pageSizeOptions: $('#'+ listId + '-search-list .dropdown-option')
@@ -95,20 +96,26 @@
                     pageSize: 10,
                     pageOffset: 0,
                     pagesNumber: 5,
-                    totalPages: null,
+                    totalPages: 0,
                 };
             },
             htmlUpdater: function(htmlNodes, state) {
                 var pagesNumber = Math.min(state.paginatedList.pagesNumber, state.paginatedList.totalPages - state.paginatedList.pageOffset);
-                var pagination = '<li class="' + ((state.paginatedList.pageOffset - state.paginatedList.pagesNumber) >= 0 ? 'enabled' : 'disabled') +
-                '"><span class="page-button" data-page-action="previous">&laquo;</span></li>';
-                for (var i = 0; i < pagesNumber; ++i) {
-                    pagination += '<li class="' + (state.paginatedList.page === i ? 'active' : 'enabled') + '"><span class="page-button" data-page-action="' +
-                    i + '">' + (state.paginatedList.pageOffset + i + 1) + '</span></li>';
+                if (pagesNumber) {
+                    var pagination = '<li class="' + ((state.paginatedList.pageOffset - state.paginatedList.pagesNumber) >= 0 ? 'enabled' : 'disabled') +
+                    '"><span class="page-button" data-page-action="previous">&laquo;</span></li>';
+                    for (var i = 0; i < pagesNumber; ++i) {
+                        pagination += '<li class="' + (state.paginatedList.page === i ? 'active' : 'enabled') + '"><span class="page-button" data-page-action="' +
+                        i + '">' + (state.paginatedList.pageOffset + i + 1) + '</span></li>';
+                    }
+                    pagination += '<li class="' + ((state.paginatedList.pageOffset + state.paginatedList.pagesNumber) < state.paginatedList.totalPages ? 'enabled' : 'disabled') +
+                    '"><span class="page-button" data-page-action="following">&raquo;</span></li>';
+                    htmlNodes.pages.html(pagination);
+                    htmlNodes.paginationBar.show();
                 }
-                pagination += '<li class="' + ((state.paginatedList.pageOffset + state.paginatedList.pagesNumber) < state.paginatedList.totalPages ? 'enabled' : 'disabled') +
-                '"><span class="page-button" data-page-action="following">&raquo;</span></li>';
-                htmlNodes.pages.html(pagination);
+                else {
+                    htmlNodes.paginationBar.hide();
+                }
                 htmlNodes.pageSize.text(state.paginatedList.pageSize);
             },
             stateUpdaters: {
