@@ -42,7 +42,7 @@ namespace SkillsMatrix.Services
             if (!String.IsNullOrEmpty(keywords)) {
                 source = source.Where(e => e.Name.ToLower().Contains(keywords.ToLower()));
             }
-            var employees = source.Skip(offset).Take(pageSize).ToList();
+            var employees = source.OrderBy(e => e.Name).Skip(offset).Take(pageSize).ToList();
             var totalRecords = source.Count();
             return new PaginatedList<Employee>(employees, totalRecords, page, pageSize);
         }

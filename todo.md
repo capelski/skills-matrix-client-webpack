@@ -1,7 +1,6 @@
 - Lists Pagination
 	- Let the pageSizes be user defined
 	- Convert utils.js in a folder with multiple stuff. Pass fillList to paginated-list.js
-	- Increase number of records
 	- Search should also reset page and pageOffset
 - Include zoom icon in searcher and cross to delete the text
 - Branch jQueryState & Redux
