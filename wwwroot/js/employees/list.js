@@ -72,8 +72,11 @@ var paginatedList = window.application.paginatedList;
         js.longOperation(employeesPromise, htmlNodes.loader);
 
         function employeesPromise() {
-            return ajax.get('/api/employee?keywords=' + state.keywords + '&page=' + (state.paginatedList.page + state.paginatedList.pageOffset) +
-            '&pageSize=' + state.paginatedList.pageSize, paginatedList.defaultInstance)
+            return ajax.get('/api/employee', {
+                keywords: state.keywords,
+                page: state.paginatedList.page + state.paginatedList.pageOffset,
+                pageSize: state.paginatedList.pageSize
+            }, paginatedList.defaultInstance)
             .then(function(paginatedList) {
                 state.employees = paginatedList.Items;
                 state.paginatedList.totalPages = paginatedList.TotalPages;

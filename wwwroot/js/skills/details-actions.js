@@ -50,7 +50,7 @@
         function employeesPromise() {
             var listPromise = Promise.resolve(paginatedList.defaultInstance);
             if (state.searchKeywords.length > 0) {
-                listPromise = ajax.get('/api/employee?keywords=' + state.searchKeywords, paginatedList.defaultInstance);
+                listPromise = ('/api/employee?', 'keywords=' + state.searchKeywords, paginatedList.defaultInstance);
             }
             return listPromise.then(function(paginatedList) {
                 state.foundEmployees = js.arrayDifference(paginatedList.Items, state.skill.Employees, 'Id');
@@ -72,7 +72,9 @@
         }
 
         function getPromise() {
-            return ajax.get('/api/skill/getById?id=' + state.skill.Id)
+            return ajax.get('/api/skill/getById', {
+                id: state.skill.Id
+            })
             .then(loadHandler);
         }
 

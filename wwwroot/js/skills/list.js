@@ -73,8 +73,11 @@ var paginatedList = window.application.paginatedList;
         js.longOperation(skillsPromise, htmlNodes.loader);
 
         function skillsPromise() {
-            return ajax.get('/api/skill?keywords=' + state.keywords + '&page=' + (state.paginatedList.page + state.paginatedList.pageOffset) +
-            '&pageSize=' + state.paginatedList.pageSize, paginatedList.defaultInstance)
+            return ajax.get('/api/skill', {
+                keywords: state.keywords,
+                page: state.paginatedList.page + state.paginatedList.pageOffset,
+                pageSize: state.paginatedList.pageSize
+            }, paginatedList.defaultInstance)
             .then(function(paginatedList) {
                 state.skills = paginatedList.Items;
                 state.paginatedList.totalPages = paginatedList.TotalPages;

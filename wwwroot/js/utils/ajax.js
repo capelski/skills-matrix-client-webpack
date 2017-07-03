@@ -1,9 +1,14 @@
 (function() {
     window.application = window.application || {};
     window.application.ajax = {
-        get: function(url, defaultValue) {
+        get: function(url, parameters, defaultValue) {
             return new Promise(function(resolve, reject) {
                 var result = defaultValue;
+                url += '?';
+                for (var key in parameters) {
+                    var parameter = parameters[key];
+                    url += key + '=' + encodeURIComponent(parameter) + '&';
+                }
                 $.ajax({
                     type: 'GET',
                     url: url

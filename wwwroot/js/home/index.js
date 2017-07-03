@@ -61,7 +61,7 @@ var paginatedList = window.application.paginatedList;
         js.longOperation(employeesPromise, htmlNodes.employeesList.loader);
 
         function employeesPromise() {
-            return ajax.get('/api/employee/getMostSkilled', [])
+            return ajax.get('/api/employee/getMostSkilled', {}, [])
             .then(function(employees) {
                 state.employees = employees;
                 update.employees(state);
@@ -73,7 +73,7 @@ var paginatedList = window.application.paginatedList;
         js.longOperation(skillsPromise, htmlNodes.skillsList.loader);
 
         function skillsPromise() {
-            return ajax.get('/api/skill/getRearest', [])
+            return ajax.get('/api/skill/getRearest', {}, [])
             .then(function(skills) {
                 state.skills = skills;
                 update.skills(state);
