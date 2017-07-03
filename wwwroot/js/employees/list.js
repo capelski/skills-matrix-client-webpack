@@ -58,13 +58,15 @@ window.application.employeesList = window.application.employeesList || {};
             }, state)
         };
 
-        htmlNodes.keywords.on('keyup', utils.eventDelayer(utils.eventLinker(getEmployees, state)));
+        htmlNodes.keywords.on('keyup', utils.eventDelayer(utils.eventLinker(searchEmployees, state)));
         utils.paginatedList.attachEvents(htmlNodes.paginationBar, paginationBarEventHandlers);
         $().ready(utils.eventLinker(initializeView, state));
     }
 
-    function getEmployees(state, event) {
+    function searchEmployees(state, event) {
         state.keywords = event.target.value;
+        state.paginatedList.page = 0;
+        state.paginatedList.pageOffset = 0;
         _loadEmployees(state);
     }
 

@@ -58,13 +58,15 @@ window.application.skillsList = window.application.skillsList || {};
             }, state)
         };
 
-        htmlNodes.keywords.on('keyup', utils.eventDelayer(utils.eventLinker(getSkills, state)));
+        htmlNodes.keywords.on('keyup', utils.eventDelayer(utils.eventLinker(searchSkills, state)));
         utils.paginatedList.attachEvents(htmlNodes.paginationBar, paginationBarEventHandlers);
         $().ready(utils.eventLinker(initializeView, state));
     }
 
-    function getSkills(state, event) {
+    function searchSkills(state, event) {
         state.keywords = event.target.value;
+        state.paginatedList.page = 0;
+        state.paginatedList.pageOffset = 0;
         _loadSkills(state);
     }
 
