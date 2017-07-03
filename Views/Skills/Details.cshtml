@@ -26,7 +26,7 @@
         <h3>Employees</h3>
         <ul id="employees-list" class="list-group clickable"></ul>
 
-        @Html.Partial("_SearchList", new ViewDataDictionary(ViewData) {
+        @Html.Partial("_PaginatedList", new ViewDataDictionary(ViewData) {
             {"searchListId", "add-employees"},
             {"placeholder", "Add employees..."},
             {"searcher", true}

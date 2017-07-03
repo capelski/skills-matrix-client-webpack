@@ -21,7 +21,7 @@
     </div>
 </div>
 
-@Html.Partial("_SearchList", new ViewDataDictionary(ViewData) {
+@Html.Partial("_PaginatedList", new ViewDataDictionary(ViewData) {
     {"searchListId", "employees"},
     {"searcher", true},
     {"pagination", true}

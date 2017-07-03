@@ -2,7 +2,6 @@
 	- htmlUpdate => The state should directly be the paginatedList
 	- PaginatedList.fill => Should take htmlNodes instead of just the list
 - Codificar URLs (e.x. search C++)
-- Rename _SearchList to _PaginatedList
 - Include zoom icon in searcher and cross to delete the text
 - Branch jQueryState & Redux
 - React
