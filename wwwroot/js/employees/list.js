@@ -47,9 +47,19 @@ window.application.employeesList = window.application.employeesList || {};
     var update = window.application.employeesList.update;
 
     function attachEvents(state) {
+        var paginationBarEventHandlers = {
+            pageButtons: utils.eventLinker(function(state, event) {
+                utils.paginatedList.stateUpdaters.pages(state, event);
+                _loadEmployees(state);
+            }, state),
+            pageSizeList: utils.eventLinker(function(state, event) {
+                utils.paginatedList.stateUpdaters.pageSize(state, event);
+                _loadEmployees(state);
+            }, state)
+        };
+
         htmlNodes.keywords.on('keyup', utils.eventDelayer(utils.eventLinker(getEmployees, state)));
-        htmlNodes.paginationBar.pageSizeOptions.on('click', utils.eventLinker(paginationBar.pageSizeOptions, state));
-        htmlNodes.paginationBar.pages.on('click', '.enabled > .page-button', utils.eventLinker(paginationBar.pages, state));
+        utils.paginatedList.attachEvents(htmlNodes.paginationBar, paginationBarEventHandlers);
         $().ready(utils.eventLinker(initializeView, state));
     }
 
@@ -76,17 +86,6 @@ window.application.employeesList = window.application.employeesList || {};
             });
         }
     }
-
-    var paginationBar = {
-        pages: function(state, event) {
-            utils.paginatedList.stateUpdaters.pages(state, event);
-            _loadEmployees(state);
-        },
-        pageSizeOptions: function(state, event) {
-            utils.paginatedList.stateUpdaters.pageSize(state, event);
-            _loadEmployees(state);
-        }
-    };
 
     window.application.employeesList.attachEvents = attachEvents;
 })();

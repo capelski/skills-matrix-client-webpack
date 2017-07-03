@@ -87,21 +87,24 @@
                     paginationBar: $('#'+ listId + '-pagination'),
                     pages: $('#'+ listId + '-pages'),
                     pageSize: $('#'+ listId + '-page-size'),
-                    pageSizeOptions: $('#'+ listId + '-search-list .dropdown-option')
+                    pageSizeList: $('#'+ listId + '-page-size-dropdown')
                 };
             },
             getState: function() {
-                return {
+                var state = {
                     page: 0,
                     pageSize: 10,
+                    pageSizeOptions: [10, 25, 50],
                     pageOffset: 0,
                     pagesNumber: 5,
                     totalPages: 0,
                 };
+                return state;
             },
             htmlUpdater: function(htmlNodes, state) {
                 var pagesNumber = Math.min(state.paginatedList.pagesNumber, state.paginatedList.totalPages - state.paginatedList.pageOffset);
                 if (pagesNumber) {
+
                     var pagination = '<li class="' + ((state.paginatedList.pageOffset - state.paginatedList.pagesNumber) >= 0 ? 'enabled' : 'disabled') +
                     '"><span class="page-button" data-page-action="previous">&laquo;</span></li>';
                     for (var i = 0; i < pagesNumber; ++i) {
@@ -111,6 +114,12 @@
                     pagination += '<li class="' + ((state.paginatedList.pageOffset + state.paginatedList.pagesNumber) < state.paginatedList.totalPages ? 'enabled' : 'disabled') +
                     '"><span class="page-button" data-page-action="following">&raquo;</span></li>';
                     htmlNodes.pages.html(pagination);
+
+                    htmlNodes.pageSizeList.empty();
+                    state.paginatedList.pageSizeOptions.forEach(function(option) {
+                        htmlNodes.pageSizeList.append('<li class="text-right"><span class="dropdown-option" data-size="' + option + '">' + option + '</span></li>');
+                    });
+
                     htmlNodes.paginationBar.show();
                 }
                 else {
@@ -143,6 +152,10 @@
                     state.paginatedList.page = 0;
                     state.paginatedList.pageOffset = 0;
                 }
+            },
+            attachEvents: function(htmlNodes, eventHandlers) {
+                htmlNodes.pageSizeList.on('click', '.dropdown-option', eventHandlers.pageSizeList);
+                htmlNodes.pages.on('click', '.enabled > .page-button', eventHandlers.pageButtons);
             }
         }
     };

@@ -47,9 +47,19 @@ window.application.skillsList = window.application.skillsList || {};
     var update = window.application.skillsList.update;
 
     function attachEvents(state) {
+        var paginationBarEventHandlers = {
+            pageButtons: utils.eventLinker(function(state, event) {
+                utils.paginatedList.stateUpdaters.pages(state, event);
+                _loadSkills(state);
+            }, state),
+            pageSizeList: utils.eventLinker(function(state, event) {
+                utils.paginatedList.stateUpdaters.pageSize(state, event);
+                _loadSkills(state);
+            }, state)
+        };
+
         htmlNodes.keywords.on('keyup', utils.eventDelayer(utils.eventLinker(getSkills, state)));
-        htmlNodes.paginationBar.pageSizeOptions.on('click', utils.eventLinker(paginationBar.pageSizeOptions, state));
-        htmlNodes.paginationBar.pages.on('click', '.enabled > .page-button', utils.eventLinker(paginationBar.pages, state));
+        utils.paginatedList.attachEvents(htmlNodes.paginationBar, paginationBarEventHandlers);
         $().ready(utils.eventLinker(initializeView, state));
     }
 
@@ -76,17 +86,6 @@ window.application.skillsList = window.application.skillsList || {};
             });
         }
     }
-
-    var paginationBar = {
-        pages: function(state, event) {
-            utils.paginatedList.stateUpdaters.pages(state, event);
-            _loadSkills(state);
-        },
-        pageSizeOptions: function(state, event) {
-            utils.paginatedList.stateUpdaters.pageSize(state, event);
-            _loadSkills(state);
-        }
-    };
 
     window.application.skillsList.attachEvents = attachEvents;
 })();
