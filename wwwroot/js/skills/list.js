@@ -7,12 +7,7 @@ var paginatedList = window.application.paginatedList;
     
 // View
 (function() {
-    var htmlNodes = {
-        keywords : $('#skills-keywords'),
-        loader : $('#skills-loader'),
-        list : $('#skills-list'),
-        paginationBar: paginatedList.getHtmlNodes('skills')
-    };
+    var htmlNodes = paginatedList.getHtmlNodes('skills');
 
     function update(state) {
         for (var key in update) {
@@ -35,7 +30,7 @@ var paginatedList = window.application.paginatedList;
     };
 
     update.paginationBar = function(state) {
-        paginatedList.htmlUpdater(htmlNodes.paginationBar, state)
+        paginatedList.htmlUpdater(htmlNodes, state)
     };
 
     window.application.skillsList.htmlNodes = htmlNodes;
@@ -61,7 +56,7 @@ var paginatedList = window.application.paginatedList;
         };
 
         htmlNodes.keywords.on('keyup', js.eventDelayer(js.eventLinker(searchSkills, state)));
-        paginatedList.attachEvents(htmlNodes.paginationBar, paginationBarEventHandlers);
+        paginatedList.attachEvents(htmlNodes, paginationBarEventHandlers);
         $().ready(js.eventLinker(initializeView, state));
     }
 

@@ -1,6 +1,14 @@
 (function() {
     window.application = window.application || {};
     window.application.paginatedList = {
+        attachEvents: function(htmlNodes, eventHandlers) {
+            htmlNodes.pageSizeList.on('click', '.dropdown-option', eventHandlers.pageSizeList);
+            htmlNodes.pages.on('click', '.enabled > .page-button', eventHandlers.pageButtons);
+        },
+        defaultInstance: {
+            Items: [],
+            TotalPages: 0
+        },
         fill: function(listNode, results, options) {
             options = options || {};
             options.noResultsHtml = options.noResultsHtml || '<i>No results found</i>';
@@ -19,16 +27,15 @@
                 });
             }
         },
-        defaultInstance: {
-            Items: [],
-            TotalPages: 0
-        },
         getHtmlNodes: function(listId) {
             return {
-                paginationBar: $('#'+ listId + '-pagination'),
+                keywords : $('#'+ listId + '-keywords'),
+                list : $('#'+ listId + '-list'),
+                loader : $('#'+ listId + '-loader'),
                 pages: $('#'+ listId + '-pages'),
                 pageSize: $('#'+ listId + '-page-size'),
-                pageSizeList: $('#'+ listId + '-page-size-dropdown')
+                pageSizeList: $('#'+ listId + '-page-size-dropdown'),
+                paginationBar: $('#'+ listId + '-pagination'),
             };
         },
         getState: function() {
@@ -93,10 +100,6 @@
                 state.paginatedList.page = 0;
                 state.paginatedList.pageOffset = 0;
             }
-        },
-        attachEvents: function(htmlNodes, eventHandlers) {
-            htmlNodes.pageSizeList.on('click', '.dropdown-option', eventHandlers.pageSizeList);
-            htmlNodes.pages.on('click', '.enabled > .page-button', eventHandlers.pageButtons);
         }
     };
 })();

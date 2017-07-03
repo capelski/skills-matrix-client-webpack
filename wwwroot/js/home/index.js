@@ -8,12 +8,8 @@ var paginatedList = window.application.paginatedList;
 // View
 (function() {
     var htmlNodes = {
-        employeesLoader : $('#employees-loader'),
-        employeesList: $('#employees-list'),
-        employeesKeywords: $('#employees-keywords'),
-        skillsLoader : $('#skills-loader'),
-        skillsList: $('#skills-list'),
-        skillsKeywords: $('#skills-keywords')
+        employeesList:  paginatedList.getHtmlNodes('employees'),
+        skillsList:  paginatedList.getHtmlNodes('skills')
     };
 
     function update(state) {
@@ -24,7 +20,7 @@ var paginatedList = window.application.paginatedList;
     }
 
     update.employees = function (state) {
-        paginatedList.fill(htmlNodes.employeesList, state.employees, {
+        paginatedList.fill(htmlNodes.employeesList.list, state.employees, {
             elementDrawer: function (employee) {
                 return '<li class="list-group-item"><a class="reset" href="/employees/details?id=' + employee.Id + '">' + employee.Name +
                 '<span class="badge floating">' + employee.Skills.length + '</span></a></li>';
@@ -34,7 +30,7 @@ var paginatedList = window.application.paginatedList;
     };
 
     update.skills = function (state) {
-        paginatedList.fill(htmlNodes.skillsList, state.skills, {
+        paginatedList.fill(htmlNodes.skillsList.list, state.skills, {
             elementDrawer: function (skill) {
                 return '<li class="list-group-item"><a class="reset" href="/skills/details?id=' + skill.Id + '">' + skill.Name +
                 '<span class="badge floating">' + skill.Employees.length + '</span></a></li>';
@@ -61,26 +57,26 @@ var paginatedList = window.application.paginatedList;
         _loadEmployees(state);
     }
 
-    function _loadSkills(state) {
-        js.longOperation(skillsPromise, htmlNodes.skillsLoader);
-
-        function skillsPromise() {
-            return ajax.get('/api/skill/getRearest', [])
-            .then(function(skills) {
-                state.skills = skills;
-                update.skills(state);
-            });
-        }
-    }
-
     function _loadEmployees(state) {
-        js.longOperation(employeesPromise, htmlNodes.employeesLoader);
+        js.longOperation(employeesPromise, htmlNodes.employeesList.loader);
 
         function employeesPromise() {
             return ajax.get('/api/employee/getMostSkilled', [])
             .then(function(employees) {
                 state.employees = employees;
                 update.employees(state);
+            });
+        }
+    }
+
+    function _loadSkills(state) {
+        js.longOperation(skillsPromise, htmlNodes.skillsList.loader);
+
+        function skillsPromise() {
+            return ajax.get('/api/skill/getRearest', [])
+            .then(function(skills) {
+                state.skills = skills;
+                update.skills(state);
             });
         }
     }

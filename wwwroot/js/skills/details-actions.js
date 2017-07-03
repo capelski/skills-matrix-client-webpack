@@ -9,8 +9,8 @@
         htmlNodes.elementName.on('blur', js.eventLinker(skillName, state));
         htmlNodes.deleteButton.on('click', js.eventLinker(removeSkill, state));
         htmlNodes.saveButton.on('click', js.eventLinker(save, state));
-        htmlNodes.addEmployeesKeywords.on('keyup', js.eventDelayer(js.eventLinker(getEmployees, state)));
-        htmlNodes.addEmployeesList.on('click', '.add-employee', js.eventLinker(addEmployee, state));
+        htmlNodes.addEmployeesList.keywords.on('keyup', js.eventDelayer(js.eventLinker(getEmployees, state)));
+        htmlNodes.addEmployeesList.list.on('click', '.add-employee', js.eventLinker(addEmployee, state));
         htmlNodes.employeesList.on('click', '.remove-employee', js.eventLinker(removeEmployee, state));
         $().ready(js.eventLinker(initializeView, state));
     };    
@@ -41,7 +41,7 @@
 
     function getEmployees(state, event) {
         state.searchKeywords = event.target.value;
-        js.longOperation(employeesPromise, htmlNodes.addEmployeesLoader);
+        js.longOperation(employeesPromise, htmlNodes.addEmployeesList.loader);
 
         function employeesPromise() {
             var listPromise = Promise.resolve(paginatedList.defaultInstance);

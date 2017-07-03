@@ -1,15 +1,13 @@
 (function() {
     var paginatedList = window.application.paginatedList;
     var htmlNodes = {
+        addSkillsList: paginatedList.getHtmlNodes('add-skills'),
         loader : $('#loader'),
         elementId : $('#model-id'),
         readOnly : $('#read-only'),
         pageTitle : $('#page-title'),
         elementName : $('#model-name'),
         skillsList : $('#skills-list'),
-        addSkillsKeywords : $('#add-skills-keywords'),
-        addSkillsLoader : $('#add-skills-loader'),
-        addSkillsList : $('#add-skills-list'),
         editButton : $('#edit-button'),
         deleteButton : $('#delete-button'),
         saveButton : $('#save-button'),
@@ -24,7 +22,7 @@
     }
 
     update.foundSkills = function (state) {
-        paginatedList.fill(htmlNodes.addSkillsList, state.foundSkills, {
+        paginatedList.fill(htmlNodes.addSkillsList.list, state.foundSkills, {
             elementDrawer: function (skill) {
                 return '<li class="list-group-item"><span class="add-skill" data-skill-id="' + skill.Id + '"><i class="fa fa-plus text-success"></i> '
                 + skill.Name + '</span></li>';
@@ -38,8 +36,8 @@
     };
 
     update.readOnly = function(state) {
-        htmlNodes.addSkillsKeywords.hide();
-        htmlNodes.addSkillsList.hide();
+        htmlNodes.addSkillsList.keywords.hide();
+        htmlNodes.addSkillsList.list.hide();
         htmlNodes.editButton.hide();
         htmlNodes.editButton.attr('href', '#');
         htmlNodes.deleteButton.hide();
@@ -61,8 +59,8 @@
             htmlNodes.elementName.removeAttr('disabled');                
             if (state.employee.Id >= 0) {
                 htmlNodes.pageTitle.text('New employee');
-                htmlNodes.addSkillsKeywords.show();
-                htmlNodes.addSkillsList.show();
+                htmlNodes.addSkillsList.keywords.show();
+                htmlNodes.addSkillsList.list.show();
                 htmlNodes.saveButton.show();
                 htmlNodes.cancelButton.show();
                 htmlNodes.cancelButton.attr('href', '/employees/');
@@ -94,7 +92,7 @@
     };
 
     update.searchKeywords = function (state) {
-        htmlNodes.addSkillsKeywords.val(state.searchKeywords);
+        htmlNodes.addSkillsList.keywords.val(state.searchKeywords);
     };
 
     window.application = window.application || {};

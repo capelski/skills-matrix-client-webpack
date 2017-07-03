@@ -7,12 +7,7 @@ var paginatedList = window.application.paginatedList;
     
 // View
 (function() {
-    var htmlNodes = {
-        keywords : $('#employees-keywords'),
-        loader : $('#employees-loader'),
-        list : $('#employees-list'),
-        paginationBar: paginatedList.getHtmlNodes('employees')
-    };
+    var htmlNodes = paginatedList.getHtmlNodes('employees');
 
     function update(state) {
         for (var key in update) {
@@ -35,7 +30,7 @@ var paginatedList = window.application.paginatedList;
     };
 
     update.paginationBar = function(state) {
-        paginatedList.htmlUpdater(htmlNodes.paginationBar, state)
+        paginatedList.htmlUpdater(htmlNodes, state)
     };
 
     window.application.employeesList.htmlNodes = htmlNodes;
@@ -60,7 +55,7 @@ var paginatedList = window.application.paginatedList;
         };
 
         htmlNodes.keywords.on('keyup', js.eventDelayer(js.eventLinker(searchEmployees, state)));
-        paginatedList.attachEvents(htmlNodes.paginationBar, paginationBarEventHandlers);
+        paginatedList.attachEvents(htmlNodes, paginationBarEventHandlers);
         $().ready(js.eventLinker(initializeView, state));
     }
 
