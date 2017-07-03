@@ -17,21 +17,21 @@
             Items: [],
             TotalPages: 0
         },
-        fill: function(listNode, results, options) {
+        fill: function(htmlNodes, results, options) {
             options = options || {};
             options.noResultsHtml = options.noResultsHtml || '<i>No results found</i>';
             options.elementDrawer = options.elementDrawer || function (element) {
                 return '<li class="list-group-item">' + element + '</li>';
             };
 
-            listNode.empty();
+            htmlNodes.list.empty();
             if (!results || !results.length) {
-                listNode.append(options.noResultsHtml);
+                htmlNodes.list.append(options.noResultsHtml);
             }
             else {
                 results.map(options.elementDrawer)
                 .forEach(function(element) {
-                    listNode.append(element);
+                    htmlNodes.list.append(element);
                 });
             }
         },
@@ -58,21 +58,21 @@
             return state;
         },
         htmlUpdater: function(htmlNodes, state) {
-            var pagesNumber = Math.min(state.paginatedList.pagesNumber, state.paginatedList.totalPages - state.paginatedList.pageOffset);
+            var pagesNumber = Math.min(state.pagesNumber, state.totalPages - state.pageOffset);
             if (pagesNumber) {
 
-                var pagination = '<li class="' + ((state.paginatedList.pageOffset - state.paginatedList.pagesNumber) >= 0 ? 'enabled' : 'disabled') +
+                var pagination = '<li class="' + ((state.pageOffset - state.pagesNumber) >= 0 ? 'enabled' : 'disabled') +
                 '"><span class="page-button" data-page-action="previous">&laquo;</span></li>';
                 for (var i = 0; i < pagesNumber; ++i) {
-                    pagination += '<li class="' + (state.paginatedList.page === i ? 'active' : 'enabled') + '"><span class="page-button" data-page-action="' +
-                    i + '">' + (state.paginatedList.pageOffset + i + 1) + '</span></li>';
+                    pagination += '<li class="' + (state.page === i ? 'active' : 'enabled') + '"><span class="page-button" data-page-action="' +
+                    i + '">' + (state.pageOffset + i + 1) + '</span></li>';
                 }
-                pagination += '<li class="' + ((state.paginatedList.pageOffset + state.paginatedList.pagesNumber) < state.paginatedList.totalPages ? 'enabled' : 'disabled') +
+                pagination += '<li class="' + ((state.pageOffset + state.pagesNumber) < state.totalPages ? 'enabled' : 'disabled') +
                 '"><span class="page-button" data-page-action="following">&raquo;</span></li>';
                 htmlNodes.pages.html(pagination);
 
                 htmlNodes.pageSizeList.empty();
-                state.paginatedList.pageSizeOptions.forEach(function(option) {
+                state.pageSizeOptions.forEach(function(option) {
                     htmlNodes.pageSizeList.append('<li class="text-right"><span class="dropdown-option" data-size="' + option + '">' + option + '</span></li>');
                 });
 
@@ -81,32 +81,32 @@
             else {
                 htmlNodes.paginationBar.hide();
             }
-            htmlNodes.pageSize.text(state.paginatedList.pageSize);
+            htmlNodes.pageSize.text(state.pageSize);
         },
         stateUpdaters: {
             pages: function(state, event) {
                 var action = $(event.target).data('page-action');
                 if (!isNaN(action)) {
-                    state.paginatedList.page = parseInt(action);
+                    state.page = parseInt(action);
                 }
                 else if (action === 'previous') {
-                    if ((state.paginatedList.pageOffset - state.paginatedList.pagesNumber) >= 0) {
-                        state.paginatedList.pageOffset -= state.paginatedList.pagesNumber;                    
+                    if ((state.pageOffset - state.pagesNumber) >= 0) {
+                        state.pageOffset -= state.pagesNumber;                    
                     }
-                    state.paginatedList.page = 0;
+                    state.page = 0;
                 }
                 else if (action === 'following') {
-                    if ((state.paginatedList.pageOffset + state.paginatedList.pagesNumber) < state.paginatedList.totalPages) {
-                        state.paginatedList.pageOffset += state.paginatedList.pagesNumber;
+                    if ((state.pageOffset + state.pagesNumber) < state.totalPages) {
+                        state.pageOffset += state.pagesNumber;
                     }
-                    state.paginatedList.page = 0;
+                    state.page = 0;
                 }
             },
             pageSize: function(state, event) {
                 var element = $(event.target);
-                state.paginatedList.pageSize = element.data('size');
-                state.paginatedList.page = 0;
-                state.paginatedList.pageOffset = 0;
+                state.pageSize = element.data('size');
+                state.page = 0;
+                state.pageOffset = 0;
             }
         }
     };

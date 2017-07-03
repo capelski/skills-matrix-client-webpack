@@ -22,7 +22,7 @@
     }
 
     update.foundEmployees = function (state) {
-        paginatedList.fill(htmlNodes.addEmployeesList.list, state.foundEmployees, {
+        paginatedList.fill(htmlNodes.addEmployeesList, state.foundEmployees, {
             elementDrawer: function (employee) {
                 return '<li class="list-group-item"><span class="add-employee" data-employee-id="' + employee.Id + '"><i class="fa fa-plus text-success"></i> '
                 + employee.Name + '</span></li>';

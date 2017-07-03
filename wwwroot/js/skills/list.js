@@ -17,7 +17,7 @@ var paginatedList = window.application.paginatedList;
     }
 
     update.skills = function (state) {
-        paginatedList.fill(htmlNodes.list, state.skills, {
+        paginatedList.fill(htmlNodes, state.skills, {
             elementDrawer: function (skill) {
                 return '<li class="list-group-item"><a class="reset" href="/skills/details?id=' + skill.Id + '">' + skill.Name + '</a></li>';
             },
@@ -30,7 +30,7 @@ var paginatedList = window.application.paginatedList;
     };
 
     update.paginationBar = function(state) {
-        paginatedList.htmlUpdater(htmlNodes, state)
+        paginatedList.htmlUpdater(htmlNodes, state.paginatedList)
     };
 
     window.application.skillsList.htmlNodes = htmlNodes;
@@ -46,11 +46,11 @@ var paginatedList = window.application.paginatedList;
     function attachEvents(state) {
         var paginatedListEventHandlers = {
             pageButtons: js.eventLinker(function(state, event) {
-                paginatedList.stateUpdaters.pages(state, event);
+                paginatedList.stateUpdaters.pages(state.paginatedList, event);
                 _loadSkills(state);
             }, state),
             pageSizeList: js.eventLinker(function(state, event) {
-                paginatedList.stateUpdaters.pageSize(state, event);
+                paginatedList.stateUpdaters.pageSize(state.paginatedList, event);
                 _loadSkills(state);
             }, state),
             searcher: js.eventLinker(function (state, event) {

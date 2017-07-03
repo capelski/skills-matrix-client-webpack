@@ -1,7 +1,5 @@
-- Lists Pagination
-	- htmlUpdate => The state should directly be the paginatedList
-	- PaginatedList.fill => Should take htmlNodes instead of just the list
 - Codificar URLs (e.x. search C++)
+- Add a row to pagination + Total records?
 - Include zoom icon in searcher and cross to delete the text
 - Branch jQueryState & Redux
 - React

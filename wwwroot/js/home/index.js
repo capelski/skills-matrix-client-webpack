@@ -20,7 +20,7 @@ var paginatedList = window.application.paginatedList;
     }
 
     update.employees = function (state) {
-        paginatedList.fill(htmlNodes.employeesList.list, state.employees, {
+        paginatedList.fill(htmlNodes.employeesList, state.employees, {
             elementDrawer: function (employee) {
                 return '<li class="list-group-item"><a class="reset" href="/employees/details?id=' + employee.Id + '">' + employee.Name +
                 '<span class="badge floating">' + employee.Skills.length + '</span></a></li>';
@@ -30,7 +30,7 @@ var paginatedList = window.application.paginatedList;
     };
 
     update.skills = function (state) {
-        paginatedList.fill(htmlNodes.skillsList.list, state.skills, {
+        paginatedList.fill(htmlNodes.skillsList, state.skills, {
             elementDrawer: function (skill) {
                 return '<li class="list-group-item"><a class="reset" href="/skills/details?id=' + skill.Id + '">' + skill.Name +
                 '<span class="badge floating">' + skill.Employees.length + '</span></a></li>';

@@ -17,7 +17,7 @@ var paginatedList = window.application.paginatedList;
     }
 
     update.employees = function (state) {
-        paginatedList.fill(htmlNodes.list, state.employees, {
+        paginatedList.fill(htmlNodes, state.employees, {
             elementDrawer: function (employee) {
                 return '<li class="list-group-item"><a class="reset" href="/employees/details?id=' + employee.Id + '">' + employee.Name + '</a></li>';
             },
@@ -30,7 +30,7 @@ var paginatedList = window.application.paginatedList;
     };
 
     update.paginationBar = function(state) {
-        paginatedList.htmlUpdater(htmlNodes, state)
+        paginatedList.htmlUpdater(htmlNodes, state.paginatedList)
     };
 
     window.application.employeesList.htmlNodes = htmlNodes;
@@ -45,11 +45,11 @@ var paginatedList = window.application.paginatedList;
     function attachEvents(state) {
         var paginatedListEventHandlers = {
             pageButtons: js.eventLinker(function(state, event) {
-                paginatedList.stateUpdaters.pages(state, event);
+                paginatedList.stateUpdaters.pages(state.paginatedList, event);
                 _loadEmployees(state);
             }, state),
             pageSizeList: js.eventLinker(function(state, event) {
-                paginatedList.stateUpdaters.pageSize(state, event);
+                paginatedList.stateUpdaters.pageSize(state.paginatedList, event);
                 _loadEmployees(state);
             }, state),
             searcher: js.eventLinker(function (state, event) {
