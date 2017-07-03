@@ -1,4 +1,3 @@
-- Include searcher handler in paginatedList.js
 - Lists Pagination
 	- htmlUpdate => The state should directly be the paginatedList
 	- PaginatedList.fill => Should take htmlNodes instead of just the list

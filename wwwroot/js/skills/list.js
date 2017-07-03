@@ -44,7 +44,7 @@ var paginatedList = window.application.paginatedList;
     var update = window.application.skillsList.update;
 
     function attachEvents(state) {
-        var paginationBarEventHandlers = {
+        var paginatedListEventHandlers = {
             pageButtons: js.eventLinker(function(state, event) {
                 paginatedList.stateUpdaters.pages(state, event);
                 _loadSkills(state);
@@ -52,19 +52,17 @@ var paginatedList = window.application.paginatedList;
             pageSizeList: js.eventLinker(function(state, event) {
                 paginatedList.stateUpdaters.pageSize(state, event);
                 _loadSkills(state);
+            }, state),
+            searcher: js.eventLinker(function (state, event) {
+                state.keywords = event.target.value;
+                state.paginatedList.page = 0;
+                state.paginatedList.pageOffset = 0;
+                _loadSkills(state);
             }, state)
         };
 
-        htmlNodes.keywords.on('keyup', js.eventDelayer(js.eventLinker(searchSkills, state)));
-        paginatedList.attachEvents(htmlNodes, paginationBarEventHandlers);
+        paginatedList.attachEvents(htmlNodes, paginatedListEventHandlers);
         $().ready(js.eventLinker(initializeView, state));
-    }
-
-    function searchSkills(state, event) {
-        state.keywords = event.target.value;
-        state.paginatedList.page = 0;
-        state.paginatedList.pageOffset = 0;
-        _loadSkills(state);
     }
 
     function initializeView(state, event) {
@@ -80,6 +78,7 @@ var paginatedList = window.application.paginatedList;
             .then(function(paginatedList) {
                 state.skills = paginatedList.Items;
                 state.paginatedList.totalPages = paginatedList.TotalPages;
+                update.keywords(state);
                 update.paginationBar(state);
                 update.skills(state);
             });

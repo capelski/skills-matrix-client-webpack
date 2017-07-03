@@ -6,10 +6,14 @@
     var update = window.application.employee.update;
 
     window.application.employee.attachEvents = function (state) {
+        var addSkillsListEventHandlers = {
+            searcher: js.eventDelayer(js.eventLinker(getSkills, state))
+        };
+
         htmlNodes.elementName.on('blur', js.eventLinker(employeeName, state));
         htmlNodes.deleteButton.on('click', js.eventLinker(removeEmployee, state));
         htmlNodes.saveButton.on('click', js.eventLinker(save, state));
-        htmlNodes.addSkillsList.keywords.on('keyup', js.eventDelayer(js.eventLinker(getSkills, state)));
+        paginatedList.attachEvents(htmlNodes.addSkillsList, addSkillsListEventHandlers);
         htmlNodes.addSkillsList.list.on('click', '.add-skill', js.eventLinker(addSkill, state));
         htmlNodes.skillsList.on('click', '.remove-skill', js.eventLinker(removeSkill, state));
         $().ready(js.eventLinker(initializeView, state));

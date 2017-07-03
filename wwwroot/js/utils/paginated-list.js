@@ -2,8 +2,16 @@
     window.application = window.application || {};
     window.application.paginatedList = {
         attachEvents: function(htmlNodes, eventHandlers) {
-            htmlNodes.pageSizeList.on('click', '.dropdown-option', eventHandlers.pageSizeList);
-            htmlNodes.pages.on('click', '.enabled > .page-button', eventHandlers.pageButtons);
+            eventHandlers = eventHandlers || {};
+            if (typeof eventHandlers.searcher === "function") {
+                htmlNodes.keywords.on('keyup', eventHandlers.searcher);
+            }
+            if (typeof eventHandlers.pageSizeList === "function") {
+                htmlNodes.pageSizeList.on('click', '.dropdown-option', eventHandlers.pageSizeList);
+            }
+            if (typeof eventHandlers.pageButtons === "function") {
+                htmlNodes.pages.on('click', '.enabled > .page-button', eventHandlers.pageButtons);
+            }
         },
         defaultInstance: {
             Items: [],

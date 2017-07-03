@@ -43,7 +43,7 @@ var paginatedList = window.application.paginatedList;
     var update = window.application.employeesList.update;
 
     function attachEvents(state) {
-        var paginationBarEventHandlers = {
+        var paginatedListEventHandlers = {
             pageButtons: js.eventLinker(function(state, event) {
                 paginatedList.stateUpdaters.pages(state, event);
                 _loadEmployees(state);
@@ -51,19 +51,17 @@ var paginatedList = window.application.paginatedList;
             pageSizeList: js.eventLinker(function(state, event) {
                 paginatedList.stateUpdaters.pageSize(state, event);
                 _loadEmployees(state);
+            }, state),
+            searcher: js.eventLinker(function (state, event) {
+                state.keywords = event.target.value;
+                state.paginatedList.page = 0;
+                state.paginatedList.pageOffset = 0;
+                _loadEmployees(state);
             }, state)
         };
 
-        htmlNodes.keywords.on('keyup', js.eventDelayer(js.eventLinker(searchEmployees, state)));
-        paginatedList.attachEvents(htmlNodes, paginationBarEventHandlers);
+        paginatedList.attachEvents(htmlNodes, paginatedListEventHandlers);
         $().ready(js.eventLinker(initializeView, state));
-    }
-
-    function searchEmployees(state, event) {
-        state.keywords = event.target.value;
-        state.paginatedList.page = 0;
-        state.paginatedList.pageOffset = 0;
-        _loadEmployees(state);
     }
 
     function initializeView(state, event) {
@@ -79,6 +77,7 @@ var paginatedList = window.application.paginatedList;
             .then(function(paginatedList) {
                 state.employees = paginatedList.Items;
                 state.paginatedList.totalPages = paginatedList.TotalPages;
+                update.keywords(state);
                 update.paginationBar(state);
                 update.employees(state);
             });
