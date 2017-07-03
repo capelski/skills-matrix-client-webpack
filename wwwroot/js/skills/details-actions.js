@@ -1,17 +1,18 @@
 (function() {
+    var js = window.application.jsCommons;
     var ajax = window.application.ajax;
-    var utils = window.application.utils;
+    var paginatedList = window.application.paginatedList;
     var htmlNodes = window.application.skill.htmlNodes;
     var update = window.application.skill.update;
 
     window.application.skill.attachEvents = function (state) {
-        htmlNodes.elementName.on('blur', utils.eventLinker(skillName, state));
-        htmlNodes.deleteButton.on('click', utils.eventLinker(removeSkill, state));
-        htmlNodes.saveButton.on('click', utils.eventLinker(save, state));
-        htmlNodes.addEmployeesKeywords.on('keyup', utils.eventDelayer(utils.eventLinker(getEmployees, state)));
-        htmlNodes.addEmployeesList.on('click', '.add-employee', utils.eventLinker(addEmployee, state));
-        htmlNodes.employeesList.on('click', '.remove-employee', utils.eventLinker(removeEmployee, state));
-        $().ready(utils.eventLinker(initializeView, state));
+        htmlNodes.elementName.on('blur', js.eventLinker(skillName, state));
+        htmlNodes.deleteButton.on('click', js.eventLinker(removeSkill, state));
+        htmlNodes.saveButton.on('click', js.eventLinker(save, state));
+        htmlNodes.addEmployeesKeywords.on('keyup', js.eventDelayer(js.eventLinker(getEmployees, state)));
+        htmlNodes.addEmployeesList.on('click', '.add-employee', js.eventLinker(addEmployee, state));
+        htmlNodes.employeesList.on('click', '.remove-employee', js.eventLinker(removeEmployee, state));
+        $().ready(js.eventLinker(initializeView, state));
     };    
 
     function addEmployee (state, event) {
@@ -40,15 +41,15 @@
 
     function getEmployees(state, event) {
         state.searchKeywords = event.target.value;
-        utils.longOperation(employeesPromise, htmlNodes.addEmployeesLoader);
+        js.longOperation(employeesPromise, htmlNodes.addEmployeesLoader);
 
         function employeesPromise() {
-            var listPromise = Promise.resolve(utils.paginatedList.default);
+            var listPromise = Promise.resolve(paginatedList.defaultInstance);
             if (state.searchKeywords.length > 0) {
-                listPromise = ajax.get('/api/employee?keywords=' + state.searchKeywords, utils.paginatedList.default);
+                listPromise = ajax.get('/api/employee?keywords=' + state.searchKeywords, paginatedList.defaultInstance);
             }
             return listPromise.then(function(paginatedList) {
-                state.foundEmployees = utils.arrayDifference(paginatedList.Items, state.skill.Employees, 'Id');
+                state.foundEmployees = js.arrayDifference(paginatedList.Items, state.skill.Employees, 'Id');
                 update.foundEmployees(state);
             });
         }
@@ -59,7 +60,7 @@
         if (state.skill.Id != 0) {
             skillPromise = getPromise;
         }
-        utils.longOperation(skillPromise, htmlNodes.loader);
+        js.longOperation(skillPromise, htmlNodes.loader);
 
         function createPromise() {
             return Promise.resolve(state.skill)
@@ -92,7 +93,7 @@
     }
 
     function removeSkill(state, event) {
-        utils.actionModal('<div>Are you sure you want to delete ' + state.skill.Name + '?</div>', 'Delete')
+        js.actionModal('<div>Are you sure you want to delete ' + state.skill.Name + '?</div>', 'Delete')
         .then(function() {
             return ajax.remove('/api/skill?id=' + state.skill.Id);
         })

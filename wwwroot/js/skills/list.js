@@ -1,14 +1,17 @@
 window.application = window.application || {};
 window.application.skillsList = window.application.skillsList || {};
+
+var js = window.application.jsCommons;
+var ajax = window.application.ajax;
+var paginatedList = window.application.paginatedList;
     
 // View
 (function() {
-    var utils = window.application.utils;
     var htmlNodes = {
         keywords : $('#skills-keywords'),
         loader : $('#skills-loader'),
         list : $('#skills-list'),
-        paginationBar: utils.paginatedList.getHtmlNodes('skills')
+        paginationBar: paginatedList.getHtmlNodes('skills')
     };
 
     function update(state) {
@@ -19,7 +22,7 @@ window.application.skillsList = window.application.skillsList || {};
     }
 
     update.skills = function (state) {
-        utils.fillList(htmlNodes.list, state.skills, {
+        paginatedList.fill(htmlNodes.list, state.skills, {
             elementDrawer: function (skill) {
                 return '<li class="list-group-item"><a class="reset" href="/skills/details?id=' + skill.Id + '">' + skill.Name + '</a></li>';
             },
@@ -32,7 +35,7 @@ window.application.skillsList = window.application.skillsList || {};
     };
 
     update.paginationBar = function(state) {
-        utils.paginatedList.htmlUpdater(htmlNodes.paginationBar, state)
+        paginatedList.htmlUpdater(htmlNodes.paginationBar, state)
     };
 
     window.application.skillsList.htmlNodes = htmlNodes;
@@ -42,25 +45,24 @@ window.application.skillsList = window.application.skillsList || {};
 // Actions
 (function() {
     var ajax = window.application.ajax;
-    var utils = window.application.utils;
     var htmlNodes = window.application.skillsList.htmlNodes;
     var update = window.application.skillsList.update;
 
     function attachEvents(state) {
         var paginationBarEventHandlers = {
-            pageButtons: utils.eventLinker(function(state, event) {
-                utils.paginatedList.stateUpdaters.pages(state, event);
+            pageButtons: js.eventLinker(function(state, event) {
+                paginatedList.stateUpdaters.pages(state, event);
                 _loadSkills(state);
             }, state),
-            pageSizeList: utils.eventLinker(function(state, event) {
-                utils.paginatedList.stateUpdaters.pageSize(state, event);
+            pageSizeList: js.eventLinker(function(state, event) {
+                paginatedList.stateUpdaters.pageSize(state, event);
                 _loadSkills(state);
             }, state)
         };
 
-        htmlNodes.keywords.on('keyup', utils.eventDelayer(utils.eventLinker(searchSkills, state)));
-        utils.paginatedList.attachEvents(htmlNodes.paginationBar, paginationBarEventHandlers);
-        $().ready(utils.eventLinker(initializeView, state));
+        htmlNodes.keywords.on('keyup', js.eventDelayer(js.eventLinker(searchSkills, state)));
+        paginatedList.attachEvents(htmlNodes.paginationBar, paginationBarEventHandlers);
+        $().ready(js.eventLinker(initializeView, state));
     }
 
     function searchSkills(state, event) {
@@ -75,11 +77,11 @@ window.application.skillsList = window.application.skillsList || {};
     }
 
     function _loadSkills(state) {
-        utils.longOperation(skillsPromise, htmlNodes.loader);
+        js.longOperation(skillsPromise, htmlNodes.loader);
 
         function skillsPromise() {
             return ajax.get('/api/skill?keywords=' + state.keywords + '&page=' + (state.paginatedList.page + state.paginatedList.pageOffset) +
-            '&pageSize=' + state.paginatedList.pageSize, utils.paginatedList.default)
+            '&pageSize=' + state.paginatedList.pageSize, paginatedList.defaultInstance)
             .then(function(paginatedList) {
                 state.skills = paginatedList.Items;
                 state.paginatedList.totalPages = paginatedList.TotalPages;
@@ -94,10 +96,9 @@ window.application.skillsList = window.application.skillsList || {};
 
 // Model
 (function() {
-    var utils = window.application.utils;    
     var state = {
         keywords: '',
-        paginatedList: utils.paginatedList.getState(),
+        paginatedList: paginatedList.getState(),
         skills: []
     };
 

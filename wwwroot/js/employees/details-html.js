@@ -1,4 +1,5 @@
 (function() {
+    var paginatedList = window.application.paginatedList;
     var htmlNodes = {
         loader : $('#loader'),
         elementId : $('#model-id'),
@@ -14,7 +15,6 @@
         saveButton : $('#save-button'),
         cancelButton : $('#cancel-button')
     };
-    var utils = window.application.utils;
 
     function update(state) {
         for (var key in update) {
@@ -24,7 +24,7 @@
     }
 
     update.foundSkills = function (state) {
-        utils.fillList(htmlNodes.addSkillsList, state.foundSkills, {
+        paginatedList.fill(htmlNodes.addSkillsList, state.foundSkills, {
             elementDrawer: function (skill) {
                 return '<li class="list-group-item"><span class="add-skill" data-skill-id="' + skill.Id + '"><i class="fa fa-plus text-success"></i> '
                 + skill.Name + '</span></li>';

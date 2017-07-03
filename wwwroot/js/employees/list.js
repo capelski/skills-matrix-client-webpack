@@ -1,14 +1,17 @@
 window.application = window.application || {};
 window.application.employeesList = window.application.employeesList || {};
+
+var js = window.application.jsCommons;
+var ajax = window.application.ajax;
+var paginatedList = window.application.paginatedList;
     
 // View
 (function() {
-    var utils = window.application.utils;
     var htmlNodes = {
         keywords : $('#employees-keywords'),
         loader : $('#employees-loader'),
         list : $('#employees-list'),
-        paginationBar: utils.paginatedList.getHtmlNodes('employees')
+        paginationBar: paginatedList.getHtmlNodes('employees')
     };
 
     function update(state) {
@@ -19,7 +22,7 @@ window.application.employeesList = window.application.employeesList || {};
     }
 
     update.employees = function (state) {
-        utils.fillList(htmlNodes.list, state.employees, {
+        paginatedList.fill(htmlNodes.list, state.employees, {
             elementDrawer: function (employee) {
                 return '<li class="list-group-item"><a class="reset" href="/employees/details?id=' + employee.Id + '">' + employee.Name + '</a></li>';
             },
@@ -32,7 +35,7 @@ window.application.employeesList = window.application.employeesList || {};
     };
 
     update.paginationBar = function(state) {
-        utils.paginatedList.htmlUpdater(htmlNodes.paginationBar, state)
+        paginatedList.htmlUpdater(htmlNodes.paginationBar, state)
     };
 
     window.application.employeesList.htmlNodes = htmlNodes;
@@ -41,26 +44,24 @@ window.application.employeesList = window.application.employeesList || {};
 
 // Actions
 (function() {
-    var ajax = window.application.ajax;
-    var utils = window.application.utils;
     var htmlNodes = window.application.employeesList.htmlNodes;
     var update = window.application.employeesList.update;
 
     function attachEvents(state) {
         var paginationBarEventHandlers = {
-            pageButtons: utils.eventLinker(function(state, event) {
-                utils.paginatedList.stateUpdaters.pages(state, event);
+            pageButtons: js.eventLinker(function(state, event) {
+                paginatedList.stateUpdaters.pages(state, event);
                 _loadEmployees(state);
             }, state),
-            pageSizeList: utils.eventLinker(function(state, event) {
-                utils.paginatedList.stateUpdaters.pageSize(state, event);
+            pageSizeList: js.eventLinker(function(state, event) {
+                paginatedList.stateUpdaters.pageSize(state, event);
                 _loadEmployees(state);
             }, state)
         };
 
-        htmlNodes.keywords.on('keyup', utils.eventDelayer(utils.eventLinker(searchEmployees, state)));
-        utils.paginatedList.attachEvents(htmlNodes.paginationBar, paginationBarEventHandlers);
-        $().ready(utils.eventLinker(initializeView, state));
+        htmlNodes.keywords.on('keyup', js.eventDelayer(js.eventLinker(searchEmployees, state)));
+        paginatedList.attachEvents(htmlNodes.paginationBar, paginationBarEventHandlers);
+        $().ready(js.eventLinker(initializeView, state));
     }
 
     function searchEmployees(state, event) {
@@ -75,11 +76,11 @@ window.application.employeesList = window.application.employeesList || {};
     }
 
     function _loadEmployees(state) {
-        utils.longOperation(employeesPromise, htmlNodes.loader);
+        js.longOperation(employeesPromise, htmlNodes.loader);
 
         function employeesPromise() {
             return ajax.get('/api/employee?keywords=' + state.keywords + '&page=' + (state.paginatedList.page + state.paginatedList.pageOffset) +
-            '&pageSize=' + state.paginatedList.pageSize, utils.paginatedList.default)
+            '&pageSize=' + state.paginatedList.pageSize, paginatedList.defaultInstance)
             .then(function(paginatedList) {
                 state.employees = paginatedList.Items;
                 state.paginatedList.totalPages = paginatedList.TotalPages;
@@ -94,11 +95,10 @@ window.application.employeesList = window.application.employeesList || {};
 
 // Model
 (function() {
-    var utils = window.application.utils;    
     var state = {
         employees: [],
         keywords: '',
-        paginatedList: utils.paginatedList.getState()
+        paginatedList: paginatedList.getState()
     };
 
     window.application.employeesList.attachEvents(state);
