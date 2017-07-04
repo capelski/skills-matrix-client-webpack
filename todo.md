@@ -1,4 +1,4 @@
-- Merge htmlUpdater and fillList?
+- Replace lists view states with list's one
 - Hide Details view forms until load finish
 - Add a row to pagination + Total records?
 - Branch jQueryState & Redux

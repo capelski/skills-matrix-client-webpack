@@ -17,8 +17,7 @@ var paginatedList = window.application.paginatedList;
     }
 
     update.employees = function (state) {
-        paginatedList.htmlUpdater(htmlNodes, state.paginatedList);
-        paginatedList.fill(htmlNodes, state.paginatedList.results, {
+        paginatedList.htmlUpdater(htmlNodes, state.paginatedList, {
             elementDrawer: function (employee) {
                 return '<li class="list-group-item"><a class="reset" href="/employees/details?id=' + employee.Id + '">' + employee.Name + '</a></li>';
             },

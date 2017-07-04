@@ -64,12 +64,16 @@
             };
             return state;
         },
-        htmlUpdater: function(htmlNodes, state) {
+        htmlUpdater: function(htmlNodes, state, options) {
+            
                 htmlNodes.keywords.val(state.keywords);
                 htmlNodes.clearKeywords.hide();
                 if (state.keywords && state.keywords.length > 0) {
                     htmlNodes.clearKeywords.show();
                 }
+
+                window.application.paginatedList.fill(htmlNodes, state.results, options);
+
                 var pagesNumber = Math.min(state.pagesNumber, state.totalPages - state.pageOffset);
                 if (pagesNumber) {
 

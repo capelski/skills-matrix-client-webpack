@@ -17,8 +17,7 @@ var paginatedList = window.application.paginatedList;
     }
 
     update.skills = function (state) {
-        paginatedList.htmlUpdater(htmlNodes, state.paginatedList);
-        paginatedList.fill(htmlNodes, state.paginatedList.results, {
+        paginatedList.htmlUpdater(htmlNodes, state.paginatedList, {
             elementDrawer: function (skill) {
                 return '<li class="list-group-item"><a class="reset" href="/skills/details?id=' + skill.Id + '">' + skill.Name + '</a></li>';
             },
