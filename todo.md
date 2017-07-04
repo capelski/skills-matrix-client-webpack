@@ -1,2 +1,0 @@
-- Hide Details view forms until load finish
-- Branch jQueryState & Redux
