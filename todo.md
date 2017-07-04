@@ -1,5 +1,5 @@
+- Include X icon in the PaginatedList searcher to delete the text
 - Add a row to pagination + Total records?
-- Include zoom icon in searcher and cross to delete the text
 - Branch jQueryState & Redux
 - React
 - Include Identity & Permissons

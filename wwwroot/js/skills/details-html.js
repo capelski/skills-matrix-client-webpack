@@ -32,8 +32,7 @@
     };
 
     update.readOnly = function (state) {
-        htmlNodes.addEmployeesList.keywords.hide();
-        htmlNodes.addEmployeesList.list.hide();
+        htmlNodes.addEmployeesList.wrapper.hide();
         htmlNodes.editButton.hide();
         htmlNodes.editButton.attr('href', '#');
         htmlNodes.deleteButton.hide();
@@ -55,8 +54,7 @@
             htmlNodes.elementName.removeAttr('disabled');                
             if (state.skill.Id >= 0) {
                 htmlNodes.pageTitle.text('New skill');
-                htmlNodes.addEmployeesList.keywords.show();
-                htmlNodes.addEmployeesList.list.show();
+                htmlNodes.addEmployeesList.wrapper.show();
                 htmlNodes.saveButton.show();
                 htmlNodes.cancelButton.show();
                 htmlNodes.cancelButton.attr('href', '/skills/');

@@ -36,8 +36,7 @@
     };
 
     update.readOnly = function(state) {
-        htmlNodes.addSkillsList.keywords.hide();
-        htmlNodes.addSkillsList.list.hide();
+        htmlNodes.addSkillsList.wrapper.hide();
         htmlNodes.editButton.hide();
         htmlNodes.editButton.attr('href', '#');
         htmlNodes.deleteButton.hide();
@@ -59,8 +58,7 @@
             htmlNodes.elementName.removeAttr('disabled');                
             if (state.employee.Id >= 0) {
                 htmlNodes.pageTitle.text('New employee');
-                htmlNodes.addSkillsList.keywords.show();
-                htmlNodes.addSkillsList.list.show();
+                htmlNodes.addSkillsList.wrapper.show();
                 htmlNodes.saveButton.show();
                 htmlNodes.cancelButton.show();
                 htmlNodes.cancelButton.attr('href', '/employees/');

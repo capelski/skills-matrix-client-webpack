@@ -50,7 +50,9 @@
         function employeesPromise() {
             var listPromise = Promise.resolve(paginatedList.defaultInstance);
             if (state.searchKeywords.length > 0) {
-                listPromise = ('/api/employee?', 'keywords=' + state.searchKeywords, paginatedList.defaultInstance);
+                listPromise = ajax.get('/api/employee', {
+                    keywords: state.searchKeywords
+                }, paginatedList.defaultInstance);
             }
             return listPromise.then(function(paginatedList) {
                 state.foundEmployees = js.arrayDifference(paginatedList.Items, state.skill.Employees, 'Id');

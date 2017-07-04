@@ -44,6 +44,7 @@
                 pageSize: $('#'+ listId + '-page-size'),
                 pageSizeList: $('#'+ listId + '-page-size-dropdown'),
                 paginationBar: $('#'+ listId + '-pagination'),
+                wrapper: $('#'+ listId + '-wrapper')
             };
         },
         getState: function() {
@@ -57,31 +58,33 @@
             };
             return state;
         },
-        htmlUpdater: function(htmlNodes, state) {
-            var pagesNumber = Math.min(state.pagesNumber, state.totalPages - state.pageOffset);
-            if (pagesNumber) {
+        htmlUpdaters: {
+            pagination: function(htmlNodes, state) {
+                var pagesNumber = Math.min(state.pagesNumber, state.totalPages - state.pageOffset);
+                if (pagesNumber) {
 
-                var pagination = '<li class="' + ((state.pageOffset - state.pagesNumber) >= 0 ? 'enabled' : 'disabled') +
-                '"><span class="page-button" data-page-action="previous">&laquo;</span></li>';
-                for (var i = 0; i < pagesNumber; ++i) {
-                    pagination += '<li class="' + (state.page === i ? 'active' : 'enabled') + '"><span class="page-button" data-page-action="' +
-                    i + '">' + (state.pageOffset + i + 1) + '</span></li>';
+                    var pagination = '<li class="' + ((state.pageOffset - state.pagesNumber) >= 0 ? 'enabled' : 'disabled') +
+                    '"><span class="page-button" data-page-action="previous">&laquo;</span></li>';
+                    for (var i = 0; i < pagesNumber; ++i) {
+                        pagination += '<li class="' + (state.page === i ? 'active' : 'enabled') + '"><span class="page-button" data-page-action="' +
+                        i + '">' + (state.pageOffset + i + 1) + '</span></li>';
+                    }
+                    pagination += '<li class="' + ((state.pageOffset + state.pagesNumber) < state.totalPages ? 'enabled' : 'disabled') +
+                    '"><span class="page-button" data-page-action="following">&raquo;</span></li>';
+                    htmlNodes.pages.html(pagination);
+
+                    htmlNodes.pageSizeList.empty();
+                    state.pageSizeOptions.forEach(function(option) {
+                        htmlNodes.pageSizeList.append('<li class="text-right"><span class="dropdown-option" data-size="' + option + '">' + option + '</span></li>');
+                    });
+
+                    htmlNodes.paginationBar.show();
                 }
-                pagination += '<li class="' + ((state.pageOffset + state.pagesNumber) < state.totalPages ? 'enabled' : 'disabled') +
-                '"><span class="page-button" data-page-action="following">&raquo;</span></li>';
-                htmlNodes.pages.html(pagination);
-
-                htmlNodes.pageSizeList.empty();
-                state.pageSizeOptions.forEach(function(option) {
-                    htmlNodes.pageSizeList.append('<li class="text-right"><span class="dropdown-option" data-size="' + option + '">' + option + '</span></li>');
-                });
-
-                htmlNodes.paginationBar.show();
+                else {
+                    htmlNodes.paginationBar.hide();
+                }
+                htmlNodes.pageSize.text(state.pageSize);
             }
-            else {
-                htmlNodes.paginationBar.hide();
-            }
-            htmlNodes.pageSize.text(state.pageSize);
         },
         stateUpdaters: {
             pages: function(state, event) {

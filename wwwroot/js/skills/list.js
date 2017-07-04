@@ -30,7 +30,7 @@ var paginatedList = window.application.paginatedList;
     };
 
     update.paginationBar = function(state) {
-        paginatedList.htmlUpdater(htmlNodes, state.paginatedList)
+        paginatedList.htmlUpdaters.pagination(htmlNodes, state.paginatedList)
     };
 
     window.application.skillsList.htmlNodes = htmlNodes;
