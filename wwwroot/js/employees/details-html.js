@@ -11,14 +11,14 @@
         editButton : $('#edit-button'),
         deleteButton : $('#delete-button'),
         saveButton : $('#save-button'),
-        cancelButton : $('#cancel-button')
+        cancelButton : $('#cancel-button'),
+        viewWrapper : $('#view-wrapper')
     };
 
     function update(state) {
-        for (var key in update) {
-            var updater = update[key];
-            updater(state);
-        }
+        update.readOnly(state);
+        update.foundSkills(state);
+        update.employeeName(state);
     }
 
     update.foundSkills = function (state) {
@@ -33,6 +33,22 @@
 
     update.employeeName = function(state) {
         htmlNodes.elementName.val(state.employee.Name);
+    };
+
+    update.employeeSkills = function(state) {
+        htmlNodes.skillsList.empty();
+        if (state.employee.Skills.length === 0) {
+            htmlNodes.skillsList.append('<i>No skills assigned yet</i>');
+        }
+        for (var key in state.employee.Skills) {
+            var skill = state.employee.Skills[key];
+            var html = '<li class="list-group-item"><a class="reset" href="/skills/details?id=' + skill.Id + '">' + skill.Name + '</a></li>';
+            if (!state.readOnly) {
+                html = '<li class="list-group-item"><span class="remove-skill" data-skill-id="' + skill.Id + '"><i class="fa fa-times text-danger"></i> '
+                + skill.Name + '</span></li>';
+            }
+            htmlNodes.skillsList.append(html);
+        }
     };
 
     update.readOnly = function(state) {
@@ -73,20 +89,10 @@
         update.employeeSkills(state);
     };
 
-    update.employeeSkills = function(state) {
-        htmlNodes.skillsList.empty();
-        if (state.employee.Skills.length === 0) {
-            htmlNodes.skillsList.append('<i>No skills assigned yet</i>');
-        }
-        for (var key in state.employee.Skills) {
-            var skill = state.employee.Skills[key];
-            var html = '<li class="list-group-item"><a class="reset" href="/skills/details?id=' + skill.Id + '">' + skill.Name + '</a></li>';
-            if (!state.readOnly) {
-                html = '<li class="list-group-item"><span class="remove-skill" data-skill-id="' + skill.Id + '"><i class="fa fa-times text-danger"></i> '
-                + skill.Name + '</span></li>';
-            }
-            htmlNodes.skillsList.append(html);
-        }
+    update.viewWrapper = function (state) {
+        htmlNodes.viewWrapper.css({
+            visibility: 'visible'
+        });
     };
 
     window.application = window.application || {};

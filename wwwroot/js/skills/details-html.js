@@ -11,14 +11,14 @@
         editButton : $('#edit-button'),
         deleteButton : $('#delete-button'),
         saveButton : $('#save-button'),
-        cancelButton : $('#cancel-button')
+        cancelButton : $('#cancel-button'),
+        viewWrapper : $('#view-wrapper')
     };
 
     function update(state) {
-        for (var key in update) {
-            var updater = update[key];
-            updater(state);
-        }
+        update.readOnly(state);
+        update.foundEmployees(state);
+        update.skillName(state);
     }
 
     update.foundEmployees = function (state) {
@@ -69,10 +69,6 @@
         update.skillEmployees(state);
     };
 
-    update.skillName = function (state) {
-        htmlNodes.elementName.val(state.skill.Name);
-    };
-
     update.skillEmployees = function (state) {
         htmlNodes.employeesList.empty();
         if (state.skill.Employees.length === 0) {
@@ -87,6 +83,16 @@
             }
             htmlNodes.employeesList.append(html);
         }
+    };
+
+    update.skillName = function (state) {
+        htmlNodes.elementName.val(state.skill.Name);
+    };
+
+    update.viewWrapper = function (state) {
+        htmlNodes.viewWrapper.css({
+            visibility: 'visible'
+        });
     };
 
     window.application = window.application || {};

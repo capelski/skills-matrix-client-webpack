@@ -108,6 +108,7 @@
                 state.readOnly = true;
             }
             update(state);
+            update.viewWrapper(state);
         }
     }
     
