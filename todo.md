@@ -1,5 +1,4 @@
 - Hide Details view forms until load finish
-- Add a row to pagination + Total records?
 - Branch jQueryState & Redux
 - React
 - Include Identity & Permissons
