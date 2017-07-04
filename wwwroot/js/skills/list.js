@@ -17,7 +17,7 @@ var paginatedList = window.application.paginatedList;
     }
 
     update.skills = function (state) {
-        paginatedList.htmlUpdater(htmlNodes, state.paginatedList, {
+        paginatedList.htmlUpdater(htmlNodes, state, {
             elementDrawer: function (skill) {
                 return '<li class="list-group-item"><a class="reset" href="/skills/details?id=' + skill.Id + '">' + skill.Name + '</a></li>';
             },
@@ -38,17 +38,17 @@ var paginatedList = window.application.paginatedList;
     function attachEvents(state) {
         var paginatedListEventHandlers = {
             pageButtons: js.eventLinker(function(state, event) {
-                paginatedList.stateUpdaters.pages(state.paginatedList, event);
+                paginatedList.stateUpdaters.pages(state, event);
                 _loadSkills(state);
             }, state),
             pageSizeList: js.eventLinker(function(state, event) {
-                paginatedList.stateUpdaters.pageSize(state.paginatedList, event);
+                paginatedList.stateUpdaters.pageSize(state, event);
                 _loadSkills(state);
             }, state),
             searcher: js.eventLinker(function (state, event) {
-                state.paginatedList.keywords = event.target.value;
-                state.paginatedList.page = 0;
-                state.paginatedList.pageOffset = 0;
+                state.keywords = event.target.value;
+                state.page = 0;
+                state.pageOffset = 0;
                 _loadSkills(state);
             }, state),
             clearKeywords: js.eventDelayer(js.eventLinker(clearKeywords, state))
@@ -59,9 +59,9 @@ var paginatedList = window.application.paginatedList;
     }
 
     function clearKeywords(state, event) {
-        state.paginatedList.keywords = '';
-        state.paginatedList.page = 0;
-        state.paginatedList.pageOffset = 0;
+        state.keywords = '';
+        state.page = 0;
+        state.pageOffset = 0;
         _loadSkills(state);
     }
 
@@ -74,13 +74,13 @@ var paginatedList = window.application.paginatedList;
 
         function skillsPromise() {
             return ajax.get('/api/skill', {
-                keywords: state.paginatedList.keywords,
-                page: state.paginatedList.page + state.paginatedList.pageOffset,
-                pageSize: state.paginatedList.pageSize
+                keywords: state.keywords,
+                page: state.page + state.pageOffset,
+                pageSize: state.pageSize
             }, paginatedList.defaultInstance)
             .then(function(paginatedList) {
-                state.paginatedList.results = paginatedList.Items;
-                state.paginatedList.totalPages = paginatedList.TotalPages;
+                state.results = paginatedList.Items;
+                state.totalPages = paginatedList.TotalPages;
                 update.skills(state);
             });
         }
@@ -91,9 +91,7 @@ var paginatedList = window.application.paginatedList;
 
 // Model
 (function() {
-    var state = {
-        paginatedList: paginatedList.getState()
-    };
+    var state = paginatedList.getState();
 
     window.application.skillsList.attachEvents(state);
     window.application.skillsList.state = state;
