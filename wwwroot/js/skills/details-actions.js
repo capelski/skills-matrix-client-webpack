@@ -31,7 +31,7 @@
                 }, paginatedList.defaultInstance);
             }
             return listPromise.then(function(paginatedList) {
-                state.foundEmployees = js.arrayDifference(paginatedList.Items, state.skill.Employees, 'Id');
+                state.addEmployeesList.results = js.arrayDifference(paginatedList.Items, state.skill.Employees, 'Id');
                 update.foundEmployees(state);
             });
         }
@@ -39,10 +39,10 @@
 
     function addEmployee (state, event) {
         var employeeId = getEmployeeId(event);
-        var employee = state.foundEmployees.find(function(employee) {
+        var employee = state.addEmployeesList.results.find(function(employee) {
             return employee.Id === employeeId;
         });
-        state.foundEmployees = [];
+        state.addEmployeesList.results = [];
         state.addEmployeesList.keywords = '';
         if (employee) {
             state.skill.Employees.push(employee);

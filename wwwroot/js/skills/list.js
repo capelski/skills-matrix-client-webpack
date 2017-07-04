@@ -18,7 +18,7 @@ var paginatedList = window.application.paginatedList;
 
     update.skills = function (state) {
         paginatedList.htmlUpdater(htmlNodes, state.paginatedList);
-        paginatedList.fill(htmlNodes, state.skills, {
+        paginatedList.fill(htmlNodes, state.paginatedList.results, {
             elementDrawer: function (skill) {
                 return '<li class="list-group-item"><a class="reset" href="/skills/details?id=' + skill.Id + '">' + skill.Name + '</a></li>';
             },
@@ -80,7 +80,7 @@ var paginatedList = window.application.paginatedList;
                 pageSize: state.paginatedList.pageSize
             }, paginatedList.defaultInstance)
             .then(function(paginatedList) {
-                state.skills = paginatedList.Items;
+                state.paginatedList.results = paginatedList.Items;
                 state.paginatedList.totalPages = paginatedList.TotalPages;
                 update.skills(state);
             });
@@ -93,8 +93,7 @@ var paginatedList = window.application.paginatedList;
 // Model
 (function() {
     var state = {
-        paginatedList: paginatedList.getState(),
-        skills: []
+        paginatedList: paginatedList.getState()
     };
 
     window.application.skillsList.attachEvents(state);

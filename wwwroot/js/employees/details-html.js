@@ -23,7 +23,7 @@
 
     update.foundSkills = function (state) {
         paginatedList.htmlUpdater(htmlNodes.addSkillsList, state.addSkillsList);
-        paginatedList.fill(htmlNodes.addSkillsList, state.foundSkills, {
+        paginatedList.fill(htmlNodes.addSkillsList, state.addSkillsList.results, {
             elementDrawer: function (skill) {
                 return '<li class="list-group-item"><span class="add-skill" data-skill-id="' + skill.Id + '"><i class="fa fa-plus text-success"></i> '
                 + skill.Name + '</span></li>';

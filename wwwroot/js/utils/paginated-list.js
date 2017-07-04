@@ -59,6 +59,7 @@
                 pageSizeOptions: [10, 25, 50],
                 pageOffset: 0,
                 pagesNumber: 5,
+                results: [],
                 totalPages: 0,
             };
             return state;

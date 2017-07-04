@@ -31,7 +31,7 @@
                 }, paginatedList.defaultInstance);
             }
             return listPromise.then(function(paginatedList) {
-                state.foundSkills = js.arrayDifference(paginatedList.Items, state.employee.Skills, 'Id');
+                state.addSkillsList.results = js.arrayDifference(paginatedList.Items, state.employee.Skills, 'Id');
                 update.foundSkills(state);
             });
         }
@@ -39,10 +39,10 @@
 
     function addSkill (state, event) {
         var skillId = getSkillId(event);
-        var skill = state.foundSkills.find(function(skill) {
+        var skill = state.addSkillsList.results.find(function(skill) {
             return skill.Id === skillId;
         });
-        state.foundSkills = [];
+        state.addSkillsList.results = [];
         state.addSkillsList.keywords = '';
         if (skill) {
             state.employee.Skills.push(skill);

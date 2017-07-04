@@ -8,7 +8,6 @@
             Name: '',
             Skills: []
         },
-        foundSkills: [],
         readOnly: htmlNodes.readOnly.val() == 'true'
     };
 

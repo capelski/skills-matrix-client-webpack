@@ -18,7 +18,7 @@ var paginatedList = window.application.paginatedList;
 
     update.employees = function (state) {
         paginatedList.htmlUpdater(htmlNodes, state.paginatedList);
-        paginatedList.fill(htmlNodes, state.employees, {
+        paginatedList.fill(htmlNodes, state.paginatedList.results, {
             elementDrawer: function (employee) {
                 return '<li class="list-group-item"><a class="reset" href="/employees/details?id=' + employee.Id + '">' + employee.Name + '</a></li>';
             },
@@ -79,7 +79,7 @@ var paginatedList = window.application.paginatedList;
                 pageSize: state.paginatedList.pageSize
             }, paginatedList.defaultInstance)
             .then(function(paginatedList) {
-                state.employees = paginatedList.Items;
+                state.paginatedList.results = paginatedList.Items;
                 state.paginatedList.totalPages = paginatedList.TotalPages;
                 update.employees(state);
             });
@@ -92,7 +92,6 @@ var paginatedList = window.application.paginatedList;
 // Model
 (function() {
     var state = {
-        employees: [],
         paginatedList: paginatedList.getState()
     };
 
