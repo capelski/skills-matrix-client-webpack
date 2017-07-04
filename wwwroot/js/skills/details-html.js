@@ -22,6 +22,7 @@
     }
 
     update.foundEmployees = function (state) {
+        paginatedList.htmlUpdater(htmlNodes.addEmployeesList, state.addEmployeesList);
         paginatedList.fill(htmlNodes.addEmployeesList, state.foundEmployees, {
             elementDrawer: function (employee) {
                 return '<li class="list-group-item"><span class="add-employee" data-employee-id="' + employee.Id + '"><i class="fa fa-plus text-success"></i> '
@@ -67,10 +68,6 @@
         }
 
         update.skillEmployees(state);
-    };
-
-    update.searchKeywords = function (state) {
-        htmlNodes.addEmployeesList.keywords.val(state.searchKeywords);
     };
 
     update.skillName = function (state) {

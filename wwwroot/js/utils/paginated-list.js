@@ -12,6 +12,9 @@
             if (typeof eventHandlers.pageButtons === "function") {
                 htmlNodes.pages.on('click', '.enabled > .page-button', eventHandlers.pageButtons);
             }
+            if (typeof eventHandlers.clearKeywords === "function") {
+                htmlNodes.clearKeywords.on('click', eventHandlers.clearKeywords);
+            }
         },
         defaultInstance: {
             Items: [],
@@ -37,6 +40,7 @@
         },
         getHtmlNodes: function(listId) {
             return {
+                clearKeywords : $('#'+ listId + '-clear-keywords'),
                 keywords : $('#'+ listId + '-keywords'),
                 list : $('#'+ listId + '-list'),
                 loader : $('#'+ listId + '-loader'),
@@ -49,6 +53,7 @@
         },
         getState: function() {
             var state = {
+                keywords: '',
                 page: 0,
                 pageSize: 10,
                 pageSizeOptions: [10, 25, 50],
@@ -58,8 +63,12 @@
             };
             return state;
         },
-        htmlUpdaters: {
-            pagination: function(htmlNodes, state) {
+        htmlUpdater: function(htmlNodes, state) {
+                htmlNodes.keywords.val(state.keywords);
+                htmlNodes.clearKeywords.hide();
+                if (state.keywords && state.keywords.length > 0) {
+                    htmlNodes.clearKeywords.show();
+                }
                 var pagesNumber = Math.min(state.pagesNumber, state.totalPages - state.pageOffset);
                 if (pagesNumber) {
 
@@ -84,7 +93,6 @@
                     htmlNodes.paginationBar.hide();
                 }
                 htmlNodes.pageSize.text(state.pageSize);
-            }
         },
         stateUpdaters: {
             pages: function(state, event) {

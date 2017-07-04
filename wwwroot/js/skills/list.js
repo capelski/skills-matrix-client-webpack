@@ -17,20 +17,13 @@ var paginatedList = window.application.paginatedList;
     }
 
     update.skills = function (state) {
+        paginatedList.htmlUpdater(htmlNodes, state.paginatedList);
         paginatedList.fill(htmlNodes, state.skills, {
             elementDrawer: function (skill) {
                 return '<li class="list-group-item"><a class="reset" href="/skills/details?id=' + skill.Id + '">' + skill.Name + '</a></li>';
             },
             noResultsHtml: '<i>No skills found</i>'
         });
-    };
-
-    update.keywords = function (state) {
-        htmlNodes.keywords.val(state.keywords);
-    };
-
-    update.paginationBar = function(state) {
-        paginatedList.htmlUpdaters.pagination(htmlNodes, state.paginatedList)
     };
 
     window.application.skillsList.htmlNodes = htmlNodes;
@@ -54,15 +47,23 @@ var paginatedList = window.application.paginatedList;
                 _loadSkills(state);
             }, state),
             searcher: js.eventLinker(function (state, event) {
-                state.keywords = event.target.value;
+                state.paginatedList.keywords = event.target.value;
                 state.paginatedList.page = 0;
                 state.paginatedList.pageOffset = 0;
                 _loadSkills(state);
-            }, state)
+            }, state),
+            clearKeywords: js.eventDelayer(js.eventLinker(clearKeywords, state))
         };
 
         paginatedList.attachEvents(htmlNodes, paginatedListEventHandlers);
         $().ready(js.eventLinker(initializeView, state));
+    }
+
+    function clearKeywords(state, event) {
+        state.paginatedList.keywords = '';
+        state.paginatedList.page = 0;
+        state.paginatedList.pageOffset = 0;
+        _loadSkills(state);
     }
 
     function initializeView(state, event) {
@@ -74,15 +75,13 @@ var paginatedList = window.application.paginatedList;
 
         function skillsPromise() {
             return ajax.get('/api/skill', {
-                keywords: state.keywords,
+                keywords: state.paginatedList.keywords,
                 page: state.paginatedList.page + state.paginatedList.pageOffset,
                 pageSize: state.paginatedList.pageSize
             }, paginatedList.defaultInstance)
             .then(function(paginatedList) {
                 state.skills = paginatedList.Items;
                 state.paginatedList.totalPages = paginatedList.TotalPages;
-                update.keywords(state);
-                update.paginationBar(state);
                 update.skills(state);
             });
         }
@@ -94,7 +93,6 @@ var paginatedList = window.application.paginatedList;
 // Model
 (function() {
     var state = {
-        keywords: '',
         paginatedList: paginatedList.getState(),
         skills: []
     };

@@ -17,20 +17,13 @@ var paginatedList = window.application.paginatedList;
     }
 
     update.employees = function (state) {
+        paginatedList.htmlUpdater(htmlNodes, state.paginatedList);
         paginatedList.fill(htmlNodes, state.employees, {
             elementDrawer: function (employee) {
                 return '<li class="list-group-item"><a class="reset" href="/employees/details?id=' + employee.Id + '">' + employee.Name + '</a></li>';
             },
             noResultsHtml: '<i>No employees found</i>'
         });
-    };
-
-    update.keywords = function (state) {
-        htmlNodes.keywords.val(state.keywords);
-    };
-
-    update.paginationBar = function(state) {
-        paginatedList.htmlUpdaters.pagination(htmlNodes, state.paginatedList)
     };
 
     window.application.employeesList.htmlNodes = htmlNodes;
@@ -53,15 +46,23 @@ var paginatedList = window.application.paginatedList;
                 _loadEmployees(state);
             }, state),
             searcher: js.eventLinker(function (state, event) {
-                state.keywords = event.target.value;
+                state.paginatedList.keywords = event.target.value;
                 state.paginatedList.page = 0;
                 state.paginatedList.pageOffset = 0;
                 _loadEmployees(state);
-            }, state)
+            }, state),
+            clearKeywords: js.eventDelayer(js.eventLinker(clearKeywords, state))
         };
 
         paginatedList.attachEvents(htmlNodes, paginatedListEventHandlers);
         $().ready(js.eventLinker(initializeView, state));
+    }
+
+    function clearKeywords(state, event) {
+        state.paginatedList.keywords = '';
+        state.paginatedList.page = 0;
+        state.paginatedList.pageOffset = 0;
+        _loadEmployees(state);
     }
 
     function initializeView(state, event) {
@@ -73,15 +74,13 @@ var paginatedList = window.application.paginatedList;
 
         function employeesPromise() {
             return ajax.get('/api/employee', {
-                keywords: state.keywords,
+                keywords: state.paginatedList.keywords,
                 page: state.paginatedList.page + state.paginatedList.pageOffset,
                 pageSize: state.paginatedList.pageSize
             }, paginatedList.defaultInstance)
             .then(function(paginatedList) {
                 state.employees = paginatedList.Items;
                 state.paginatedList.totalPages = paginatedList.TotalPages;
-                update.keywords(state);
-                update.paginationBar(state);
                 update.employees(state);
             });
         }
@@ -94,7 +93,6 @@ var paginatedList = window.application.paginatedList;
 (function() {
     var state = {
         employees: [],
-        keywords: '',
         paginatedList: paginatedList.getState()
     };
 

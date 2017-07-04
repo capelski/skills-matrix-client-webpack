@@ -22,6 +22,7 @@
     }
 
     update.foundSkills = function (state) {
+        paginatedList.htmlUpdater(htmlNodes.addSkillsList, state.addSkillsList);
         paginatedList.fill(htmlNodes.addSkillsList, state.foundSkills, {
             elementDrawer: function (skill) {
                 return '<li class="list-group-item"><span class="add-skill" data-skill-id="' + skill.Id + '"><i class="fa fa-plus text-success"></i> '
@@ -87,10 +88,6 @@
             }
             htmlNodes.skillsList.append(html);
         }
-    };
-
-    update.searchKeywords = function (state) {
-        htmlNodes.addSkillsList.keywords.val(state.searchKeywords);
     };
 
     window.application = window.application || {};

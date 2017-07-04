@@ -49,7 +49,7 @@
         longOperation: function (promiseBuilder, loader) {
             return new Promise(function(resolve, reject) {
                 loader.parent().addClass('loading');
-                loader.fadeIn(400).promise().done(function() {
+                loader.show().promise().done(function() {
                     promiseBuilder().then(function() {
                         loader.delay(400).fadeOut().promise().done(function() {
                             loader.parent().removeClass('loading');

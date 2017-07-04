@@ -7,7 +7,8 @@
 
     window.application.employee.attachEvents = function (state) {
         var addSkillsListEventHandlers = {
-            searcher: js.eventDelayer(js.eventLinker(getSkills, state))
+            searcher: js.eventDelayer(js.eventLinker(searchSkills, state)),
+            clearKeywords: js.eventDelayer(js.eventLinker(clearKeywords, state))
         };
 
         htmlNodes.elementName.on('blur', js.eventLinker(employeeName, state));
@@ -17,7 +18,24 @@
         htmlNodes.addSkillsList.list.on('click', '.add-skill', js.eventLinker(addSkill, state));
         htmlNodes.skillsList.on('click', '.remove-skill', js.eventLinker(removeSkill, state));
         $().ready(js.eventLinker(initializeView, state));
-    };  
+    };
+
+    function _getSkills(state) {
+        js.longOperation(skillsPromise, htmlNodes.addSkillsList.loader);
+
+        function skillsPromise() {
+            var listPromise = Promise.resolve(paginatedList.defaultInstance);
+            if (state.addSkillsList.keywords.length > 0) {
+                listPromise = ajax.get('/api/skill', {
+                    keywords: state.addSkillsList.keywords
+                }, paginatedList.defaultInstance);
+            }
+            return listPromise.then(function(paginatedList) {
+                state.foundSkills = js.arrayDifference(paginatedList.Items, state.employee.Skills, 'Id');
+                update.foundSkills(state);
+            });
+        }
+    }
 
     function addSkill (state, event) {
         var skillId = getSkillId(event);
@@ -25,13 +43,19 @@
             return skill.Id === skillId;
         });
         state.foundSkills = [];
-        state.searchKeywords = '';
+        state.addSkillsList.keywords = '';
         if (skill) {
             state.employee.Skills.push(skill);
             update.employeeSkills(state);
         }
-        update.searchKeywords(state);
         update.foundSkills(state);
+    }
+
+    function clearKeywords(state, event) {
+        state.addSkillsList.keywords = '';
+        state.addSkillsList.page = 0;
+        state.addSkillsList.pageOffset = 0;
+        _getSkills(state);
     }
 
     function employeeName (state, event) {
@@ -49,22 +73,11 @@
         return skillId;
     }
 
-    function getSkills(state, event) {
-        state.searchKeywords = event.target.value;
-        js.longOperation(skillsPromise, htmlNodes.addSkillsList.loader);
-
-        function skillsPromise() {
-            var listPromise = Promise.resolve(paginatedList.defaultInstance);
-            if (state.searchKeywords.length > 0) {
-                listPromise = ajax.get('/api/skill', {
-                    keywords: state.searchKeywords
-                }, paginatedList.defaultInstance);
-            }
-            return listPromise.then(function(paginatedList) {
-                state.foundSkills = js.arrayDifference(paginatedList.Items, state.employee.Skills, 'Id');
-                update.foundSkills(state);
-            });
-        }
+    function searchSkills(state, event) {
+        state.addSkillsList.keywords = event.target.value;
+        state.addSkillsList.page = 0;
+        state.addSkillsList.pageOffset = 0;
+        _getSkills(state);
     }
 
     function initializeView(state, event) {

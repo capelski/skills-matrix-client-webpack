@@ -7,6 +7,7 @@
     <div class="input-group @(ViewData["searcher"] != null && (bool) ViewData["searcher"] ? "" : " hidden")">
         <span class="input-group-addon"><i class="fa fa-search"></i></span>
         <input id="@listId-keywords" class="form-control" placeholder="@(ViewData["placeholder"] != null ? ViewData["placeholder"] : "Search...")" />
+        <span id="@listId-clear-keywords" class="fa fa-times clear-icon" style="display: none;"></span>
     </div>
 
     <div class="dynamic-content">

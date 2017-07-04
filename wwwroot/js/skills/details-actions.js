@@ -7,7 +7,8 @@
 
     window.application.skill.attachEvents = function (state) {
         var addEmployeesListEventHandlers = {
-            searcher: js.eventDelayer(js.eventLinker(getEmployees, state))
+            searcher: js.eventDelayer(js.eventLinker(searchEmployees, state)),
+            clearKeywords: js.eventDelayer(js.eventLinker(clearKeywords, state))
         };
 
         htmlNodes.elementName.on('blur', js.eventLinker(skillName, state));
@@ -17,7 +18,24 @@
         htmlNodes.addEmployeesList.list.on('click', '.add-employee', js.eventLinker(addEmployee, state));
         htmlNodes.employeesList.on('click', '.remove-employee', js.eventLinker(removeEmployee, state));
         $().ready(js.eventLinker(initializeView, state));
-    };    
+    };
+
+    function _getEmployees(state) {
+        js.longOperation(employeesPromise, htmlNodes.addEmployeesList.loader);
+
+        function employeesPromise() {
+            var listPromise = Promise.resolve(paginatedList.defaultInstance);
+            if (state.addEmployeesList.keywords.length > 0) {
+                listPromise = ajax.get('/api/employee', {
+                    keywords: state.addEmployeesList.keywords
+                }, paginatedList.defaultInstance);
+            }
+            return listPromise.then(function(paginatedList) {
+                state.foundEmployees = js.arrayDifference(paginatedList.Items, state.skill.Employees, 'Id');
+                update.foundEmployees(state);
+            });
+        }
+    }
 
     function addEmployee (state, event) {
         var employeeId = getEmployeeId(event);
@@ -25,13 +43,19 @@
             return employee.Id === employeeId;
         });
         state.foundEmployees = [];
-        state.searchKeywords = '';
+        state.addEmployeesList.keywords = '';
         if (employee) {
             state.skill.Employees.push(employee);
             update.skillEmployees(state);
         }
-        update.searchKeywords(state);
         update.foundEmployees(state);
+    }
+
+    function clearKeywords(state, event) {
+        state.addEmployeesList.keywords = '';
+        state.addEmployeesList.page = 0;
+        state.addEmployeesList.pageOffset = 0;
+        _getEmployees(state);
     }
 
     function getEmployeeId(event) {
@@ -43,22 +67,11 @@
         return employeeId;
     }
 
-    function getEmployees(state, event) {
-        state.searchKeywords = event.target.value;
-        js.longOperation(employeesPromise, htmlNodes.addEmployeesList.loader);
-
-        function employeesPromise() {
-            var listPromise = Promise.resolve(paginatedList.defaultInstance);
-            if (state.searchKeywords.length > 0) {
-                listPromise = ajax.get('/api/employee', {
-                    keywords: state.searchKeywords
-                }, paginatedList.defaultInstance);
-            }
-            return listPromise.then(function(paginatedList) {
-                state.foundEmployees = js.arrayDifference(paginatedList.Items, state.skill.Employees, 'Id');
-                update.foundEmployees(state);
-            });
-        }
+    function searchEmployees(state, event) {
+        state.addEmployeesList.keywords = event.target.value;
+        state.addEmployeesList.page = 0;
+        state.addEmployeesList.pageOffset = 0;
+        _getEmployees(state);
     }
 
     function initializeView(state, event) {

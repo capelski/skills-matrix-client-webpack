@@ -1,4 +1,5 @@
-- Include X icon in the PaginatedList searcher to delete the text
+- Merge htmlUpdater and fillList?
+- Hide Details view forms until load finish
 - Add a row to pagination + Total records?
 - Branch jQueryState & Redux
 - React
