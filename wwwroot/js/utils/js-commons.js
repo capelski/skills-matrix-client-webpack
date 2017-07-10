@@ -41,17 +41,18 @@
                 }, delay);
             }
         },
-        longOperation: function (promiseBuilder, loader) {
+        longOperation: function (promise, loader) {
             return new Promise(function(resolve, reject) {
-                loader.parent().addClass('loading');
-                loader.fadeIn(400).promise().done(function() {
-                    promiseBuilder().then(function() {
-                        loader.delay(400).fadeOut().promise().done(function() {
-                            loader.parent().removeClass('loading');
-                            resolve();
-                        });
+                var delayTime = 500;
+                var parent = loader.parent();
+                var loadingPromise = parent.removeClass('finished').addClass('loading').delay(delayTime).promise();
+                Promise.all([promise, loadingPromise])
+                .then(function(results) {
+                    resolve(results[0]);
+                    parent.removeClass('loading').delay(delayTime).promise().done(function() {
+                        parent.addClass('finished');
                     });
-                });
+                })
             });
         }
     };

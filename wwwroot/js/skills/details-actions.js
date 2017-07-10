@@ -43,20 +43,17 @@
     };
 
     function _getEmployees(state) {
-        js.longOperation(employeesPromise, htmlNodes.addEmployeesList.loader);
-
-        function employeesPromise() {
-            var listPromise = Promise.resolve(paginatedList.defaultInstance);
-            if (state.addEmployeesList.keywords.length > 0) {
-                listPromise = ajax.get('/api/employee', {
-                    keywords: state.addEmployeesList.keywords
-                }, paginatedList.defaultInstance);
-            }
-            return listPromise.then(function(paginatedList) {
-                state.addEmployeesList.results = js.arrayDifference(paginatedList.Items, state.skill.Employees, 'Id');
-                update.foundEmployees(state);
-            });
+        var listPromise = Promise.resolve(paginatedList.defaultInstance);
+        if (state.addEmployeesList.keywords.length > 0) {
+            listPromise = js.longOperation(ajax.get('/api/employee', {
+                keywords: state.addEmployeesList.keywords
+            }, paginatedList.defaultInstance), htmlNodes.addEmployeesList.loader);
         }
+        
+        listPromise.then(function(paginatedList) {
+            state.addEmployeesList.results = js.arrayDifference(paginatedList.Items, state.skill.Employees, 'Id');
+            update.foundEmployees(state);
+        });
     }
 
     function addEmployee (state, event) {
@@ -83,25 +80,14 @@
     }
 
     function initializeView(state, event) {
-        var skillPromise = createPromise;
+        var skillPromise = Promise.resolve(state.skill);
         if (state.skill.Id != 0) {
-            skillPromise = getPromise;
-        }
-        js.longOperation(skillPromise, htmlNodes.loader);
-
-        function createPromise() {
-            return Promise.resolve(state.skill)
-            .then(loadHandler);
-        }
-
-        function getPromise() {
-            return ajax.get('/api/skill/getById', {
+            skillPromise = ajax.get('/api/skill/getById', {
                 id: state.skill.Id
-            })
-            .then(loadHandler);
+            });
         }
-
-        function loadHandler(skill) {
+        js.longOperation(skillPromise, htmlNodes.loader)
+        .then(function(skill) {
             if (skill) {
                 state.skill = skill;
             }
@@ -111,7 +97,7 @@
             }
             update(state);
             update.viewWrapper(state);
-        }
+        });
     }
 
     function removeEmployee(state, event) {

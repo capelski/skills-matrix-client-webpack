@@ -8,14 +8,13 @@ using SkillsMatrix.Models;
 namespace SkillsMatrix.Migrations
 {
     [DbContext(typeof(SkillsMatrixContext))]
-    [Migration("20170613135443_EmployeeSkill")]
-    partial class EmployeeSkill
+    [Migration("20170710161148_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "1.1.1")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "1.1.1");
 
             modelBuilder.Entity("SkillsMatrix.Models.Employee", b =>
                 {
@@ -26,7 +25,7 @@ namespace SkillsMatrix.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Employee");
+                    b.ToTable("employee");
                 });
 
             modelBuilder.Entity("SkillsMatrix.Models.EmployeeSkill", b =>
@@ -39,7 +38,7 @@ namespace SkillsMatrix.Migrations
 
                     b.HasIndex("SkillId");
 
-                    b.ToTable("Employee_Skill");
+                    b.ToTable("employee_skill");
                 });
 
             modelBuilder.Entity("SkillsMatrix.Models.Skill", b =>
@@ -51,7 +50,7 @@ namespace SkillsMatrix.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Skill");
+                    b.ToTable("skill");
                 });
 
             modelBuilder.Entity("SkillsMatrix.Models.EmployeeSkill", b =>

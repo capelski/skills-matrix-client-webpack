@@ -70,20 +70,16 @@ var paginatedList = window.application.paginatedList;
     }
 
     function _loadSkills(state) {
-        js.longOperation(skillsPromise, htmlNodes.loader);
-
-        function skillsPromise() {
-            return ajax.get('/api/skill', {
-                keywords: state.keywords,
-                page: state.page + state.pageOffset,
-                pageSize: state.pageSize
-            }, paginatedList.defaultInstance)
-            .then(function(paginatedList) {
-                state.results = paginatedList.Items;
-                state.totalPages = paginatedList.TotalPages;
-                update.skills(state);
-            });
-        }
+        js.longOperation(ajax.get('/api/skill', {
+            keywords: state.keywords,
+            page: state.page + state.pageOffset,
+            pageSize: state.pageSize
+        }, paginatedList.defaultInstance), htmlNodes.loader)
+        .then(function(paginatedList) {
+            state.results = paginatedList.Items;
+            state.totalPages = paginatedList.TotalPages;
+            update.skills(state);
+        });
     }
 
     window.application.skillsList.attachEvents = attachEvents;

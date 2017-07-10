@@ -1,1 +1,2 @@
-- The spinner must be displayed by CSS; remove async longOperation
+-  Configure production MySql database server -> (Remove SQL Server VM and Enable MySQL)
+- Remove todo.md

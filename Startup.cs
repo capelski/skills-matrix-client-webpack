@@ -8,9 +8,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SkillsMatrix.Models;
-using Microsoft.EntityFrameworkCore;
 using SkillsMatrix.Commons;
 using SkillsMatrix.Services;
+using Microsoft.EntityFrameworkCore;
+using Pomelo.EntityFrameworkCore.MySql;
 
 namespace SkillsMatrix
 {
@@ -36,7 +37,7 @@ namespace SkillsMatrix
                     options.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();
                 });
             services.AddDbContext<SkillsMatrixContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("SkillsMatrixDatabase")));
+                options.UseMySql(Configuration.GetConnectionString("SkillsMatrixDatabase")));
 
             services.AddTransient<IEntityService<Employee, int>, EmployeeService>();
             services.AddTransient<IEntityService<Skill, int>, SkillService>();

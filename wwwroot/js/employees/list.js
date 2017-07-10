@@ -69,20 +69,16 @@ var paginatedList = window.application.paginatedList;
     }
 
     function _loadEmployees(state) {
-        js.longOperation(employeesPromise, htmlNodes.loader);
-
-        function employeesPromise() {
-            return ajax.get('/api/employee', {
-                keywords: state.keywords,
-                page: state.page + state.pageOffset,
-                pageSize: state.pageSize
-            }, paginatedList.defaultInstance)
-            .then(function(paginatedList) {
-                state.results = paginatedList.Items;
-                state.totalPages = paginatedList.TotalPages;
-                update.employees(state);
-            });
-        }
+        js.longOperation(ajax.get('/api/employee', {
+            keywords: state.keywords,
+            page: state.page + state.pageOffset,
+            pageSize: state.pageSize
+        }, paginatedList.defaultInstance), htmlNodes.loader)
+        .then(function(paginatedList) {
+            state.results = paginatedList.Items;
+            state.totalPages = paginatedList.TotalPages;
+            update.employees(state);
+        });
     }
 
     window.application.employeesList.attachEvents = attachEvents;

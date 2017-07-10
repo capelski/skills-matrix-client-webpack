@@ -17,9 +17,9 @@ namespace SkillsMatrix.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Employee>().Ignore(e => e.Skills).ToTable("Employee");
-            modelBuilder.Entity<Skill>().Ignore(s => s.Employees).ToTable("Skill");
-            modelBuilder.Entity<EmployeeSkill>().ToTable("Employee_Skill").HasKey(es => new { es.EmployeeId, es.SkillId});
+            modelBuilder.Entity<Employee>().Ignore(e => e.Skills).ToTable("employee");
+            modelBuilder.Entity<Skill>().Ignore(s => s.Employees).ToTable("skill");
+            modelBuilder.Entity<EmployeeSkill>().ToTable("employee_skill").HasKey(es => new { es.EmployeeId, es.SkillId});
 
             modelBuilder.Entity<EmployeeSkill>()
                 .HasOne(es => es.Employee)
