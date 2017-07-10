@@ -49,7 +49,9 @@ var paginatedList = window.application.paginatedList;
     var update = window.application.home.update;
 
     function attachEvents(state) {
-        $().ready(js.eventLinker(initializeView, state));
+        $().ready(function(event) {
+            initializeView(state, event);
+        });
     }
 
     function initializeView(state, event) {

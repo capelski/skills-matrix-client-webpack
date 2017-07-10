@@ -7,17 +7,39 @@
 
     window.application.employee.attachEvents = function (state) {
         var addSkillsListEventHandlers = {
-            searcher: js.eventDelayer(js.eventLinker(searchSkills, state)),
-            clearKeywords: js.eventDelayer(js.eventLinker(clearKeywords, state))
+            searcher: js.eventDelayer(function(event) {
+                state.addSkillsList.keywords = event.target.value;
+                state.addSkillsList.page = 0;
+                state.addSkillsList.pageOffset = 0;
+                _getSkills(state);
+            }),
+            clearKeywords: function(event) {
+                state.addSkillsList.keywords = '';
+                state.addSkillsList.page = 0;
+                state.addSkillsList.pageOffset = 0;
+                _getSkills(state);
+            }
         };
 
-        htmlNodes.elementName.on('blur', js.eventLinker(employeeName, state));
-        htmlNodes.deleteButton.on('click', js.eventLinker(removeEmployee, state));
-        htmlNodes.saveButton.on('click', js.eventLinker(save, state));
+        htmlNodes.elementName.on('blur', function(event) {
+            employeeName(state, event);
+        });
+        htmlNodes.deleteButton.on('click', function(event) {
+            removeEmployee(state, event);
+        });
+        htmlNodes.saveButton.on('click', function(event) {
+            save(state, event);
+        });
         paginatedList.attachEvents(htmlNodes.addSkillsList, addSkillsListEventHandlers);
-        htmlNodes.addSkillsList.list.on('click', '.add-skill', js.eventLinker(addSkill, state));
-        htmlNodes.skillsList.on('click', '.remove-skill', js.eventLinker(removeSkill, state));
-        $().ready(js.eventLinker(initializeView, state));
+        htmlNodes.addSkillsList.list.on('click', '.add-skill', function(event) {
+            addSkill(state, event);
+        });
+        htmlNodes.skillsList.on('click', '.remove-skill', function(event) {
+            removeSkill(state, event);
+        });
+        $().ready(function(event) {
+            initializeView(state, event);
+        });
     };
 
     function _getSkills(state) {
@@ -51,13 +73,6 @@
         update.foundSkills(state);
     }
 
-    function clearKeywords(state, event) {
-        state.addSkillsList.keywords = '';
-        state.addSkillsList.page = 0;
-        state.addSkillsList.pageOffset = 0;
-        _getSkills(state);
-    }
-
     function employeeName (state, event) {
         var name = event.target.value;
         state.employee.Name = name;
@@ -71,13 +86,6 @@
         }
         var skillId = $element.data('skill-id');
         return skillId;
-    }
-
-    function searchSkills(state, event) {
-        state.addSkillsList.keywords = event.target.value;
-        state.addSkillsList.page = 0;
-        state.addSkillsList.pageOffset = 0;
-        _getSkills(state);
     }
 
     function initializeView(state, event) {

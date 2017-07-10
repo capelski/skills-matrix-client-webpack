@@ -7,17 +7,39 @@
 
     window.application.skill.attachEvents = function (state) {
         var addEmployeesListEventHandlers = {
-            searcher: js.eventDelayer(js.eventLinker(searchEmployees, state)),
-            clearKeywords: js.eventDelayer(js.eventLinker(clearKeywords, state))
+            searcher: js.eventDelayer(function(event) {
+                state.addEmployeesList.keywords = event.target.value;
+                state.addEmployeesList.page = 0;
+                state.addEmployeesList.pageOffset = 0;
+                _getEmployees(state);
+            }),
+            clearKeywords: function(event) {
+                state.addEmployeesList.keywords = '';
+                state.addEmployeesList.page = 0;
+                state.addEmployeesList.pageOffset = 0;
+                _getEmployees(state);
+            }
         };
 
-        htmlNodes.elementName.on('blur', js.eventLinker(skillName, state));
-        htmlNodes.deleteButton.on('click', js.eventLinker(removeSkill, state));
-        htmlNodes.saveButton.on('click', js.eventLinker(save, state));
+        htmlNodes.elementName.on('blur', function(event) {
+            skillName(state, event);
+        });
+        htmlNodes.deleteButton.on('click', function(event) {
+            removeSkill(state, event);
+        });
+        htmlNodes.saveButton.on('click', function(event) {
+            save(state, event);
+        });
         paginatedList.attachEvents(htmlNodes.addEmployeesList, addEmployeesListEventHandlers);
-        htmlNodes.addEmployeesList.list.on('click', '.add-employee', js.eventLinker(addEmployee, state));
-        htmlNodes.employeesList.on('click', '.remove-employee', js.eventLinker(removeEmployee, state));
-        $().ready(js.eventLinker(initializeView, state));
+        htmlNodes.addEmployeesList.list.on('click', '.add-employee', function(event) {
+            addEmployee(state, event);
+        });
+        htmlNodes.employeesList.on('click', '.remove-employee', function(event) {
+            removeEmployee(state, event);
+        });
+        $().ready(function(event) {
+            initializeView(state, event);
+        });
     };
 
     function _getEmployees(state) {
@@ -51,13 +73,6 @@
         update.foundEmployees(state);
     }
 
-    function clearKeywords(state, event) {
-        state.addEmployeesList.keywords = '';
-        state.addEmployeesList.page = 0;
-        state.addEmployeesList.pageOffset = 0;
-        _getEmployees(state);
-    }
-
     function getEmployeeId(event) {
         var $element = $(event.target);
         if ($element.hasClass('fa')) {
@@ -65,13 +80,6 @@
         }
         var employeeId = $element.data('employee-id');
         return employeeId;
-    }
-
-    function searchEmployees(state, event) {
-        state.addEmployeesList.keywords = event.target.value;
-        state.addEmployeesList.page = 0;
-        state.addEmployeesList.pageOffset = 0;
-        _getEmployees(state);
     }
 
     function initializeView(state, event) {

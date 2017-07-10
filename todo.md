@@ -1,0 +1,1 @@
+- The spinner must be displayed by CSS; remove async longOperation

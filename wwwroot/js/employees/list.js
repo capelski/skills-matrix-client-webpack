@@ -36,32 +36,32 @@ var paginatedList = window.application.paginatedList;
 
     function attachEvents(state) {
         var paginatedListEventHandlers = {
-            pageButtons: js.eventLinker(function(state, event) {
+            pageButtons: function(event) {
                 paginatedList.stateUpdaters.pages(state, event);
                 _loadEmployees(state);
-            }, state),
-            pageSizeList: js.eventLinker(function(state, event) {
+            },
+            pageSizeList: function(event) {
                 paginatedList.stateUpdaters.pageSize(state, event);
                 _loadEmployees(state);
-            }, state),
-            searcher: js.eventLinker(function (state, event) {
+            },
+            searcher: function(event) {
                 state.keywords = event.target.value;
                 state.page = 0;
                 state.pageOffset = 0;
                 _loadEmployees(state);
-            }, state),
-            clearKeywords: js.eventDelayer(js.eventLinker(clearKeywords, state))
+            },
+            clearKeywords: function(event) {
+                state.keywords = '';
+                state.page = 0;
+                state.pageOffset = 0;
+                _loadEmployees(state);
+            }
         };
 
         paginatedList.attachEvents(htmlNodes, paginatedListEventHandlers);
-        $().ready(js.eventLinker(initializeView, state));
-    }
-
-    function clearKeywords(state, event) {
-        state.keywords = '';
-        state.page = 0;
-        state.pageOffset = 0;
-        _loadEmployees(state);
+        $().ready(function(event) {
+            initializeView(state, event);
+        });
     }
 
     function initializeView(state, event) {
