@@ -1,9 +1,9 @@
 window.application = window.application || {};
 window.application.skillsList = window.application.skillsList || {};
 
-var js = window.application.jsCommons;
-var ajax = window.application.ajax;
-var paginatedList = window.application.paginatedList;
+var js = window.JsCommons;
+var ajax = window.Ajax;
+var paginatedList = window.PaginatedList;
     
 // View
 (function() {
@@ -31,7 +31,7 @@ var paginatedList = window.application.paginatedList;
 
 // Actions
 (function() {
-    var ajax = window.application.ajax;
+    var ajax = window.Ajax;
     var htmlNodes = window.application.skillsList.htmlNodes;
     var update = window.application.skillsList.update;
 

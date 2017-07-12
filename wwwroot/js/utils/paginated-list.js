@@ -1,6 +1,5 @@
 (function() {
-    window.application = window.application || {};
-    window.application.paginatedList = {
+    var PaginatedList = {
         attachEvents: function(htmlNodes, eventHandlers) {
             eventHandlers = eventHandlers || {};
             if (typeof eventHandlers.searcher === "function") {
@@ -72,7 +71,7 @@
                     htmlNodes.clearKeywords.show();
                 }
 
-                window.application.paginatedList.fill(htmlNodes, state.results, options);
+                window.PaginatedList.fill(htmlNodes, state.results, options);
 
                 var pagesNumber = Math.min(state.pagesNumber, state.totalPages - state.pageOffset);
                 if (pagesNumber) {
@@ -126,4 +125,5 @@
             }
         }
     };
+    window.PaginatedList = PaginatedList;
 })();

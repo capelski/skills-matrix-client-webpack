@@ -1,5 +1,5 @@
 (function() {
-    var paginatedList = window.application.paginatedList;
+    var paginatedList = window.PaginatedList;
     var htmlNodes = {
         addSkillsList: paginatedList.getHtmlNodes('add-skills'),
         loader : $('#loader'),

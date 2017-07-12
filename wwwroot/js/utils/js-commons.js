@@ -1,6 +1,5 @@
 (function() {
-    window.application = window.application || {};
-    window.application.jsCommons = {
+    var JsCommons = {
         actionModal: function(text, actionName) {
             return new Promise(function(resolve, reject) {
                 basicModal.show({
@@ -56,4 +55,5 @@
             });
         }
     };
+    window.JsCommons = JsCommons;
 })();

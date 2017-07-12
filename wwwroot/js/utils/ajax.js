@@ -1,6 +1,5 @@
 (function() {
-    window.application = window.application || {};
-    window.application.ajax = {
+    var Ajax = {
         get: function(url, parameters, defaultValue) {
             return new Promise(function(resolve, reject) {
                 var result = defaultValue;
@@ -69,4 +68,5 @@
             });
         }
     };
+    window.Ajax = Ajax;
 })();

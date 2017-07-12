@@ -1,7 +1,7 @@
 (function() {
-    var js = window.application.jsCommons;
-    var ajax = window.application.ajax;
-    var paginatedList = window.application.paginatedList;
+    var js = window.JsCommons;
+    var ajax = window.Ajax;
+    var paginatedList = window.PaginatedList;
     var htmlNodes = window.application.skill.htmlNodes;
     var update = window.application.skill.update;
 

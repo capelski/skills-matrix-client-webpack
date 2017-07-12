@@ -1,9 +1,9 @@
 window.application = window.application || {};
 window.application.home = window.application.home || {};
 
-var js = window.application.jsCommons;
-var ajax = window.application.ajax;
-var paginatedList = window.application.paginatedList;
+var js = window.JsCommons;
+var ajax = window.Ajax;
+var paginatedList = window.PaginatedList;
 
 // View
 (function() {

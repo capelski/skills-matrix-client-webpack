@@ -1,5 +1,5 @@
 (function() {
-    var paginatedList = window.application.paginatedList;
+    var paginatedList = window.PaginatedList;
     var htmlNodes = window.application.skill.htmlNodes;
     window.application.skill.state = {
         addEmployeesList: paginatedList.getState(),

@@ -1,5 +1,5 @@
 (function() {
-    var paginatedList = window.application.paginatedList;
+    var paginatedList = window.PaginatedList;
     var htmlNodes = {
         addEmployeesList: paginatedList.getHtmlNodes('add-employees'),
         loader : $('#loader'),
