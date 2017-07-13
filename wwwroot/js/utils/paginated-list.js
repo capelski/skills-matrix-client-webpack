@@ -52,14 +52,16 @@
         },
         getState: function() {
             var state = {
+                loadPhases: ['not-loaded', 'loading', 'loaded'],
                 keywords: '',
+                loadPhase: 'not-loaded',
                 page: 0,
                 pageSize: 10,
                 pageSizeOptions: [10, 25, 50],
                 pageOffset: 0,
                 pagesNumber: 5,
                 results: [],
-                totalPages: 0,
+                totalPages: 0
             };
             return state;
         },
@@ -70,6 +72,8 @@
                 if (state.keywords && state.keywords.length > 0) {
                     htmlNodes.clearKeywords.show();
                 }
+
+                htmlNodes.loader.parent().removeClass(state.loadPhases.join(' ')).addClass(state.loadPhase);
 
                 window.PaginatedList.fill(htmlNodes, state.results, options);
 

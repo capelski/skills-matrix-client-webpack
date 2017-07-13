@@ -1,5 +1,6 @@
 - Adapting skills/list.js...
 	- Copy the CSS animation approach
+		- Removing longOperation
 	- Call the render method after and before promises
 	- Adapt rest of the files
 - Configure production MySql database server -> (Remove SQL Server VM and Enable MySQL)

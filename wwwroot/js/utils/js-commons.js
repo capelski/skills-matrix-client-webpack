@@ -27,6 +27,13 @@
             });
             return result;
         },
+        delay: function(time) {
+            return new Promise(function(resolve, reject) {
+                setTimeout(function() {
+                    resolve();
+                }, time);
+            });
+        },
         eventDelayer: function(eventHandler, delay) {
             var timeOut = null;
             delay = delay || 300;
@@ -40,18 +47,10 @@
                 }, delay);
             }
         },
-        longOperation: function (promise, loader) {
-            return new Promise(function(resolve, reject) {
-                var delayTime = 500;
-                var parent = loader.parent();
-                var loadingPromise = parent.removeClass('finished').addClass('loading').delay(delayTime).promise();
-                Promise.all([promise, loadingPromise])
-                .then(function(results) {
-                    resolve(results[0]);
-                    parent.removeClass('loading').delay(delayTime).promise().done(function() {
-                        parent.addClass('finished');
-                    });
-                })
+        stallPromise: function(promise, minimumTime) {
+            return Promise.all([promise, JsCommons.delay(minimumTime)])
+            .then(function(results) {
+                return results[0];
             });
         }
     };
