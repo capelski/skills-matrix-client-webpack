@@ -1,90 +1,56 @@
-window.application = window.application || {};
-window.application.home = window.application.home || {};
+(function(js, ajax, paginatedList) {
 
-var js = window.JsCommons;
-var ajax = window.Ajax;
-var paginatedList = window.PaginatedList;
+    var state = {
+        employees: paginatedList.getState(),
+        skills: paginatedList.getState()
+    };
 
-// View
-(function() {
     var htmlNodes = {
         employeesList:  paginatedList.getHtmlNodes('employees'),
         skillsList:  paginatedList.getHtmlNodes('skills')
     };
 
-    function update(state) {
-        for (var key in update) {
-            var updater = update[key];
-            updater(state);
-        }
-    }
-
-    update.employees = function (state) {
-        paginatedList.fill(htmlNodes.employeesList, state.employees, {
+    function render() {
+        // State would be retrieved from the store in Redux
+        paginatedList.render(htmlNodes.employeesList, state.employees, {
             elementDrawer: function (employee) {
                 return '<li class="list-group-item"><a class="reset" href="/employees/details?id=' + employee.Id + '">' + employee.Name +
                 '<span class="badge floating">' + employee.Skills.length + '</span></a></li>';
             },
             noResultsHtml: '<i>No employees found</i>'
         });
-    };
-
-    update.skills = function (state) {
-        paginatedList.fill(htmlNodes.skillsList, state.skills, {
+        paginatedList.render(htmlNodes.skillsList, state.skills, {
             elementDrawer: function (skill) {
                 return '<li class="list-group-item"><a class="reset" href="/skills/details?id=' + skill.Id + '">' + skill.Name +
                 '<span class="badge floating">' + skill.Employees.length + '</span></a></li>';
             },
             noResultsHtml: '<i>No skills found</i>'
         });
-    };
-
-    window.application.home.htmlNodes = htmlNodes;
-    window.application.home.update = update;
-})();
-
-// Actions
-(function() {
-    var htmlNodes = window.application.home.htmlNodes;
-    var update = window.application.home.update;
-
-    function attachEvents(state) {
-        $().ready(function(event) {
-            initializeView(state, event);
-        });
     }
 
-    function initializeView(state, event) {
-        _loadSkills(state);
-        _loadEmployees(state);
-    }
+    //Actions
+    function initialize(state) {
+        state.employees.loadPhase = 'loading';
+        state.skills.loadPhase = 'loading';
+        render();
 
-    function _loadEmployees(state) {
-        js.longOperation(ajax.get('/api/employee/getMostSkilled', {}, []), htmlNodes.employeesList.loader)
+        js.stallPromise(ajax.get('/api/employee/getMostSkilled', {}, []), 1000)
         .then(function(employees) {
-            state.employees = employees;
-            update.employees(state);
+            state.employees.loadPhase = 'loaded';
+            state.employees.results = employees;
+            render();
         });
-    }
 
-    function _loadSkills(state) {
-        js.longOperation(ajax.get('/api/skill/getRearest', {}, []), htmlNodes.skillsList.loader)
+        js.stallPromise(ajax.get('/api/skill/getRearest', {}, []), 1000)
         .then(function(skills) {
-            state.skills = skills;
-            update.skills(state);
+            state.skills.loadPhase = 'loaded';
+            state.skills.results = skills;
+            render();
         });
     }
 
-    window.application.home.attachEvents = attachEvents;
-})();
+    $().ready(function(event) {
+        initialize(state);
+    });
 
-// Model
-(function() {
-    var state = {
-        employees: [],
-        skills: []
-    };
-
-    window.application.home.attachEvents(state);
-    window.application.home.state = state;
-})();
+})(JsCommons, Ajax, PaginatedList);
