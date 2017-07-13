@@ -1,13 +1,13 @@
 (function(js, ajax, paginatedList) {
 
-    var state = {
-        employees: paginatedList.getState(),
-        skills: paginatedList.getState()
-    };
-
     var htmlNodes = {
         employeesList:  paginatedList.getHtmlNodes('employees'),
         skillsList:  paginatedList.getHtmlNodes('skills')
+    };
+
+    var state = {
+        employees: paginatedList.getState(),
+        skills: paginatedList.getState()
     };
 
     function render() {
@@ -53,4 +53,4 @@
         initialize(state);
     });
 
-})(JsCommons, Ajax, PaginatedList);
+})(window.JsCommons, window.Ajax, window.PaginatedList);

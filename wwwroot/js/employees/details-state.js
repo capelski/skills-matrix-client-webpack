@@ -1,5 +1,5 @@
-(function() {
-    var paginatedList = window.PaginatedList;
+(function(paginatedList) {
+
     var htmlNodes = {
         addSkillsList: paginatedList.getHtmlNodes('add-skills'),
         loader : $('#loader'),
@@ -15,14 +15,40 @@
         viewWrapper : $('#view-wrapper')
     };
 
-    function update(state) {
-        update.readOnly(state);
-        update.foundSkills(state);
-        update.employeeName(state);
+    var state = {
+        addSkillsList: paginatedList.getState(),
+        employee: {
+            Id: parseInt(htmlNodes.elementId.val()),
+            Name: '',
+            Skills: []
+        },
+        loading: true,
+        readOnly: htmlNodes.readOnly.val() == 'true'
+    };
+
+    function render() {
+        // State would be retrieved from the store in Redux        
+        render.readOnly();
+        render.employeeName();
+        render.employeeSkills();
+        render.foundSkills();
+
+        if (state.loading) {
+            htmlNodes.viewWrapper.css({
+                visibility: 'hidden'
+            });
+            htmlNodes.loader.parent().removeClass('loaded').addClass('loading');
+        }
+        else {
+            htmlNodes.viewWrapper.css({
+                visibility: 'visible'
+            });
+            htmlNodes.loader.parent().removeClass('loading').addClass('loaded');
+        }
     }
 
-    update.foundSkills = function (state) {
-        paginatedList.htmlUpdater(htmlNodes.addSkillsList, state.addSkillsList, {
+    render.foundSkills = function () {
+        paginatedList.render(htmlNodes.addSkillsList, state.addSkillsList, {
             elementDrawer: function (skill) {
                 return '<li class="list-group-item"><span class="add-skill" data-skill-id="' + skill.Id + '"><i class="fa fa-plus text-success"></i> '
                 + skill.Name + '</span></li>';
@@ -31,11 +57,11 @@
         });
     };
 
-    update.employeeName = function(state) {
+    render.employeeName = function() {
         htmlNodes.elementName.val(state.employee.Name);
     };
 
-    update.employeeSkills = function(state) {
+    render.employeeSkills = function() {
         htmlNodes.skillsList.empty();
         if (state.employee.Skills.length === 0) {
             htmlNodes.skillsList.append('<i>No skills assigned yet</i>');
@@ -51,7 +77,7 @@
         }
     };
 
-    update.readOnly = function(state) {
+    render.readOnly = function() {
         htmlNodes.addSkillsList.wrapper.hide();
         htmlNodes.editButton.hide();
         htmlNodes.editButton.attr('href', '#');
@@ -85,18 +111,12 @@
                 }
             }
         }
-
-        update.employeeSkills(state);
-    };
-
-    update.viewWrapper = function (state) {
-        htmlNodes.viewWrapper.css({
-            visibility: 'visible'
-        });
     };
 
     window.application = window.application || {};
-    window.application.employee = window.application.employee || {};
-    window.application.employee.htmlNodes = htmlNodes;
-    window.application.employee.update = update;
-})();
+    window.application.employeeDetails = window.application.employeeDetails || {};
+    window.application.employeeDetails.htmlNodes = htmlNodes;
+    window.application.employeeDetails.state = state;
+    window.application.employeeDetails.render = render;
+
+})(window.PaginatedList);

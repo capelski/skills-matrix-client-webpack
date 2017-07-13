@@ -1,8 +1,8 @@
 (function(js, ajax, paginatedList) {
 
-    var state = paginatedList.getState();
-
     var htmlNodes = paginatedList.getHtmlNodes('skills');
+
+    var state = paginatedList.getState();
 
     function render() {
         // State would be retrieved from the store in Redux
@@ -41,4 +41,4 @@
         initialize(state);
     });
 
-})(JsCommons, Ajax, PaginatedList);
+})(window.JsCommons, window.Ajax, window.PaginatedList);

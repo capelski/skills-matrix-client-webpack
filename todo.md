@@ -1,7 +1,8 @@
-- Adapting skills/list.js...
-	- Copy the CSS animation approach
-		- Removing longOperation
-	- Call the render method after and before promises
-	- Adapt rest of the files
+- Remove _PaginatedList parameters and configure everything through PaginatedList.js state
+- Use paginatedList (without pagination) for addXXXList
+- If loading > EMpty the list
+
+- SKills details
+
 - Configure production MySql database server -> (Remove SQL Server VM and Enable MySQL)
 - Remove todo.md
