@@ -1,23 +1,12 @@
-window.application = window.application || {};
-window.application.employeesList = window.application.employeesList || {};
+(function(js, ajax, paginatedList) {
 
-var js = window.JsCommons;
-var ajax = window.Ajax;
-var paginatedList = window.PaginatedList;
-    
-// View
-(function() {
+    var state = paginatedList.getState();
+
     var htmlNodes = paginatedList.getHtmlNodes('employees');
 
-    function update(state) {
-        for (var key in update) {
-            var updater = update[key];
-            updater(state);
-        }
-    }
-
-    update.employees = function (state) {
-        paginatedList.htmlUpdater(htmlNodes, state, {
+    function render() {
+        // State would be retrieved from the store in Redux
+        paginatedList.render(htmlNodes, state, {
             elementDrawer: function (employee) {
                 return '<li class="list-group-item"><a class="reset" href="/employees/details?id=' + employee.Id + '">' + employee.Name + '</a></li>';
             },
@@ -25,69 +14,31 @@ var paginatedList = window.PaginatedList;
         });
     };
 
-    window.application.employeesList.htmlNodes = htmlNodes;
-    window.application.employeesList.update = update;
-})();
-
-// Actions
-(function() {
-    var htmlNodes = window.application.employeesList.htmlNodes;
-    var update = window.application.employeesList.update;
-
-    function attachEvents(state) {
-        var paginatedListEventHandlers = {
-            pageButtons: function(event) {
-                paginatedList.stateUpdaters.pages(state, event);
-                _loadEmployees(state);
-            },
-            pageSizeList: function(event) {
-                paginatedList.stateUpdaters.pageSize(state, event);
-                _loadEmployees(state);
-            },
-            searcher: function(event) {
-                state.keywords = event.target.value;
-                state.page = 0;
-                state.pageOffset = 0;
-                _loadEmployees(state);
-            },
-            clearKeywords: function(event) {
-                state.keywords = '';
-                state.page = 0;
-                state.pageOffset = 0;
-                _loadEmployees(state);
-            }
-        };
-
-        paginatedList.attachEvents(htmlNodes, paginatedListEventHandlers);
-        $().ready(function(event) {
-            initializeView(state, event);
-        });
-    }
-
-    function initializeView(state, event) {
-        _loadEmployees(state);
-    }
-
-    function _loadEmployees(state) {
-        js.longOperation(ajax.get('/api/employee', {
+    function getEmployees(state) {
+        js.stallPromise(ajax.get('/api/employee', {
             keywords: state.keywords,
             page: state.page + state.pageOffset,
             pageSize: state.pageSize
-        }, paginatedList.defaultInstance), htmlNodes.loader)
+        }, paginatedList.defaultInstance), 1000)
         .then(function(paginatedList) {
+            state.loadPhase = 'loaded';
             state.results = paginatedList.Items;
             state.totalPages = paginatedList.TotalPages;
-            update.employees(state);
+            render();
         });
     }
 
-    window.application.employeesList.attachEvents = attachEvents;
-})();
+    // Actions
+    function initialize(state, event) {
+        state.loadPhase = 'loading';
+        render();
+        getEmployees(state);
+    }
 
-// Model
-(function() {
-    var state = paginatedList.getState();
+    paginatedList.attachEvents(htmlNodes, state, render, getEmployees);
 
-    window.application.employeesList.attachEvents(state);
-    window.application.employeesList.state = state;
-})();
+    $().ready(function(event) {
+        initialize(state);
+    });
+
+})(JsCommons, Ajax, PaginatedList);

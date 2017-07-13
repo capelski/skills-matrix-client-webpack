@@ -1,10 +1,12 @@
 (function(js, ajax, paginatedList) {
 
-    // View
+    var state = paginatedList.getState();
+
     var htmlNodes = paginatedList.getHtmlNodes('skills');
 
-    function render(state) {
-        paginatedList.htmlUpdater(htmlNodes, state, {
+    function render() {
+        // State would be retrieved from the store in Redux
+        paginatedList.render(htmlNodes, state, {
             elementDrawer: function (skill) {
                 return '<li class="list-group-item"><a class="reset" href="/skills/details?id=' + skill.Id + '">' + skill.Name + '</a></li>';
             },
@@ -12,8 +14,7 @@
         });
     };
 
-    // Actions
-    function _loadSkills(state) {
+    function getSkills(state) {
         js.stallPromise(ajax.get('/api/skill', {
             keywords: state.keywords,
             page: state.page + state.pageOffset,
@@ -23,53 +24,21 @@
             state.loadPhase = 'loaded';
             state.results = paginatedList.Items;
             state.totalPages = paginatedList.TotalPages;
-            render(state);
+            render();
         });
     }
 
-    function initializeView(state, event) {
+    // Actions
+    function initialize(state, event) {
         state.loadPhase = 'loading';
-        render(state);
-        _loadSkills(state);
+        render();
+        getSkills(state);
     }
 
-    // State
-    var state = paginatedList.getState();
-
-    var paginatedListEventHandlers = {
-        pageButtons: function(event) {
-            state.loadPhase = 'loading';
-            paginatedList.stateUpdaters.pages(state, event);
-            _loadSkills(state);
-            render(state);
-        },
-        pageSizeList: function(event) {
-            state.loadPhase = 'loading';            
-            paginatedList.stateUpdaters.pageSize(state, event);
-            _loadSkills(state);
-            render(state);
-        },
-        searcher: function (event) {
-            state.loadPhase = 'loading';
-            state.keywords = event.target.value;
-            state.page = 0;
-            state.pageOffset = 0;
-            _loadSkills(state);
-            render(state);
-        },
-        clearKeywords: function(event) {
-            state.loadPhase = 'loading';
-            state.keywords = '';
-            state.page = 0;
-            state.pageOffset = 0;
-            _loadSkills(state);
-            render(state);
-        }
-    };
-    paginatedList.attachEvents(htmlNodes, paginatedListEventHandlers);
+    paginatedList.attachEvents(htmlNodes, state, render, getSkills);
 
     $().ready(function(event) {
-        initializeView(state, event);
+        initialize(state);
     });
 
 })(JsCommons, Ajax, PaginatedList);

@@ -1,19 +1,65 @@
 (function() {
     var PaginatedList = {
-        attachEvents: function(htmlNodes, eventHandlers) {
-            eventHandlers = eventHandlers || {};
-            if (typeof eventHandlers.searcher === "function") {
-                htmlNodes.keywords.on('keyup', eventHandlers.searcher);
+        attachEvents: function(htmlNodes, state, render, resultsUpdater) {
+
+            resultsUpdater = resultsUpdater || function(state) {
+                state.loadPhase = 'loaded';
+            };
+
+            function initialize(event) {
+                state.loadPhase = 'loading';
+                state.keywords = '';
+                state.page = 0;
+                state.pageOffset = 0;
+                render();
+                resultsUpdater(state);
             }
-            if (typeof eventHandlers.pageSizeList === "function") {
-                htmlNodes.pageSizeList.on('click', '.dropdown-option', eventHandlers.pageSizeList);
+
+            function pageButtons(event) {
+                state.loadPhase = 'loading';
+                var action = $(event.target).data('page-action');
+                if (!isNaN(action)) {
+                    state.page = parseInt(action);
+                }
+                else if (action === 'previous') {
+                    if ((state.pageOffset - state.pagesNumber) >= 0) {
+                        state.pageOffset -= state.pagesNumber;                    
+                    }
+                    state.page = 0;
+                }
+                else if (action === 'following') {
+                    if ((state.pageOffset + state.pagesNumber) < state.totalPages) {
+                        state.pageOffset += state.pagesNumber;
+                    }
+                    state.page = 0;
+                }
+                render();
+                resultsUpdater(state);
             }
-            if (typeof eventHandlers.pageButtons === "function") {
-                htmlNodes.pages.on('click', '.enabled > .page-button', eventHandlers.pageButtons);
+
+            function pageSizeList(event) {
+                state.loadPhase = 'loading';            
+                var element = $(event.target);
+                state.pageSize = element.data('size');
+                state.page = 0;
+                state.pageOffset = 0;
+                render();
+                resultsUpdater(state);
             }
-            if (typeof eventHandlers.clearKeywords === "function") {
-                htmlNodes.clearKeywords.on('click', eventHandlers.clearKeywords);
+
+            function searcher(event) {
+                state.loadPhase = 'loading';
+                state.keywords = event.target.value;
+                state.page = 0;
+                state.pageOffset = 0;
+                render();
+                resultsUpdater(state);
             }
+
+            htmlNodes.keywords.on('keyup', searcher);
+            htmlNodes.pageSizeList.on('click', '.dropdown-option', pageSizeList);
+            htmlNodes.pages.on('click', '.enabled > .page-button', pageButtons);
+            htmlNodes.clearKeywords.on('click', initialize);
         },
         defaultInstance: {
             Items: [],
@@ -100,32 +146,6 @@
                 htmlNodes.paginationBar.hide();
             }
             htmlNodes.pageSize.text(state.pageSize);
-        },
-        stateUpdaters: {
-            pages: function(state, event) {
-                var action = $(event.target).data('page-action');
-                if (!isNaN(action)) {
-                    state.page = parseInt(action);
-                }
-                else if (action === 'previous') {
-                    if ((state.pageOffset - state.pagesNumber) >= 0) {
-                        state.pageOffset -= state.pagesNumber;                    
-                    }
-                    state.page = 0;
-                }
-                else if (action === 'following') {
-                    if ((state.pageOffset + state.pagesNumber) < state.totalPages) {
-                        state.pageOffset += state.pagesNumber;
-                    }
-                    state.page = 0;
-                }
-            },
-            pageSize: function(state, event) {
-                var element = $(event.target);
-                state.pageSize = element.data('size');
-                state.page = 0;
-                state.pageOffset = 0;
-            }
         }
     };
     window.PaginatedList = PaginatedList;
