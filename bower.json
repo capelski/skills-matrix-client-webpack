@@ -7,6 +7,7 @@
     "basicModal": "^3.3.8",
     "toastr": "^2.1.3",
     "SpinKit": "spinkit#^1.2.5",
-    "font-awesome": "^4.7.0"
+    "font-awesome": "^4.7.0",
+    "redux": "^3.7.1"
   }
 }
