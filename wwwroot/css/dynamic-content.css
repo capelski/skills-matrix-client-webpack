@@ -1,5 +1,7 @@
 ﻿.dynamic-content {
     position: relative;
+    -webkit-transition: height 1s;
+    transition: height 1s;
 }
 
 .dynamic-content > .loader {

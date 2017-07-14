@@ -1,4 +1,5 @@
-(function() {
+(function(js) {
+
     var PaginatedList = {
         attachEvents: function(htmlNodes, state, render, resultsUpdater) {
 
@@ -56,7 +57,7 @@
                 resultsUpdater(state);
             }
 
-            htmlNodes.keywords.on('keyup', searcher);
+            htmlNodes.keywords.on('keyup', js.eventDelayer(searcher));
             htmlNodes.pageSizeList.on('click', '.dropdown-option', pageSizeList);
             htmlNodes.pages.on('click', '.enabled > .page-button', pageButtons);
             htmlNodes.clearKeywords.on('click', initialize);
@@ -120,33 +121,36 @@
 
             htmlNodes.loader.parent().removeClass(state.loadPhases.join(' ')).addClass(state.loadPhase);
 
-            window.PaginatedList.fill(htmlNodes, state.results, options);
+            if (state.loadPhase !== 'loading') {
+                var pagesNumber = Math.min(state.pagesNumber, state.totalPages - state.pageOffset);
+                if (pagesNumber) {
+                    var pagination = '<li class="' + ((state.pageOffset - state.pagesNumber) >= 0 ? 'enabled' : 'disabled') +
+                    '"><span class="page-button" data-page-action="previous">&laquo;</span></li>';
+                    for (var i = 0; i < pagesNumber; ++i) {
+                        pagination += '<li class="' + (state.page === i ? 'active' : 'enabled') + '"><span class="page-button" data-page-action="' +
+                        i + '">' + (state.pageOffset + i + 1) + '</span></li>';
+                    }
+                    pagination += '<li class="' + ((state.pageOffset + state.pagesNumber) < state.totalPages ? 'enabled' : 'disabled') +
+                    '"><span class="page-button" data-page-action="following">&raquo;</span></li>';
+                    htmlNodes.pages.html(pagination);
 
-            var pagesNumber = Math.min(state.pagesNumber, state.totalPages - state.pageOffset);
-            if (pagesNumber) {
+                    htmlNodes.pageSizeList.empty();
+                    state.pageSizeOptions.forEach(function(option) {
+                        htmlNodes.pageSizeList.append('<li class="text-right"><span class="dropdown-option" data-size="' + option + '">' + option + '</span></li>');
+                    });
 
-                var pagination = '<li class="' + ((state.pageOffset - state.pagesNumber) >= 0 ? 'enabled' : 'disabled') +
-                '"><span class="page-button" data-page-action="previous">&laquo;</span></li>';
-                for (var i = 0; i < pagesNumber; ++i) {
-                    pagination += '<li class="' + (state.page === i ? 'active' : 'enabled') + '"><span class="page-button" data-page-action="' +
-                    i + '">' + (state.pageOffset + i + 1) + '</span></li>';
+                    htmlNodes.paginationBar.show();
                 }
-                pagination += '<li class="' + ((state.pageOffset + state.pagesNumber) < state.totalPages ? 'enabled' : 'disabled') +
-                '"><span class="page-button" data-page-action="following">&raquo;</span></li>';
-                htmlNodes.pages.html(pagination);
+                else {
+                    htmlNodes.paginationBar.hide();
+                }
+                
+                htmlNodes.pageSize.text(state.pageSize);
 
-                htmlNodes.pageSizeList.empty();
-                state.pageSizeOptions.forEach(function(option) {
-                    htmlNodes.pageSizeList.append('<li class="text-right"><span class="dropdown-option" data-size="' + option + '">' + option + '</span></li>');
-                });
-
-                htmlNodes.paginationBar.show();
+                window.PaginatedList.fill(htmlNodes, state.results, options);
             }
-            else {
-                htmlNodes.paginationBar.hide();
-            }
-            htmlNodes.pageSize.text(state.pageSize);
         }
     };
     window.PaginatedList = PaginatedList;
-})();
+
+})(window.JsCommons);
