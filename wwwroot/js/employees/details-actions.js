@@ -60,6 +60,7 @@
             state.loading = false;
             if (employee) {
                 state.employee = employee;
+                state.skillsList.results = state.employee.Skills;
             }
             else {
                 state.employee.Id = -1;
@@ -93,6 +94,7 @@
         state.employee.Skills = state.employee.Skills.filter(function(skill) {
             return skill.Id !== skillId;
         });
+        state.skillsList.results = state.employee.Skills;
         render.employeeSkills();
     }
 
@@ -123,7 +125,7 @@
     htmlNodes.addSkillsList.list.on('click', '.add-skill', function(event) {
         addSkill(state, event);
     });
-    htmlNodes.skillsList.on('click', '.remove-skill', function(event) {
+    htmlNodes.skillsList.list.on('click', '.remove-skill', function(event) {
         removeSkill(state, event);
     });
     paginatedList.attachEvents(htmlNodes.addSkillsList, state.addSkillsList, render.foundSkills, getSkills);

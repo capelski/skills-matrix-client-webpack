@@ -66,24 +66,6 @@
             Items: [],
             TotalPages: 0
         },
-        fill: function(htmlNodes, results, options) {
-            options = options || {};
-            options.noResultsHtml = options.noResultsHtml || '<i>No results found</i>';
-            options.elementDrawer = options.elementDrawer || function (element) {
-                return '<li class="list-group-item">' + element + '</li>';
-            };
-
-            htmlNodes.list.empty();
-            if (!results || !results.length) {
-                htmlNodes.list.append(options.noResultsHtml);
-            }
-            else {
-                results.map(options.elementDrawer)
-                .forEach(function(element) {
-                    htmlNodes.list.append(element);
-                });
-            }
-        },
         getHtmlNodes: function(listId) {
             return {
                 clearKeywords: $('#'+ listId + '-clear-keywords'),
@@ -117,6 +99,12 @@
             return state;
         },
         render: function(htmlNodes, state, options) {
+
+            options = options || {};
+            options.noResultsHtml = options.noResultsHtml || '<i>No results found</i>';
+            options.elementDrawer = options.elementDrawer || function (element) {
+                return '<li class="list-group-item">' + element + '</li>';
+            };
 
             htmlNodes.keywords.attr('placeholder', state.searcherPlaceholder);
             if (state.hasSearcher) {
@@ -168,7 +156,16 @@
                     htmlNodes.paginationBar.hide();
                 }
 
-                window.PaginatedList.fill(htmlNodes, state.results, options);
+                htmlNodes.list.empty();
+                if (!state.results || !state.results.length) {
+                    htmlNodes.list.append(options.noResultsHtml);
+                }
+                else {
+                    state.results.map(options.elementDrawer)
+                    .forEach(function(element) {
+                        htmlNodes.list.append(element);
+                    });
+                }
             }
         }
     };

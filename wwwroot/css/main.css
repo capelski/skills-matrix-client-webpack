@@ -54,6 +54,10 @@ ul.clickable > li > span {
     display: block;
 }
 
+.paginated-list {
+    margin-bottom: 20px;
+}
+
 .paginated-list .list-group {
     margin-bottom: 5px;
 }
@@ -71,18 +75,18 @@ ul.clickable > li > span {
     min-width: auto;
 }
 
-.pagination-bar ul.clickable > li > a,
-.pagination-bar ul.clickable > li > span {
+.paginated-list .pagination-bar ul.clickable > li > a,
+.paginated-list .pagination-bar ul.clickable > li > span {
     padding: 6px 12px;
 }
 
-.pagination-bar ul.dropdown-menu > li > span {
+.paginated-list .pagination-bar ul.dropdown-menu > li > span {
     padding: 3px 20px;
     cursor: pointer;
     display: block;
 }
 
-.clear-icon {
+.paginated-list .clear-icon {
     position: absolute;
     right: 10px;
     top: 0;

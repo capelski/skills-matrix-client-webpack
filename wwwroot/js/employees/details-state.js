@@ -7,7 +7,7 @@
         readOnly : $('#read-only'),
         pageTitle : $('#page-title'),
         elementName : $('#model-name'),
-        skillsList : $('#skills-list'),
+        skillsList : paginatedList.getHtmlNodes('skills'),
         editButton : $('#edit-button'),
         deleteButton : $('#delete-button'),
         saveButton : $('#save-button'),
@@ -16,6 +16,7 @@
     };
 
     var state = {
+        skillsList: paginatedList.getState(),
         addSkillsList: paginatedList.getState(),
         employee: {
             Id: parseInt(htmlNodes.elementId.val()),
@@ -34,19 +35,7 @@
         render.employeeName();
         render.employeeSkills();
         render.foundSkills();
-
-        if (state.loading) {
-            htmlNodes.viewWrapper.css({
-                visibility: 'hidden'
-            });
-            htmlNodes.loader.parent().removeClass('loaded').addClass('loading');
-        }
-        else {
-            htmlNodes.viewWrapper.css({
-                visibility: 'visible'
-            });
-            htmlNodes.loader.parent().removeClass('loading').addClass('loaded');
-        }
+        render.viewWrapper();
     }
 
     render.foundSkills = function () {
@@ -60,23 +49,22 @@
     };
 
     render.employeeName = function() {
+        htmlNodes.pageTitle.html(state.employee.Name);
         htmlNodes.elementName.val(state.employee.Name);
     };
 
     render.employeeSkills = function() {
-        htmlNodes.skillsList.empty();
-        if (state.employee.Skills.length === 0) {
-            htmlNodes.skillsList.append('<i>No skills assigned yet</i>');
-        }
-        for (var key in state.employee.Skills) {
-            var skill = state.employee.Skills[key];
-            var html = '<li class="list-group-item"><a class="reset" href="/skills/details?id=' + skill.Id + '">' + skill.Name + '</a></li>';
-            if (!state.readOnly) {
-                html = '<li class="list-group-item"><span class="remove-skill" data-skill-id="' + skill.Id + '"><i class="fa fa-times text-danger"></i> '
-                + skill.Name + '</span></li>';
-            }
-            htmlNodes.skillsList.append(html);
-        }
+        paginatedList.render(htmlNodes.skillsList, state.skillsList, {
+            elementDrawer: function (skill) {
+                var html = '<li class="list-group-item"><a class="reset" href="/skills/details?id=' + skill.Id + '">' + skill.Name + '</a></li>';
+                if (!state.readOnly) {
+                    html = '<li class="list-group-item"><span class="remove-skill" data-skill-id="' + skill.Id + '"><i class="fa fa-times text-danger"></i> '
+                    + skill.Name + '</span></li>';
+                }
+                return html;
+            },
+            noResultsHtml: '<i>No skills assigned yet</i>'
+        });
     };
 
     render.readOnly = function() {
@@ -112,6 +100,21 @@
                     htmlNodes.cancelButton.attr('href', '/employees/details?id=' + state.employee.Id);
                 }
             }
+        }
+    };
+
+    render.viewWrapper = function() {
+        if (state.loading) {
+            htmlNodes.viewWrapper.css({
+                visibility: 'hidden'
+            });
+            htmlNodes.loader.parent().removeClass('loaded').addClass('loading');
+        }
+        else {
+            htmlNodes.viewWrapper.css({
+                visibility: 'visible'
+            });
+            htmlNodes.loader.parent().removeClass('loading').addClass('loaded');
         }
     };
 
