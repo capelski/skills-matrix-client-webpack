@@ -24,7 +24,7 @@
             </div>
 
             <h3>Employees</h3>
-            <ul id="employees-list" class="list-group clickable"></ul>
+            @Html.Partial("_PaginatedList", "employees")
 
             @Html.Partial("_PaginatedList", "add-employees")
 
@@ -45,7 +45,6 @@
 </div>
 
 @section scripts {
-    <script src="~/js/skills/details-html.js"></script>
+    <script src="~/js/skills/details-state.js"></script>
     <script src="~/js/skills/details-actions.js"></script>
-    <script src="~/js/skills/details.js"></script>
 }

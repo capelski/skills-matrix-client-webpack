@@ -34,14 +34,14 @@
         state.skills.loadPhase = 'loading';
         render();
 
-        js.stallPromise(ajax.get('/api/employee/getMostSkilled', {}, []), 1000)
+        js.stallPromise(ajax.get('/api/employee/getMostSkilled', {}, []), 1500)
         .then(function(employees) {
             state.employees.loadPhase = 'loaded';
             state.employees.results = employees;
             render();
         });
 
-        js.stallPromise(ajax.get('/api/skill/getRearest', {}, []), 1000)
+        js.stallPromise(ajax.get('/api/skill/getRearest', {}, []), 1500)
         .then(function(skills) {
             state.skills.loadPhase = 'loaded';
             state.skills.results = skills;

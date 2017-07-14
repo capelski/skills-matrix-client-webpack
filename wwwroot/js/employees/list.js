@@ -21,7 +21,7 @@
             keywords: state.keywords,
             page: state.page + state.pageOffset,
             pageSize: state.pageSize
-        }, paginatedList.defaultInstance), 1000)
+        }, paginatedList.defaultInstance), 1500)
         .then(function(paginatedList) {
             state.loadPhase = 'loaded';
             state.results = paginatedList.Items;

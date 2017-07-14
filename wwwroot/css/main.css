@@ -33,17 +33,6 @@ a.reset:hover {
     margin-right: 0;
 }
 
-ul.clickable > li {
-    cursor: pointer;
-    padding: 0;
-}
-
-ul.clickable > li > a,
-ul.clickable > li > span {
-    display: block;
-    padding: 10px 15px;
-}
-
 .badge.floating {
     float: right;
 }
@@ -73,6 +62,17 @@ ul.clickable > li > span {
 
 .paginated-list .dropdown-menu {
     min-width: auto;
+}
+
+.paginated-list ul.clickable > li {
+    cursor: pointer;
+    padding: 0;
+}
+
+.paginated-list ul.clickable > li > a,
+.paginated-list ul.clickable > li > span {
+    display: block;
+    padding: 10px 15px;
 }
 
 .paginated-list .pagination-bar ul.clickable > li > a,

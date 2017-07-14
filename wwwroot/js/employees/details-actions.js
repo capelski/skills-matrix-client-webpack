@@ -36,7 +36,7 @@
                 keywords: state.addSkillsList.keywords
             }, paginatedList.defaultInstance);
         }
-        js.stallPromise(skillsPromise, 1000)
+        js.stallPromise(skillsPromise, 1500)
         .then(function(paginatedList) {
             state.addSkillsList.loadPhase = 'loaded';
             state.addSkillsList.results = js.arrayDifference(paginatedList.Items, state.employee.Skills, 'Id');
@@ -55,7 +55,7 @@
             });
         }
 
-        js.stallPromise(employeePromise, 1000)
+        js.stallPromise(employeePromise, 1500)
         .then(function(employee) {
             state.loading = false;
             if (employee) {

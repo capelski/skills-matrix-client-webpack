@@ -1,7 +1,10 @@
 ﻿.dynamic-content {
+    min-height: 0;
+    max-height: 5000px;
+    overflow: hidden;
     position: relative;
-    -webkit-transition: height 1s;
-    transition: height 1s;
+    -webkit-transition: min-height 1s, max-height 1s;
+    transition: min-height 1s, max-height 1s;
 }
 
 .dynamic-content > .loader {
@@ -16,10 +19,8 @@
 }
 
 .dynamic-content.loading {
-    -webkit-animation: set-min-height 1s;
-    animation: set-min-height 1s;
-    -webkit-animation-fill-mode: forwards;
-    animation-fill-mode: forwards;
+    min-height: 200px;
+    max-height: 200px;
 }
 
 .dynamic-content.loading > .loader {
@@ -29,42 +30,11 @@
     animation-fill-mode: forwards;
 }
 
-.dynamic-content.loaded {
-    -webkit-animation: remove-min-height 1s;
-    animation: remove-min-height 1s;
-    -webkit-animation-fill-mode: forwards;
-    animation-fill-mode: forwards;
-}
-
 .dynamic-content.loaded > .loader {
     -webkit-animation: fade-out 1s;
     animation: fade-out 1s;
     -webkit-animation-fill-mode: forwards;
     animation-fill-mode: forwards;
-}
-
-@-webkit-keyframes set-min-height {
-    0% {
-        min-height: 0;
-    }
-    50% {
-        min-height: 200px;
-    }
-    100% {
-        min-height: 200px;
-    }
-}
-
-@-webkit-keyframes remove-min-height {
-    100% {
-        min-height: 0;
-    }
-    50% {
-        min-height: 200px;
-    }
-    0% {
-        min-height: 200px;
-    }
 }
 
 @-webkit-keyframes fade-in {
@@ -86,30 +56,6 @@
     0% {
         visibility: visible;
         opacity: 1;
-    }
-}
-
-@keyframes set-min-height {
-    0% {
-        min-height: 0;
-    }
-    50% {
-        min-height: 200px;
-    }
-    100% {
-        min-height: 200px;
-    }
-}
-
-@keyframes remove-min-height {
-    100% {
-        min-height: 0;
-    }
-    50% {
-        min-height: 200px;
-    }
-    0% {
-        min-height: 200px;
     }
 }
 
