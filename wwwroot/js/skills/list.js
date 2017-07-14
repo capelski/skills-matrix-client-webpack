@@ -3,6 +3,8 @@
     var htmlNodes = paginatedList.getHtmlNodes('skills');
 
     var state = paginatedList.getState();
+    state.hasSearcher = true;
+    state.hasPagination = true;
 
     function render() {
         // State would be retrieved from the store in Redux

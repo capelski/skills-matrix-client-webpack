@@ -29,9 +29,7 @@
                 <a href="/employees">View all</a>  
             </div>
         </div>
-        @Html.Partial("_PaginatedList", new ViewDataDictionary(ViewData) {
-            {"searchListId", "employees"}
-        })
+        @Html.Partial("_PaginatedList", "employees")
     </div>
     <div class="col-sm-6">
         <div class="row align-bottom">
@@ -42,9 +40,7 @@
                 <a href="/skills">View all</a>  
             </div>
         </div>
-        @Html.Partial("_PaginatedList", new ViewDataDictionary(ViewData) {
-            {"searchListId", "skills"}
-        })
+        @Html.Partial("_PaginatedList", "skills")
     </div>
 </div>
 

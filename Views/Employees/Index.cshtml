@@ -21,11 +21,7 @@
     </div>
 </div>
 
-@Html.Partial("_PaginatedList", new ViewDataDictionary(ViewData) {
-    {"searchListId", "employees"},
-    {"searcher", true},
-    {"pagination", true}
-})
+@Html.Partial("_PaginatedList", "employees")
 
 @section scripts {
     <script src="~/js/employees/list.js"></script>

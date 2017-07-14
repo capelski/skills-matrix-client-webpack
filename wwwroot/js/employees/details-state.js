@@ -25,6 +25,8 @@
         loading: true,
         readOnly: htmlNodes.readOnly.val() == 'true'
     };
+    state.addSkillsList.hasSearcher = true;
+    state.addSkillsList.searcherPlaceholder = "Add skills...";
 
     function render() {
         // State would be retrieved from the store in Redux        
