@@ -1,46 +1,58 @@
 (function(js, ajax, paginatedList) {
 
-    var htmlNodes = paginatedList.getHtmlNodes('skills');
+    function SkillsList(options) {
+        var self = this;
+        self.htmlNodes = options.htmlNodes;
+        self.store = options.store;
+        self.initialize = function() {
+            self.store.dispatch(function(dispatch) {
+                dispatch({
+                    config: {
+                        hasSearcher: true,
+                        hasPagination: true
+                    },
+                    type: 'initialize'
+                });
+                getSkills(self.store.getState(), dispatch);
+            });
+        };
 
-    var state = paginatedList.getState();
-    state.hasSearcher = true;
-    state.hasPagination = true;
+        function getSkills(state, dispatch) {
+            js.stallPromise(ajax.get('/api/skill', {
+                keywords: state.keywords,
+                page: state.page + state.pageOffset,
+                pageSize: state.pageSize
+            }, paginatedList.defaultInstance), 1500)
+            .then(function(paginatedList) {
+                dispatch({
+                    paginatedList: paginatedList,
+                    type: 'updateResults'
+                });
+            });
+        }
 
-    function render() {
-        // State would be retrieved from the store in Redux
-        paginatedList.render(htmlNodes, state, {
-            elementDrawer: function (skill) {
-                return '<li class="list-group-item"><a class="reset" href="/skills/details?id=' + skill.Id + '">' + skill.Name + '</a></li>';
-            },
-            noResultsHtml: '<i>No skills found</i>'
-        });
-    };
+        function render() {
+            paginatedList.render(self.htmlNodes, self.store.getState(), {
+                elementDrawer: function (skill) {
+                    return '<li class="list-group-item"><a class="reset" href="/skills/details?id=' + skill.Id + '">' + skill.Name + '</a></li>';
+                },
+                noResultsHtml: '<i>No skills found</i>'
+            });
+        };
 
-    function getSkills(state) {
-        js.stallPromise(ajax.get('/api/skill', {
-            keywords: state.keywords,
-            page: state.page + state.pageOffset,
-            pageSize: state.pageSize
-        }, paginatedList.defaultInstance), 1500)
-        .then(function(paginatedList) {
-            state.loadPhase = 'loaded';
-            state.results = paginatedList.Items;
-            state.totalPages = paginatedList.TotalPages;
-            render();
-        });
+        PaginatedList.attachActions(self.store, self.htmlNodes, getSkills);
+
+        self.store.subscribe(render);
     }
 
-    // Actions
-    function initialize(state, event) {
-        state.loadPhase = 'loading';
-        render();
-        getSkills(state);
-    }
+    var store = Redux.createStore(paginatedList.reducer, Redux.applyMiddleware(thunk));
 
-    paginatedList.attachEvents(htmlNodes, state, render, getSkills);
-
-    $().ready(function(event) {
-        initialize(state);
+    document.addEventListener("DOMContentLoaded", function() {
+        var skillsList = new SkillsList({
+            htmlNodes: paginatedList.getHtmlNodes('skills'),
+            store: store
+        });
+        skillsList.initialize();
     });
 
 })(window.JsCommons, window.Ajax, window.PaginatedList);
