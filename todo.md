@@ -1,1 +1,2 @@
-- Migrate details view
+- Split Employee details into multiple files
+- Migrate Skill details view

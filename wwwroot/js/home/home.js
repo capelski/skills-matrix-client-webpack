@@ -36,7 +36,7 @@
             self.store.dispatch(function(dispatch) {
                 dispatch({
                     target: 'employees|skills',
-                    type: 'initializeList'
+                    type: 'initialize'
                 });
                 var state = self.store.getState();
                 loadEmployees(state.employeesList, dispatch);

@@ -1,3 +1,5 @@
+/*
+
 (function(js, ajax, paginatedList, htmlNodes, state, render) {
 
     function addSkill (state, event) {
@@ -136,3 +138,5 @@
 
 })(window.JsCommons, window.Ajax, window.PaginatedList, window.application.employeeDetails.htmlNodes,
     window.application.employeeDetails.state, window.application.employeeDetails.render);
+    
+*/
