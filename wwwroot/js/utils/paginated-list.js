@@ -1,49 +1,145 @@
-(function(js) {
+(function() {
 
-    var PaginatedList = {};
+    function eventDelayer(eventHandler, delay) {
+        var timeOut = null;
+        delay = delay || 300;
+        return function (event) {
+            if (timeOut) {
+                clearTimeout(timeOut);
+            }
+            timeOut = setTimeout(function() {
+                timeOut = null;
+                eventHandler(event);
+            }, delay);
+        }
+    }
+
+    // TODO Transform to state, action
+    PaginatedList.stateHandlers = {};
+
+    PaginatedList.stateHandlers.initialize = function(state, event)  {
+        state.loadPhase = 'loading';
+        state.keywords = '';
+        state.page = 0;
+        state.pageOffset = 0;
+    };
+
+    PaginatedList.stateHandlers.pageButtons = function(state, event)  {
+        state.loadPhase = 'loading';
+        var action = $(event.target).data('page-action');
+        if (!isNaN(action)) {
+            state.page = parseInt(action);
+        }
+        else if (action === 'previous') {
+            if ((state.pageOffset - state.pagesNumber) >= 0) {
+                state.pageOffset -= state.pagesNumber;                    
+            }
+            state.page = 0;
+        }
+        else if (action === 'following') {
+            if ((state.pageOffset + state.pagesNumber) < state.totalPages) {
+                state.pageOffset += state.pagesNumber;
+            }
+            state.page = 0;
+        }
+    };
+
+    PaginatedList.stateHandlers.pageSizeList = function(state, event)  {
+        state.loadPhase = 'loading';            
+        var element = $(event.target);
+        state.pageSize = element.data('size');
+        state.page = 0;
+        state.pageOffset = 0;
+    };
+
+    PaginatedList.stateHandlers.searcher = function(state, event)  {
+        state.loadPhase = 'loading';
+        state.keywords = event.target.value;
+        state.page = 0;
+        state.pageOffset = 0;
+    };
+
+    function PaginatedList(listId, resultsFetcher, renderingOptions) {
+        var self = this;
+        self.htmlNodes = PaginatedList.getHtmlNodes(listId);
+        self.state = PaginatedList.getState(listId);
+        self.reducer = PaginatedList.getReducer(listId);
+        self.resultsFetcher = resultsFetcher;
+        self.renderingOptions = renderingOptions;
+        self.render = function () {
+            PaginatedList.render(self.htmlNodes, self.state, self.renderingOptions)
+        };
+        self.attachEventHandlers = function(mode) {
+            var hanlders = {};
+            if (mode == 'dispatch-actions') {
+                // Define handlers as action dispatchers + call resultsFetcher
+            }
+            else if (mode == 'modify-state') {
+                // Define handlers as state modifiers + call resultsFetcher
+            }
+
+            // All the handlers will receive state and an action; the only difference will be that the redux version will dispatch (and reducer will modify) and the jquery will directly call the modify
+
+            htmlNodes.keywords.on('keyup', eventDelayer(function(event) {
+                hanlders.searcher(event);
+            }));
+            htmlNodes.pageSizeList.on('click', '.dropdown-option', function(event) {
+                hanlders.pageSizeList(event);
+            });
+            htmlNodes.pages.on('click', '.enabled > .page-button', function(event) {
+                var action = $(event.target).data('page-action');
+                hanlders.pageButtons(event);
+            });
+            htmlNodes.clearKeywords.on('click', function(event) {
+                hanlders.initialize(event);
+            });
+        };
+    }
+
+    // remove attachActions && attachEvents
 
     PaginatedList.attachActions = function(store, htmlNodes, updateResults) {
         
-            function pageButtons(event) {
-                store.dispatch(function(dispatch) {
-                    dispatch({
-                        event: event,
-                        type: 'pageButtons'
-                    });
-                    updateResults(store.getState(), dispatch);
+        function pageButtons(event) {
+            store.dispatch(function(dispatch) {
+                dispatch({
+                    event: event,
+                    type: 'pageButtons'
                 });
-            }
+                updateResults(store.getState(), dispatch);
+            });
+        }
 
-            function pageSizeList(event) {
-                store.dispatch(function(dispatch) {
-                    dispatch({
-                        event: event,
-                        type: 'pageSizeList'
-                    });
-                    updateResults(store.getState(), dispatch);
+        function pageSizeList(event) {
+            store.dispatch(function(dispatch) {
+                dispatch({
+                    event: event,
+                    type: 'pageSizeList'
                 });
-            }
+                updateResults(store.getState(), dispatch);
+            });
+        }
 
-            function searcher(event) {
-                store.dispatch(function(dispatch) {
-                    dispatch({
-                        event: event,
-                        type: 'searcher'
-                    });
-                    updateResults(store.getState(), dispatch);
+        function searcher(event) {
+            store.dispatch(function(dispatch) {
+                dispatch({
+                    event: event,
+                    type: 'searcher'
                 });
-            }
+                updateResults(store.getState(), dispatch);
+            });
+        }
 
-            function initialize(event) {
-                store.dispatch(function(dispatch) {
-                    dispatch({
-                        type: 'initialize'
-                    });
-                    updateResults(store.getState(), dispatch);
+        function initialize(event) {
+            store.dispatch(function(dispatch) {
+                dispatch({
+                    type: 'initialize'
                 });
-            }
+                updateResults(store.getState(), dispatch);
+            });
+        }
 
-        htmlNodes.keywords.on('keyup', js.eventDelayer(searcher));
+        htmlNodes.keywords.on('keyup', eventDelayer(searcher));
         htmlNodes.pageSizeList.on('click', '.dropdown-option', pageSizeList);
         htmlNodes.pages.on('click', '.enabled > .page-button', pageButtons);
         htmlNodes.clearKeywords.on('click', initialize);
@@ -79,15 +175,25 @@
             resultsUpdater(state);
         }
 
-        htmlNodes.keywords.on('keyup', js.eventDelayer(searcher));
-        htmlNodes.pageSizeList.on('click', '.dropdown-option', pageSizeList);
-        htmlNodes.pages.on('click', '.enabled > .page-button', pageButtons);
-        htmlNodes.clearKeywords.on('click', initialize);
+        htmlNodes.keywords.on('keyup', eventDelayer(function(event) {
+            searcher(event);
+        }));
+        htmlNodes.pageSizeList.on('click', '.dropdown-option', function(event) {
+            pageSizeList(event);
+        });
+        htmlNodes.pages.on('click', '.enabled > .page-button', function(event) {
+            pageButtons(event);
+        });
+        htmlNodes.clearKeywords.on('click', function(event) {
+            initialize(event);
+        });
     };
 
-    PaginatedList.defaultInstance = {
-        Items: [],
-        TotalPages: 0
+    PaginatedList.getDefaultResults = function () {
+        return {
+            Items: [],
+            TotalPages: 0
+        };
     };
 
     PaginatedList.getHtmlNodes = function(listId) {
@@ -105,11 +211,12 @@
         };
     };
 
-    PaginatedList.getState = function() {
+    PaginatedList.getState = function(listId) {
         var state = {
             hasSearcher: false,
             hasPagination: false,
             keywords: '',
+            listId: listId,
             loadPhase: 'not-loaded',
             loadPhases: ['not-loaded', 'loading', 'loaded'],
             page: 0,
@@ -124,36 +231,38 @@
         return state;
     };
 
-    PaginatedList.reducer = function (state, action) {
-        if (typeof state === 'undefined') {
-            state = PaginatedList.getState();
-        }
+    PaginatedList.getReducer = function(listId) {
+        return function (state, action) {
+            if (typeof state === 'undefined') {
+                state = PaginatedList.getState(listId);
+            }
 
-        switch (action.type) {
-            case 'pageButtons':
-                PaginatedList.stateHandlers.pageButtons(state, action.event);
-                return state;
-            case 'pageSizeList':
-                PaginatedList.stateHandlers.pageSizeList(state, action.event);
-                return state;
-            case 'searcher':
-                PaginatedList.stateHandlers.searcher(state, action.event);
-                return state;
-            case 'initialize':
-                PaginatedList.stateHandlers.initialize(state, action.event);
-                if (action.config) {
-                    state.hasSearcher = typeof action.config.hasSearcher === "undefined" ? state.hasSearcher : action.config.hasSearcher;
-                    state.hasPagination = typeof action.config.hasPagination === "undefined" ? state.hasPagination : action.config.hasPagination;
-                }
-                return state;
-            case 'updateResults':
-                state.results = action.paginatedList.Items;
-                state.totalPages = action.paginatedList.TotalPages;
-                state.loadPhase = 'loaded';
-                return state;
-            default:
-                return state;
-        }
+            switch (action.type) {
+                case listId + '_pageButtons':
+                    PaginatedList.stateHandlers.pageButtons(state, action.event);
+                    return state;
+                case listId + '_pageSizeList':
+                    PaginatedList.stateHandlers.pageSizeList(state, action.event);
+                    return state;
+                case listId + '_searcher':
+                    PaginatedList.stateHandlers.searcher(state, action.event);
+                    return state;
+                case listId + '_initialize':
+                    PaginatedList.stateHandlers.initialize(state, action.event);
+                    if (action.config) {
+                        state.hasSearcher = typeof action.config.hasSearcher === "undefined" ? state.hasSearcher : action.config.hasSearcher;
+                        state.hasPagination = typeof action.config.hasPagination === "undefined" ? state.hasPagination : action.config.hasPagination;
+                    }
+                    return state;
+                case listId + '_updateResults':
+                    state.results = action.paginatedList.Items;
+                    state.totalPages = action.paginatedList.TotalPages;
+                    state.loadPhase = 'loaded';
+                    return state;
+                default:
+                    return state;
+            }
+        };
     };
 
     PaginatedList.render = function(htmlNodes, state, options) {
@@ -234,47 +343,6 @@
         }
     };
 
-        PaginatedList.stateHandlers = {};
-
-    PaginatedList.stateHandlers.initialize = function(state, event)  {
-        state.loadPhase = 'loading';
-        state.keywords = '';
-        state.page = 0;
-        state.pageOffset = 0;
-    };
-    PaginatedList.stateHandlers.pageButtons = function(state, event)  {
-        state.loadPhase = 'loading';
-        var action = $(event.target).data('page-action');
-        if (!isNaN(action)) {
-            state.page = parseInt(action);
-        }
-        else if (action === 'previous') {
-            if ((state.pageOffset - state.pagesNumber) >= 0) {
-                state.pageOffset -= state.pagesNumber;                    
-            }
-            state.page = 0;
-        }
-        else if (action === 'following') {
-            if ((state.pageOffset + state.pagesNumber) < state.totalPages) {
-                state.pageOffset += state.pagesNumber;
-            }
-            state.page = 0;
-        }
-    };
-    PaginatedList.stateHandlers.pageSizeList = function(state, event)  {
-        state.loadPhase = 'loading';            
-        var element = $(event.target);
-        state.pageSize = element.data('size');
-        state.page = 0;
-        state.pageOffset = 0;
-    };
-    PaginatedList.stateHandlers.searcher = function(state, event)  {
-        state.loadPhase = 'loading';
-        state.keywords = event.target.value;
-        state.page = 0;
-        state.pageOffset = 0;
-    };
-
     window.PaginatedList = PaginatedList;
 
-})(window.JsCommons);
+})();

@@ -19,10 +19,10 @@
                 });
                 var state = self.store.getState();
 
-                var employeePromise = Promise.resolve(state.employee);
-                if (state.employee.Id != 0) {
+                var employeePromise = Promise.resolve(state.viewDetails.employee);
+                if (state.viewDetails.employee.Id != 0) {
                     employeePromise = ajax.get('/api/employee/getById', {
-                        id : state.employee.Id
+                        id : state.viewDetails.employee.Id
                     });
                 }
 
@@ -56,15 +56,15 @@
         };
 
         render.employeeName = function(state) {
-            self.htmlNodes.pageTitle.html(state.employee.Name);
-            self.htmlNodes.elementName.val(state.employee.Name);
+            self.htmlNodes.pageTitle.html(state.viewDetails.employee.Name);
+            self.htmlNodes.elementName.val(state.viewDetails.employee.Name);
         };
 
         render.employeeSkills = function(state) {
-            paginatedList.render(self.htmlNodes.skillsList, state.skillsList, {
+            paginatedList.render(self.htmlNodes.skillsList, state.viewDetails.skillsList, {
                 elementDrawer: function (skill) {
                     var html = '<li class="list-group-item"><a class="reset" href="/skills/details?id=' + skill.Id + '">' + skill.Name + '</a></li>';
-                    if (!state.readOnly) {
+                    if (!state.viewDetails.readOnly) {
                         html = '<li class="list-group-item"><span class="remove-skill" data-skill-id="' + skill.Id + '"><i class="fa fa-times text-danger"></i> '
                         + skill.Name + '</span></li>';
                     }
@@ -84,34 +84,34 @@
             self.htmlNodes.cancelButton.hide();
             self.htmlNodes.cancelButton.attr('href', '#');
 
-            if (state.readOnly) {
+            if (state.viewDetails.readOnly) {
                 self.htmlNodes.elementName.attr('disabled', 'disabled');
-                if (state.employee.Id > 0) {
-                    self.htmlNodes.pageTitle.text(state.employee.Name);
-                    self.htmlNodes.editButton.attr('href', '/employees/edit?id=' + state.employee.Id);
+                if (state.viewDetails.employee.Id > 0) {
+                    self.htmlNodes.pageTitle.text(state.viewDetails.employee.Name);
+                    self.htmlNodes.editButton.attr('href', '/employees/edit?id=' + state.viewDetails.employee.Id);
                     self.htmlNodes.editButton.show();
                     self.htmlNodes.deleteButton.show();
                 }
             }
             else {
                 self.htmlNodes.elementName.removeAttr('disabled');                
-                if (state.employee.Id >= 0) {
+                if (state.viewDetails.employee.Id >= 0) {
                     self.htmlNodes.pageTitle.text('New employee');
                     self.htmlNodes.addSkillsList.wrapper.show();
                     self.htmlNodes.saveButton.show();
                     self.htmlNodes.cancelButton.show();
                     self.htmlNodes.cancelButton.attr('href', '/employees/');
 
-                    if (state.employee.Id > 0) {
-                        self.htmlNodes.pageTitle.text(state.employee.Name);
-                        self.htmlNodes.cancelButton.attr('href', '/employees/details?id=' + state.employee.Id);
+                    if (state.viewDetails.employee.Id > 0) {
+                        self.htmlNodes.pageTitle.text(state.viewDetails.employee.Name);
+                        self.htmlNodes.cancelButton.attr('href', '/employees/details?id=' + state.viewDetails.employee.Id);
                     }
                 }
             }
         };
 
         render.viewWrapper = function(state) {
-            if (state.loading) {
+            if (state.viewDetails.loading) {
                 self.htmlNodes.viewWrapper.css({
                     visibility: 'hidden'
                 });
@@ -143,7 +143,7 @@
             }
             js.stallPromise(skillsPromise, 1500)
             .then(function(paginatedList) {
-                paginatedList.Items = js.arrayDifference(paginatedList.Items, state.employee.Skills, 'Id');
+                paginatedList.Items = js.arrayDifference(paginatedList.Items, state.viewDetails.employee.Skills, 'Id');
                 self.store.dispatch({
                     paginatedList: paginatedList,
                     type: 'updateResults'
@@ -162,12 +162,12 @@
             self.store.dispatch(function (dispatch) {
                 var state = self.store.getState();
 
-                js.actionModal('<div>Are you sure you want to delete ' + state.employee.Name + '?</div>', 'Delete')
+                js.actionModal('<div>Are you sure you want to delete ' + state.viewDetails.employee.Name + '?</div>', 'Delete')
                 .then(function() {
                     dispatch({
                         type: 'processing'
                     });
-                    return ajax.remove('/api/employee?id=' + state.employee.Id);
+                    return ajax.remove('/api/employee?id=' + state.viewDetails.employee.Id);
                 })
                 .then(function (employee) {
                     if (employee) {
@@ -190,7 +190,7 @@
                 });
                 var state = self.store.getState();
                 
-                ajax.save('/api/employee', state.employee)
+                ajax.save('/api/employee', state.viewDetails.employee)
                 .then(function (employee) {
                     if (employee) {
                         document.location.href = '/employees/details/' + employee.Id;
@@ -205,9 +205,23 @@
         });
 
         self.htmlNodes.addSkillsList.list.on('click', '.add-skill', function(event) {
+            var skillId = getSkillId(event);
+            var state = self.store.getState();
+            var skill = state.addSkillsList.results.find(function(skill) {
+                return skill.Id === skillId;
+            });
+            if (skill) {
+                self.store.dispatch({
+                    type: 'skillAdded',
+                    skill: skill
+                });
+            }
             self.store.dispatch({
-                type: 'skillAdded',
-                skillId: getSkillId(event)
+                type: 'initialize'
+            });
+            self.store.dispatch({
+                type: 'updateResults',
+                paginatedList: paginatedList.defaultInstance
             });
         });
 
@@ -242,7 +256,6 @@
         if (typeof state === "undefined") {
             state = {
                 skillsList: paginatedList.getState(),
-                addSkillsList: paginatedList.getState(),
                 employee: {
                     Id: parseInt(htmlNodes.elementId.val()),
                     Name: '',
@@ -272,14 +285,7 @@
                 state.employee.Name = action.name;
                 return state;
             case 'skillAdded':
-                var skill = state.addSkillsList.results.find(function(skill) {
-                    return skill.Id === action.skillId;
-                });
-                state.addSkillsList.results = [];
-                state.addSkillsList.keywords = '';
-                if (skill) {
-                    state.employee.Skills.push(skill);
-                }
+                state.employee.Skills.push(action.skill);
                 return state;
             case 'skillRemoved':
                 state.employee.Skills = state.employee.Skills.filter(function(skill) {
@@ -298,11 +304,10 @@
         }
     }
 
-    function reducer(state, action) {
-        state = viewReducer(state, action);
-        state.addSkillsList = paginatedList.reducer(state.addSkillsList, action);
-        return state;
-    }
+    var reducer = Redux.combineReducers({
+        viewDetails: viewReducer,
+        addSkillsList: paginatedList.reducer,
+    });
 
     var store = Redux.createStore(reducer, Redux.applyMiddleware(thunk));
 
