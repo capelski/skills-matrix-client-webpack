@@ -14,7 +14,49 @@
         }
     }
 
-    // TODO Transform to state, action
+    // TODO Implement the event transforming
+    // TODO Use state modifiers in Reducer & attachEvents
+
+    PaginatedList.stateModifiers = {
+    	initialize: function(state, action)  {
+	        state.loadPhase = 'loading';
+	        state.keywords = '';
+	        state.page = 0;
+	        state.pageOffset = 0;
+	    },
+		pageButtons: function(state, action)  {
+	        state.loadPhase = 'loading';
+	        if (!isNaN(action.target)) {
+	            state.page = parseInt(action.target);
+	        }
+	        else if (action.target === 'previous') {
+	            if ((state.pageOffset - state.pagesNumber) >= 0) {
+	                state.pageOffset -= state.pagesNumber;                    
+	            }
+	            state.page = 0;
+	        }
+	        else if (action.target === 'following') {
+	            if ((state.pageOffset + state.pagesNumber) < state.totalPages) {
+	                state.pageOffset += state.pagesNumber;
+	            }
+	            state.page = 0;
+	        }
+	    },
+		pageSizeList: function(state, action)  {
+	        state.loadPhase = 'loading';            
+	        state.pageSize = action.pageSize;
+	        state.page = 0;
+	        state.pageOffset = 0;
+	    },
+	    searcher: function(state, action)  {
+	        state.loadPhase = 'loading';
+	        state.keywords = action.keywords;
+	        state.page = 0;
+	        state.pageOffset = 0;
+	    }
+    };
+
+    /*
     PaginatedList.stateHandlers = {};
 
     PaginatedList.stateHandlers.initialize = function(state, event)  {
@@ -58,6 +100,7 @@
         state.page = 0;
         state.pageOffset = 0;
     };
+    */
 
     function PaginatedList(listId, resultsFetcher, renderingOptions) {
         var self = this;
@@ -69,125 +112,110 @@
         self.render = function () {
             PaginatedList.render(self.htmlNodes, self.state, self.renderingOptions)
         };
-        self.attachEventHandlers = function(mode) {
-            var hanlders = {};
-            if (mode == 'dispatch-actions') {
-                // Define handlers as action dispatchers + call resultsFetcher
-            }
-            else if (mode == 'modify-state') {
-                // Define handlers as state modifiers + call resultsFetcher
-            }
 
-            // All the handlers will receive state and an action; the only difference will be that the redux version will dispatch (and reducer will modify) and the jquery will directly call the modify
+        self.attachActions = function(store) {
 
-            htmlNodes.keywords.on('keyup', eventDelayer(function(event) {
+            function pageButtons(event) {
+            	// TODO Perform event transforming
+	            store.dispatch(function(dispatch) {
+	                dispatch({
+	                    event: event,
+	                    type: 'pageButtons'
+	                });
+	                self.resultsFetcher(store.getState(), dispatch);
+	            });
+	        }
+
+	        function pageSizeList(event) {
+            	// TODO Perform event transforming
+	            store.dispatch(function(dispatch) {
+	                dispatch({
+	                    event: event,
+	                    type: 'pageSizeList'
+	                });
+	                self.resultsFetcher(store.getState(), dispatch);
+	            });
+	        }
+
+	        function searcher(event) {
+            	// TODO Perform event transforming
+	            store.dispatch(function(dispatch) {
+	                dispatch({
+	                    event: event,
+	                    type: 'searcher'
+	                });
+	                self.resultsFetcher(store.getState(), dispatch);
+	            });
+	        }
+
+	        function initialize(event) {
+            	// TODO Perform event transforming
+	            store.dispatch(function(dispatch) {
+	                dispatch({
+	                    type: 'initialize'
+	                });
+	                self.resultsFetcher(store.getState(), dispatch);
+	            });
+	        }
+
+            self.htmlNodes.keywords.on('keyup', eventDelayer(function(event) {
                 hanlders.searcher(event);
             }));
-            htmlNodes.pageSizeList.on('click', '.dropdown-option', function(event) {
+            self.htmlNodes.pageSizeList.on('click', '.dropdown-option', function(event) {
                 hanlders.pageSizeList(event);
             });
-            htmlNodes.pages.on('click', '.enabled > .page-button', function(event) {
-                var action = $(event.target).data('page-action');
+            self.htmlNodes.pages.on('click', '.enabled > .page-button', function(event) {
                 hanlders.pageButtons(event);
             });
-            htmlNodes.clearKeywords.on('click', function(event) {
+            self.htmlNodes.clearKeywords.on('click', function(event) {
                 hanlders.initialize(event);
             });
         };
-    }
 
-    // remove attachActions && attachEvents
+        self.attachEvents = function(state, render) {
 
-    PaginatedList.attachActions = function(store, htmlNodes, updateResults) {
-        
-        function pageButtons(event) {
-            store.dispatch(function(dispatch) {
-                dispatch({
-                    event: event,
-                    type: 'pageButtons'
-                });
-                updateResults(store.getState(), dispatch);
+            function pageButtons(event) {
+            	// TODO Perform event transforming
+            	// Directly call the stateUpdaters emulating the redux call
+                self.resultsFetcher(state);
+	        }
+
+	        function pageSizeList(event) {
+            	// TODO Perform event transforming
+            	// Directly call the stateUpdaters emulating the redux call
+                self.resultsFetcher(state);
+	        }
+
+	        function searcher(event) {
+            	// TODO Perform event transforming
+            	// Directly call the stateUpdaters emulating the redux call
+                self.resultsFetcher(state);
+	        }
+
+	        function initialize(event) {
+            	// TODO Perform event transforming
+            	// Directly call the stateUpdaters emulating the redux call
+                self.resultsFetcher(state);
+	        }
+
+            self.htmlNodes.keywords.on('keyup', eventDelayer(function(event) {
+                hanlders.searcher(event);
+                render();
+            }));
+            self.htmlNodes.pageSizeList.on('click', '.dropdown-option', function(event) {
+                hanlders.pageSizeList(event);
+                render();
             });
-        }
-
-        function pageSizeList(event) {
-            store.dispatch(function(dispatch) {
-                dispatch({
-                    event: event,
-                    type: 'pageSizeList'
-                });
-                updateResults(store.getState(), dispatch);
+            self.htmlNodes.pages.on('click', '.enabled > .page-button', function(event) {
+                hanlders.pageButtons(event);
+                render();
             });
-        }
-
-        function searcher(event) {
-            store.dispatch(function(dispatch) {
-                dispatch({
-                    event: event,
-                    type: 'searcher'
-                });
-                updateResults(store.getState(), dispatch);
+            self.htmlNodes.clearKeywords.on('click', function(event) {
+                hanlders.initialize(event);
+                render();
             });
-        }
-
-        function initialize(event) {
-            store.dispatch(function(dispatch) {
-                dispatch({
-                    type: 'initialize'
-                });
-                updateResults(store.getState(), dispatch);
-            });
-        }
-
-        htmlNodes.keywords.on('keyup', eventDelayer(searcher));
-        htmlNodes.pageSizeList.on('click', '.dropdown-option', pageSizeList);
-        htmlNodes.pages.on('click', '.enabled > .page-button', pageButtons);
-        htmlNodes.clearKeywords.on('click', initialize);
-    };
-
-    PaginatedList.attachEvents = function(htmlNodes, state, render, resultsUpdater) {
-
-        resultsUpdater = resultsUpdater || function(state) {
-            state.loadPhase = 'loaded';
         };
-
-        function initialize(event) {
-            PaginatedList.stateHandlers.initialize(state, event);
-            render();
-            resultsUpdater(state);
-        }
-
-        function pageButtons(event) {
-            PaginatedList.stateHandlers.pageButtons(state, event);
-            render();
-            resultsUpdater(state);
-        }
-
-        function pageSizeList(event) {
-            PaginatedList.stateHandlers.pageSizeList(state, event);
-            render();
-            resultsUpdater(state);
-        }
-
-        function searcher(event) {
-            PaginatedList.stateHandlers.searcher(state, event);
-            render();
-            resultsUpdater(state);
-        }
-
-        htmlNodes.keywords.on('keyup', eventDelayer(function(event) {
-            searcher(event);
-        }));
-        htmlNodes.pageSizeList.on('click', '.dropdown-option', function(event) {
-            pageSizeList(event);
-        });
-        htmlNodes.pages.on('click', '.enabled > .page-button', function(event) {
-            pageButtons(event);
-        });
-        htmlNodes.clearKeywords.on('click', function(event) {
-            initialize(event);
-        });
-    };
+    }
 
     PaginatedList.getDefaultResults = function () {
         return {
