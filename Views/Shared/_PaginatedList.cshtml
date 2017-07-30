@@ -8,9 +8,10 @@
         <span id="@Model-clear-keywords" class="fa fa-times clear-icon"></span>
     </div>
 
-    <div class="dynamic-content">
-        <ul id="@Model-list" class="list-group clickable"></ul>
+    <div class="dynamic-content no-height">
         @Html.Partial("_Loader", Model + "-loader")
+
+        <ul id="@Model-list" class="list-group clickable"></ul>
 
         <div id="@Model-pagination" class="pagination-bar" style="display: none;">
             <ul id="@Model-pages" class="pagination clickable">

@@ -34,7 +34,10 @@
             </div>
         </div>
     </nav>
-    <div class="container body-content">
+    <div class="container body-content dynamic-content">
+
+        @Html.Partial("_Loader", "loader")
+
         @RenderBody()
         <hr />
         <footer>
@@ -51,6 +54,8 @@
     <script type="text/javascript" src="~/js/utils/js-commons.js"></script>
     <script type="text/javascript" src="~/js/utils/ajax.js"></script>
     <script type="text/javascript" src="~/js/utils/paginated-list.js"></script>
+    <!-- Development purposes only -->
+    <script type="text/javascript" src="~/js/utils/time-travel.js"></script>
 
     @RenderSection("Scripts", required: false)
 </body>

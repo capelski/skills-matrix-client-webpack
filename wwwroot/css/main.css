@@ -1,6 +1,14 @@
-﻿body {
-    padding-top: 50px;
+﻿body, html {
+    height: 100%;
+}
+
+body {
+    padding-top: 71px;
     padding-bottom: 20px;
+}
+
+.body-content {
+    min-height: 100%;
 }
 
 .row.align-bottom {

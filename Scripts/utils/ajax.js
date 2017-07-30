@@ -1,9 +1,7 @@
-'use strict';
-
-(function () {
+(function() {
     var Ajax = {
-        get: function get(url, parameters, defaultValue) {
-            return new Promise(function (resolve, reject) {
+        get: function(url, parameters, defaultValue) {
+            return new Promise(function(resolve, reject) {
                 var result = defaultValue;
                 url += '?';
                 for (var key in parameters) {
@@ -13,32 +11,38 @@
                 $.ajax({
                     type: 'GET',
                     url: url
-                }).then(function (data) {
+                })
+                .then(function(data) {
                     result = data;
-                }).fail(function (response) {
-                    toastr.error('An error ocurred', 'Oops!', { timeOut: 5000 });
-                }).always(function (data) {
+                })
+                .fail(function(response) {
+                    toastr.error('An error ocurred', 'Oops!', {timeOut: 5000});
+                })
+                .always(function(data) {
                     resolve(result);
                 });
             });
         },
-        remove: function remove(url) {
-            return new Promise(function (resolve, reject) {
+        remove: function(url) {
+            return new Promise(function(resolve, reject) {
                 var result = null;
                 $.ajax({
                     type: 'DELETE',
                     url: url
-                }).then(function (data) {
+                })
+                .then(function(data) {
                     result = data;
-                }).fail(function (response) {
-                    toastr.error('An error ocurred', 'Oops!', { timeOut: 5000 });
-                }).always(function (data) {
+                })
+                .fail(function(response) {
+                    toastr.error('An error ocurred', 'Oops!', {timeOut: 5000});
+                })
+                .always(function(data) {
                     resolve(result);
                 });
             });
         },
-        save: function save(url, entitity) {
-            return new Promise(function (resolve, reject) {
+        save: function(url, entitity) {
+            return new Promise(function(resolve, reject) {
                 var result = null;
                 var request = {
                     type: 'POST',
@@ -51,11 +55,14 @@
                     request.type = 'PUT';
                 }
 
-                $.ajax(request).then(function (data) {
+                $.ajax(request)
+                .then(function(data) {
                     result = data;
-                }).fail(function (response) {
-                    toastr.error('An error ocurred', 'Oops!', { timeOut: 5000 });
-                }).always(function (data) {
+                })
+                .fail(function(response) {
+                    toastr.error('An error ocurred', 'Oops!', {timeOut: 5000});
+                })
+                .always(function(data) {
                     resolve(result);
                 });
             });

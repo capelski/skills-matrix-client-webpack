@@ -1,8 +1,4 @@
-'use strict';
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-(function (paginatedListService, elements, render, actions) {
+(function(paginatedListService, elements, render, actions) {
 
     function viewDetails(state, action) {
         if (typeof state === "undefined") {
@@ -20,31 +16,38 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
         switch (action.type) {
             case 'skillLoaded':
-                return _extends({}, state, {
+                return {
+                    ...state,
                     loadPhase: 'loaded',
                     readOnly: action.readOnly,
                     skill: action.skill
-                });
+                };
             case 'skillName':
-                return _extends({}, state, {
-                    skill: _extends({}, state.skill, {
+                return {
+                    ...state,
+                    skill: {
+                        ...state.skill,
                         Name: action.name
-                    })
-                });
+                    }
+                };
             case 'skillEmployees':
-                return _extends({}, state, {
-                    skill: _extends({}, state.skill, {
+                return {
+                    ...state,
+                    skill: {
+                        ...state.skill,
                         Employees: action.employees
-                    })
-                });
+                    }
+                };
             case 'processing':
-                return _extends({}, state, {
+                return {
+                    ...state,
                     loadPhase: 'loading'
-                });
+                };
             case 'processed':
-                return _extends({}, state, {
+                return {
+                    ...state,
                     loadPhase: 'loaded'
-                });
+                };
             default:
                 return state;
         }
@@ -53,15 +56,15 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     var reducer = Redux.combineReducers({
         skillEmployeesList: paginatedListService.getReducer(elements.skillEmployeesList),
         addEmployeesList: paginatedListService.getReducer(elements.addEmployeesList),
-        viewDetails: viewDetails
+        viewDetails
     });
     //var store = Redux.createStore(reducer, Redux.applyMiddleware(thunk));
 
     // Use this store declaration for Time Travel debug through DevTools Redux Extension
     var store = createTimeTravelStore(reducer, [thunk]);
 
-    document.addEventListener("DOMContentLoaded", function () {
-
+    document.addEventListener("DOMContentLoaded", function() {
+        
         function getEmployeeId(event) {
             var $element = $(event.target);
             if ($element.hasClass('fa')) {
@@ -71,22 +74,22 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
             return employeeId;
         }
 
-        elements.htmlNodes.elementName.on('blur', function (event) {
+        elements.htmlNodes.elementName.on('blur', function(event) {
             store.dispatch(actions.skillName(event.target.value));
         });
 
-        elements.htmlNodes.deleteButton.on('click', function (event) {
+        elements.htmlNodes.deleteButton.on('click', function(event) {
             store.dispatch(actions.deleteSkill(store));
         });
 
-        elements.htmlNodes.saveButton.on('click', function (event) {
+        elements.htmlNodes.saveButton.on('click', function(event) {
             store.dispatch(actions.saveSkill(store));
         });
 
-        elements.htmlNodes.addEmployeesList.list.on('click', '.add-employee', function (event) {
+        elements.htmlNodes.addEmployeesList.list.on('click', '.add-employee', function(event) {
             var state = store.getState();
             var employeeId = getEmployeeId(event);
-            var employee = state.addEmployeesList.results.find(function (employee) {
+            var employee = state.addEmployeesList.results.find(function(employee) {
                 return employee.Id === employeeId;
             });
             if (employee) {
@@ -97,22 +100,24 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
             store.dispatch(actions.addEmployeesListEmpty(elements.addEmployeesList.listId));
         });
 
-        elements.htmlNodes.skillEmployeesList.list.on('click', '.remove-employee', function (event) {
+        elements.htmlNodes.skillEmployeesList.list.on('click', '.remove-employee', function(event) {
             var state = store.getState();
             var employeeId = getEmployeeId(event);
-            var employees = state.viewDetails.skill.Employees.filter(function (employee) {
+            var employees = state.viewDetails.skill.Employees.filter(function(employee) {
                 return employee.Id !== employeeId;
             });
             store.dispatch(actions.skillEmployees(employees));
             store.dispatch(actions.addEmployeesListFill(elements.skillEmployeesList.listId, employees));
         });
 
-        paginatedListService.attachActions(elements.addEmployeesList, store);
+        paginatedListService.attachActions(elements.addEmployeesList, store)
 
-        store.subscribe(function () {
+        store.subscribe(function() {
             render(store.getState());
         });
 
         store.dispatch(actions.loadSkill(store, elements));
     });
-})(window.PaginatedListService, window.skillDetails.elements, window.skillDetails.render, window.skillDetails.actions);
+
+})(window.PaginatedListService, window.skillDetails.elements,
+    window.skillDetails.render, window.skillDetails.actions);

@@ -1,6 +1,4 @@
-'use strict';
-
-(function (js, ajax, paginatedListService, elements) {
+(function(js, ajax, paginatedListService, elements) {
 
     function addSkillsListEmpty(listId) {
         return {
@@ -24,22 +22,26 @@
         return function (dispatch) {
             var state = store.getState();
 
-            js.actionModal('<div>Are you sure you want to delete ' + state.viewDetails.employee.Name + '?</div>', 'Delete').then(function () {
+            js.actionModal('<div>Are you sure you want to delete ' + state.viewDetails.employee.Name + '?</div>',
+            'Delete')
+            .then(function() {
                 dispatch({
                     type: 'processing'
                 });
                 return ajax.remove('/api/employee?id=' + state.viewDetails.employee.Id);
-            }).then(function (employee) {
+            })
+            .then(function (employee) {
                 if (employee) {
                     document.location.href = '/employees/';
-                } else {
+                }
+                else {
                     basicModal.close();
                     dispatch({
                         type: 'processed'
                     });
                 }
             });
-        };
+        }
     }
 
     function employeeName(name) {
@@ -52,7 +54,7 @@
     function employeeSkills(skills) {
         return {
             type: 'employeeSkills',
-            skills: skills
+            skills
         };
     }
 
@@ -67,7 +69,7 @@
     }
 
     function loadEmployee(store, elements) {
-        return function (dispatch) {
+        return function(dispatch) {
             dispatch({
                 type: elements.employeeSkillsList.listId + ':initialize',
                 loadPhase: 'none'
@@ -92,18 +94,20 @@
                 }, state.viewDetails.employee);
             }
 
-            js.stallPromise(employeePromise, 1500).then(function (employee) {
+            js.stallPromise(employeePromise, 1500)
+            .then(function(employee) {
                 if (employeeId == 0 && !readOnly) {
                     employee.Id = employeeId;
                     employee.Name = 'New employee';
-                } else if (employee.Id == -1) {
+                }
+                else if (employee.Id == -1) {
                     employee.Name = 'Employee not found';
                     readOnly = true;
                 }
                 dispatch({
                     type: 'employeeLoaded',
-                    employee: employee,
-                    readOnly: readOnly
+                    employee,
+                    readOnly
                 });
                 dispatch({
                     type: elements.employeeSkillsList.listId + ':updateResults',
@@ -123,11 +127,13 @@
                 type: 'processing'
             });
             var state = store.getState();
-
-            ajax.save('/api/employee', state.viewDetails.employee).then(function (employee) {
+            
+            ajax.save('/api/employee', state.viewDetails.employee)
+            .then(function (employee) {
                 if (employee) {
                     document.location.href = '/employees/details/' + employee.Id;
-                } else {
+                }
+                else {
                     dispatch({
                         type: 'processed'
                     });
@@ -138,13 +144,14 @@
 
     window.employeeDetails = window.employeeDetails || {};
     window.employeeDetails.actions = {
-        addSkillsListEmpty: addSkillsListEmpty,
-        addSkillsListFill: addSkillsListFill,
-        deleteEmployee: deleteEmployee,
-        employeeName: employeeName,
-        employeeSkills: employeeSkills,
-        employeeSkillsList: employeeSkillsList,
-        loadEmployee: loadEmployee,
-        saveEmployee: saveEmployee
+        addSkillsListEmpty,
+        addSkillsListFill,
+        deleteEmployee,
+        employeeName,
+        employeeSkills,
+        employeeSkillsList,
+        loadEmployee,
+        saveEmployee
     };
-})(window.JsCommons, window.Ajax, window.PaginatedListService, window.employeeDetails.elements);
+    
+})(window.JsCommons, window.Ajax,window.PaginatedListService, window.employeeDetails.elements);

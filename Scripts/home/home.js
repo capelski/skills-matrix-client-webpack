@@ -1,17 +1,18 @@
-'use strict';
-
-(function (js, ajax, paginatedListService) {
+(function(js, ajax, paginatedListService) {
 
     var employeesList = paginatedListService.create('employees', null, {
-        elementDrawer: function elementDrawer(employee) {
-            return '<li class="list-group-item"><a class="reset" href="/employees/details?id=' + employee.Id + '">' + employee.Name + '<span class="badge floating">' + employee.Skills.length + '</span></a></li>';
+        elementDrawer: function (employee) {
+            return '<li class="list-group-item"><a class="reset" href="/employees/details?id=' +
+            employee.Id + '">' + employee.Name +
+            '<span class="badge floating">' + employee.Skills.length + '</span></a></li>';
         },
         noResultsHtml: '<i>No employees found</i>'
     });
 
     var skillsList = paginatedListService.create('skills', null, {
-        elementDrawer: function elementDrawer(skill) {
-            return '<li class="list-group-item"><a class="reset" href="/skills/details?id=' + skill.Id + '">' + skill.Name + '<span class="badge floating">' + skill.Employees.length + '</span></a></li>';
+        elementDrawer: function (skill) {
+            return '<li class="list-group-item"><a class="reset" href="/skills/details?id=' + skill.Id + '">' + skill.Name +
+            '<span class="badge floating">' + skill.Employees.length + '</span></a></li>';
         },
         noResultsHtml: '<i>No skills found</i>'
     });
@@ -26,22 +27,23 @@
     // Use this store declaration for Time Travel debug through DevTools Redux Extension
     //var store = createTimeTravelStore(reducer, [thunk]);
 
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
 
         function render(state) {
             paginatedListService.render(employeesList, state, state.employeesList);
             paginatedListService.render(skillsList, state, state.skillsList);
         };
 
-        store.subscribe(function () {
+        store.subscribe(function() {
             render(store.getState());
         });
 
-        store.dispatch(function (dispatch) {
+        store.dispatch(function(dispatch) {
             dispatch({
                 type: employeesList.listId + ':initialize'
             });
-            js.stallPromise(ajax.get('/api/employee/getMostSkilled', {}, []), 1500).then(function (employees) {
+            js.stallPromise(ajax.get('/api/employee/getMostSkilled', {}, []), 1500)
+            .then(function(employees) {
                 dispatch({
                     type: employeesList.listId + ':updateResults',
                     listResults: {
@@ -51,12 +53,13 @@
                 });
             });
         });
-
-        store.dispatch(function (dispatch) {
+        
+        store.dispatch(function(dispatch) {
             dispatch({
                 type: skillsList.listId + ':initialize'
             });
-            js.stallPromise(ajax.get('/api/skill/getRearest', {}, []), 1500).then(function (skills) {
+            js.stallPromise(ajax.get('/api/skill/getRearest', {}, []), 1500)
+            .then(function(skills) {
                 dispatch({
                     type: skillsList.listId + ':updateResults',
                     listResults: {
@@ -66,5 +69,7 @@
                 });
             });
         });
+
     });
+
 })(window.JsCommons, window.Ajax, window.PaginatedListService);

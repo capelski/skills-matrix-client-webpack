@@ -1,6 +1,4 @@
-'use strict';
-
-(function (js, ajax, paginatedListService, elements) {
+(function(js, ajax, paginatedListService, elements) {
 
     function addEmployeesListEmpty(listId) {
         return {
@@ -24,22 +22,26 @@
         return function (dispatch) {
             var state = store.getState();
 
-            js.actionModal('<div>Are you sure you want to delete ' + state.viewDetails.skill.Name + '?</div>', 'Delete').then(function () {
+            js.actionModal('<div>Are you sure you want to delete ' + state.viewDetails.skill.Name + '?</div>',
+            'Delete')
+            .then(function() {
                 dispatch({
                     type: 'processing'
                 });
                 return ajax.remove('/api/skill?id=' + state.viewDetails.skill.Id);
-            }).then(function (skill) {
+            })
+            .then(function (skill) {
                 if (skill) {
                     document.location.href = '/skills/';
-                } else {
+                }
+                else {
                     basicModal.close();
                     dispatch({
                         type: 'processed'
                     });
                 }
             });
-        };
+        }
     }
 
     function skillName(name) {
@@ -52,7 +54,7 @@
     function skillEmployees(employees) {
         return {
             type: 'skillEmployees',
-            employees: employees
+            employees
         };
     }
 
@@ -67,7 +69,7 @@
     }
 
     function loadSkill(store, elements) {
-        return function (dispatch) {
+        return function(dispatch) {
             dispatch({
                 type: elements.skillEmployeesList.listId + ':initialize',
                 loadPhase: 'none'
@@ -92,18 +94,20 @@
                 }, state.viewDetails.skill);
             }
 
-            js.stallPromise(skillPromise, 1500).then(function (skill) {
+            js.stallPromise(skillPromise, 1500)
+            .then(function(skill) {
                 if (skillId == 0 && !readOnly) {
                     skill.Id = skillId;
                     skill.Name = 'New skill';
-                } else if (skill.Id == -1) {
+                }
+                else if (skill.Id == -1) {
                     skill.Name = 'Skill not found';
                     readOnly = true;
                 }
                 dispatch({
                     type: 'skillLoaded',
-                    skill: skill,
-                    readOnly: readOnly
+                    skill,
+                    readOnly
                 });
                 dispatch({
                     type: elements.skillEmployeesList.listId + ':updateResults',
@@ -123,11 +127,13 @@
                 type: 'processing'
             });
             var state = store.getState();
-
-            ajax.save('/api/skill', state.viewDetails.skill).then(function (skill) {
+            
+            ajax.save('/api/skill', state.viewDetails.skill)
+            .then(function (skill) {
                 if (skill) {
                     document.location.href = '/skills/details/' + skill.Id;
-                } else {
+                }
+                else {
                     dispatch({
                         type: 'processed'
                     });
@@ -138,13 +144,14 @@
 
     window.skillDetails = window.skillDetails || {};
     window.skillDetails.actions = {
-        addEmployeesListEmpty: addEmployeesListEmpty,
-        addEmployeesListFill: addEmployeesListFill,
-        deleteSkill: deleteSkill,
-        skillName: skillName,
-        skillEmployees: skillEmployees,
-        skillEmployeesList: skillEmployeesList,
-        loadSkill: loadSkill,
-        saveSkill: saveSkill
+        addEmployeesListEmpty,
+        addEmployeesListFill,
+        deleteSkill,
+        skillName,
+        skillEmployees,
+        skillEmployeesList,
+        loadSkill,
+        saveSkill
     };
-})(window.JsCommons, window.Ajax, window.PaginatedListService, window.skillDetails.elements);
+    
+})(window.JsCommons, window.Ajax,window.PaginatedListService, window.skillDetails.elements);

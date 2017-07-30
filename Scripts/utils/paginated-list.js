@@ -1,8 +1,4 @@
-'use strict';
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-(function () {
+(function() {
 
     function getHtmlNodes(listId) {
         var htmlNodes = {
@@ -22,12 +18,12 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
     function PaginatedList(listId, fetcher, renderOptions) {
         this.listId = listId;
-        this.fetcher = fetcher || function (state) {
+        this.fetcher = fetcher || function(state) {
             return Promise.resolve(PaginatedListService.getDefaultData());
         };
         this.renderOptions = renderOptions || {};
         this.renderOptions.noResultsHtml = this.renderOptions.noResultsHtml || '<i>No results found</i>';
-        this.renderOptions.elementDrawer = this.renderOptions.elementDrawer || function (element, state) {
+        this.renderOptions.elementDrawer = this.renderOptions.elementDrawer || function(element, state) {
             return '<li class= "list-group-item">' + element + '</li>';
         };
         this.htmlNodes = getHtmlNodes(listId);
@@ -36,11 +32,11 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     function eventDelayer(eventHandler, delay) {
         var timeOut = null;
         delay = delay || 300;
-        return function (event) {
+        return function(event) {
             if (timeOut) {
                 clearTimeout(timeOut);
             }
-            timeOut = setTimeout(function () {
+            timeOut = setTimeout(function() {
                 timeOut = null;
                 eventHandler(event);
             }, delay);
@@ -50,9 +46,10 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     function getActionDispatcher(store, paginatedList, actionType) {
         return function (actionData) {
             actionData.type = paginatedList.listId + ':' + actionType;
-            store.dispatch(function (dispatch) {
+            store.dispatch(function(dispatch) {
                 dispatch(actionData);
-                paginatedList.fetcher(store.getState()).then(function (listResults) {
+                paginatedList.fetcher(store.getState())
+                .then(function(listResults) {
                     store.dispatch({
                         listResults: listResults,
                         type: paginatedList.listId + ':updateResults'
@@ -84,23 +81,23 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         }
 
         function attachHandlers(paginatedList, handlers) {
-            paginatedList.htmlNodes.keywords.on('keyup', eventDelayer(function (event) {
+            paginatedList.htmlNodes.keywords.on('keyup', eventDelayer(function(event) {
                 handlers.searcher({
                     keywords: event.target.value
                 });
             }));
-            paginatedList.htmlNodes.pageSizeList.on('click', '.dropdown-option', function (event) {
+            paginatedList.htmlNodes.pageSizeList.on('click', '.dropdown-option', function(event) {
                 handlers.pageSizeList({
                     pageSize: $(event.target).data('size'),
                     type: 'pageSizeList'
                 });
             });
-            paginatedList.htmlNodes.pages.on('click', '.enabled > .page-button', function (event) {
+            paginatedList.htmlNodes.pages.on('click', '.enabled > .page-button', function(event) {
                 handlers.pageButtons({
                     movement: $(event.target).data('page-action')
                 });
             });
-            paginatedList.htmlNodes.clearKeywords.on('click', function (event) {
+            paginatedList.htmlNodes.clearKeywords.on('click', function(event) {
                 handlers.initialize({
                     loadPhase: 'loading'
                 });
@@ -139,62 +136,74 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         }
 
         function getReducer(paginatedList) {
-            return function (state, action) {
+            return function(state, action) {
                 if (typeof state === 'undefined') {
                     state = getDefaultState();
                 }
 
                 switch (action.type) {
                     case paginatedList.listId + ':initialize':
-                        var hasSearcher = action.config && action.config.hasSearcher != null ? action.config.hasSearcher : state.hasSearcher;
-                        var hasPagination = action.config && action.config.hasPagination != null ? action.config.hasPagination : state.hasPagination;
+                        var hasSearcher = action.config && action.config.hasSearcher != null ?
+                            action.config.hasSearcher :
+                            state.hasSearcher;
+                        var hasPagination = action.config && action.config.hasPagination != null ?
+                            action.config.hasPagination :
+                            state.hasPagination;
                         var loadPhase = action.loadPhase != null ? action.loadPhase : state.loadPhase;
-                        return _extends({}, state, {
-                            hasSearcher: hasSearcher,
-                            hasPagination: hasPagination,
-                            loadPhase: loadPhase,
+                        return {
+                            ...state,
+                            hasSearcher,
+                            hasPagination,
+                            loadPhase,
                             keywords: '',
                             page: 0,
                             pageOffset: 0
-                        });
+                        };
                     case paginatedList.listId + ':pageButtons':
                         var page = 0;
                         var pageOffset = state.pageOffset;
                         if (!isNaN(action.movement)) {
                             page = parseInt(action.movement);
-                        } else if (action.movement === 'previous' && state.pageOffset - state.pagesNumber >= 0) {
+                        }
+                        else if (action.movement === 'previous' && (state.pageOffset - state.pagesNumber) >= 0) {
                             pageOffset = state.pageOffset - state.pagesNumber;
-                        } else if (action.movement === 'following' && state.pageOffset + state.pagesNumber < state.totalPages) {
+                        }
+                        else if (action.movement === 'following' &&
+                        (state.pageOffset + state.pagesNumber) < state.totalPages) {
                             pageOffset = state.pageOffset + state.pagesNumber;
                         }
-                        return _extends({}, state, {
-                            page: page,
-                            pageOffset: pageOffset,
+                        return {
+                            ...state,
+                            page,
+                            pageOffset,
                             loadPhase: 'loading'
-                        });
+                        };
                     case paginatedList.listId + ':pageSizeList':
-                        return _extends({}, state, {
+                        return {
+                            ...state,
                             loadPhase: 'loading',
                             pageSize: action.pageSize,
                             page: 0,
                             pageOffset: 0
-                        });
+                        };
                     case paginatedList.listId + ':searcher':
-                        return _extends({}, state, {
+                        return {
+                            ...state,
                             loadPhase: 'loading',
                             keywords: action.keywords,
                             page: 0,
                             pageOffset: 0
-                        });
+                        };
                     case paginatedList.listId + ':updateResults':
-                        var loadPhase = action.loadPhase != null ? action.loadPhase : 'loaded';
-                        var keywords = action.keywords != null ? action.keywords : state.keywords;
-                        return _extends({}, state, {
-                            loadPhase: loadPhase,
-                            keywords: keywords,
+                        var loadPhase = action.loadPhase != null ? action.loadPhase : 'loaded';                    
+                        var keywords = action.keywords != null ? action.keywords : state.keywords;                    
+                        return {
+                            ...state,
+                            loadPhase,
+                            keywords,
                             results: action.listResults.Items,
-                            totalPages: action.listResults.TotalPages
-                        });
+                            totalPages: action.listResults.TotalPages,
+                        };
                     default:
                         return state;
                 }
@@ -210,11 +219,13 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
                 paginatedList.htmlNodes.keywords.val(listState.keywords);
                 if (listState.keywords && listState.keywords.length > 0) {
                     paginatedList.htmlNodes.clearKeywords.show();
-                } else {
+                }
+                else {
                     paginatedList.htmlNodes.clearKeywords.hide();
                 }
                 paginatedList.htmlNodes.searcher.show();
-            } else {
+            }
+            else {
                 paginatedList.htmlNodes.searcher.hide();
             }
 
@@ -222,42 +233,59 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
                 if (listState.hasPagination) {
                     var pagesNumber = Math.min(listState.pagesNumber, listState.totalPages - listState.pageOffset);
                     if (pagesNumber) {
-                        var pagination = '<li class= "' + (listState.pageOffset - listState.pagesNumber >= 0 ? 'enabled' : 'disabled') + '"><span class= "page-button" data-page-action= "previous">&laquo;</span></li>';
+                        var pagination = '<li class= "' + ((listState.pageOffset - listState.pagesNumber) >= 0 ?
+                            'enabled' :
+                            'disabled') +
+                        '"><span class= "page-button" data-page-action= "previous">&laquo;</span></li>';
                         for (var i = 0; i < pagesNumber; ++i) {
-                            pagination += '<li class= "' + (listState.page === i ? 'active' : 'enabled') + '"><span class= "page-button" data-page-action= "' + i + '">' + (listState.pageOffset + i + 1) + '</span></li>';
+                            pagination += '<li class= "' + (listState.page === i ?
+                                'active' :
+                                'enabled') +
+                            '"><span class= "page-button" data-page-action= "' + i + '">' +
+                            (listState.pageOffset + i + 1) + '</span></li>';
                         }
-                        pagination += '<li class= "' + (listState.pageOffset + listState.pagesNumber < listState.totalPages ? 'enabled' : 'disabled') + '"><span class= "page-button" data-page-action= "following">&raquo;</span></li>';
+                        pagination += '<li class= "' + ((listState.pageOffset + listState.pagesNumber) < listState.totalPages ?
+                                'enabled' :
+                                'disabled') +
+                        '"><span class= "page-button" data-page-action= "following">&raquo;</span></li>';
                         paginatedList.htmlNodes.pages.html(pagination);
 
                         paginatedList.htmlNodes.pageSizeList.empty();
-                        listState.pageSizeOptions.forEach(function (option) {
-                            paginatedList.htmlNodes.pageSizeList.append('<li class= "text-right"><span class= "dropdown-option" data-size= "' + option + '">' + option + '</span></li>');
+                        listState.pageSizeOptions.forEach(function(option) {
+                            paginatedList.htmlNodes.pageSizeList.append(
+                                '<li class= "text-right"><span class= "dropdown-option" data-size= "' +
+                                option + '">' + option + '</span></li>');
                         });
 
                         paginatedList.htmlNodes.paginationBar.show();
-                    } else {
+                    }
+                    else {
                         paginatedList.htmlNodes.paginationBar.hide();
                     }
 
                     paginatedList.htmlNodes.pageSize.text(listState.pageSize);
-                } else {
+                }
+                else {
                     paginatedList.htmlNodes.paginationBar.hide();
                 }
 
                 paginatedList.htmlNodes.list.empty();
                 if (!listState.results || !listState.results.length) {
                     paginatedList.htmlNodes.list.append(paginatedList.renderOptions.noResultsHtml);
-                } else {
-                    listState.results.map(function (element) {
+                }
+                else {
+                    listState.results.map(function(element) {
                         return paginatedList.renderOptions.elementDrawer(element, state);
-                    }).forEach(function (element) {
+                    })
+                    .forEach(function(element) {
                         paginatedList.htmlNodes.list.append(element);
                     });
                 }
             }
         }
     }
-
+    
     window.PaginatedList = PaginatedList;
     window.PaginatedListService = new PaginatedListService();
+
 })();
