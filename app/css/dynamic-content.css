@@ -1,5 +1,6 @@
 ﻿.dynamic-content {
     min-height: 0;
+    max-height: 5000px;
     overflow: hidden;
     position: relative;
     -webkit-transition: min-height 1s, max-height 1s;
@@ -17,19 +18,9 @@
     z-index: 10;
 }
 
-.dynamic-content.loading,
-.dynamic-content.not-loaded {
-    min-height: 100%;
-}
-
-.dynamic-content.no-height.loading,
-.dynamic-content.no-height.not-loaded {
+.dynamic-content.loading {
     min-height: 200px;
-}
-
-.dynamic-content.not-loaded > .loader {
-    visibility: visible;
-    opacity: 1;
+    max-height: 200px;
 }
 
 .dynamic-content.loading > .loader {

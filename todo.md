@@ -1,0 +1,1 @@
+- Define state in actions and inject it

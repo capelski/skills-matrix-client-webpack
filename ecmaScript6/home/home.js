@@ -1,4 +1,4 @@
-(function(js, ajax, paginatedListService) {
+(function(js, navigation, ajax, paginatedListService) {
 
     var employeesList = paginatedListService.create('employees', null, {
         elementDrawer: function (employee) {
@@ -22,22 +22,21 @@
         skillsList: paginatedListService.getReducer(skillsList)
     });
 
+    function render(state) {
+        paginatedListService.render(employeesList, state, state.employeesList);
+        paginatedListService.render(skillsList, state, state.skillsList);
+    };
+
     var store = Redux.createStore(reducer, Redux.applyMiddleware(thunk));
+
+    store.subscribe(function() {
+        render(store.getState());
+    });
 
     // Use this store declaration for Time Travel debug through DevTools Redux Extension
     //var store = createTimeTravelStore(reducer, [thunk]);
 
-    document.addEventListener("DOMContentLoaded", function() {
-
-        function render(state) {
-            paginatedListService.render(employeesList, state, state.employeesList);
-            paginatedListService.render(skillsList, state, state.skillsList);
-        };
-
-        store.subscribe(function() {
-            render(store.getState());
-        });
-
+    navigation.register('home-section', function(navigationData) {
         store.dispatch(function(dispatch) {
             dispatch({
                 type: employeesList.listId + ':initialize'
@@ -69,7 +68,6 @@
                 });
             });
         });
-
     });
 
-})(window.JsCommons, window.Ajax, window.PaginatedListService);
+})(window.JsCommons, window.Navigation, window.Ajax, window.PaginatedListService);

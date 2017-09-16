@@ -1,14 +1,14 @@
-﻿body, html {
-    height: 100%;
-}
-
-body {
-    padding-top: 71px;
+﻿body {
+    padding-top: 50px;
     padding-bottom: 20px;
 }
 
-.body-content {
-    min-height: 100%;
+.navigation-section {
+    display: none;
+}
+
+.navigation-section.visible {
+    display: block;
 }
 
 .row.align-bottom {
