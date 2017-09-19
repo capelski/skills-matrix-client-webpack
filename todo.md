@@ -1,1 +1,3 @@
+- Extract list commons
+- Loader
 - Define state in actions and inject it

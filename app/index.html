@@ -34,187 +34,192 @@
             </div>
         </div>
     </nav>
-    <div class="container body-content">
-        
-        <!-- SECTIONS -->
+    <div id="page-wrapper" class="container body-content page-wrapper">
 
-        <div id="home-section" class="navigation-section">
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="page-header">
-                        <h2>Skills matrix</h2>
+        <div class="page-loader loader"></div>
+        <div class="page-content">
+
+            <!-- SECTIONS -->
+
+            <div id="home-section" class="navigation-section">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="page-header">
+                            <h2>Skills matrix</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <p>
+                            Suspendisse et metus ligula. Nulla laoreet imperdiet magna, quis egestas sem rhoncus vitae. In non maximus sem, eget accumsan risus. Nam porttitor lorem at purus mollis dictum. Vestibulum eleifend lorem non est consectetur, vel dignissim eros cursus. Aenean magna tortor, fringilla vitae vulputate sit amet, ornare et eros. Vestibulum eget suscipit elit
+                        </p>
+                        <img src="/images/skills.png" class="responsive-img" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="row align-bottom">
+                            <div class="col-xs-9">
+                                <h2>Most skilled employees</h2>  
+                            </div>
+                            <div class="col-xs-3 m-bottom-10 text-right">
+                                <a href="#" onclick="Navigation.navigate('employees-list-section')">View all</a>  
+                            </div>
+                        </div>
+                        <div id="home-employees-list"></div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="row align-bottom">
+                            <div class="col-xs-9">
+                                <h2>Rearest skills</h2>
+                            </div>
+                            <div class="col-xs-3 m-bottom-10 text-right">
+                                <a href="#" onclick="Navigation.navigate('skills-list-section')">View all</a>  
+                            </div>
+                        </div>
+                        <div id="home-skills-list"></div>
                     </div>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-xs-12">
-                    <p>
-                        Suspendisse et metus ligula. Nulla laoreet imperdiet magna, quis egestas sem rhoncus vitae. In non maximus sem, eget accumsan risus. Nam porttitor lorem at purus mollis dictum. Vestibulum eleifend lorem non est consectetur, vel dignissim eros cursus. Aenean magna tortor, fringilla vitae vulputate sit amet, ornare et eros. Vestibulum eget suscipit elit
-                    </p>
-                    <img src="/images/skills.png" class="responsive-img" />
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-6">
+            <div id="employees-list-section" class="navigation-section">
+                <div class="page-header">
                     <div class="row align-bottom">
-                        <div class="col-xs-9">
-                            <h2>Most skilled employees</h2>  
+                        <div class="col-xs-6">
+                            <h2>Employees</h2>
                         </div>
-                        <div class="col-xs-3 m-bottom-10 text-right">
-                            <a href="#" onclick="Navigation.navigate('employees-list-section')">View all</a>  
-                        </div>
-                    </div>
-                    <div id="home-employees-list"></div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="row align-bottom">
-                        <div class="col-xs-9">
-                            <h2>Rearest skills</h2>
-                        </div>
-                        <div class="col-xs-3 m-bottom-10 text-right">
-                            <a href="#" onclick="Navigation.navigate('skills-list-section')">View all</a>  
+                        <div class="col-xs-6 text-right m-bottom-10">
+                            <a class="btn btn-primary" href="#"
+                            onclick="Navigation.navigate('employee-details-section', {employeeId: 0, readOnly: false})">
+                                Create
+                            </a>
                         </div>
                     </div>
-                    <div id="home-skills-list"></div>
                 </div>
-            </div>
-        </div>
 
-        <div id="employees-list-section" class="navigation-section">
-            <div class="page-header">
-                <div class="row align-bottom">
-                    <div class="col-xs-6">
-                        <h2>Employees</h2>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <p>
+                            Suspendisse et metus ligula. Nulla laoreet imperdiet magna, quis egestas sem rhoncus vitae. In non maximus sem, eget accumsan risus. Nam porttitor lorem at purus mollis dictum. Vestibulum eleifend lorem non est consectetur, vel dignissim eros cursus. Aenean magna tortor, fringilla vitae vulputate sit amet, ornare et eros. Vestibulum eget suscipit elit
+                        </p>
                     </div>
-                    <div class="col-xs-6 text-right m-bottom-10">
-                        <a class="btn btn-primary" href="#"
-                        onclick="Navigation.navigate('employee-details-section', {employeeId: 0, readOnly: false})">
-                            Create
+                </div>
+
+                <div id="employees-list-wrapper"></div>
+            </div>
+
+            <div id="employee-details-section" class="navigation-section">
+                <div class="dynamic-content">
+
+                    <div id="employee-loader" class="loader"></div>
+
+                    <div id="employee-view-wrapper" style="visibility: hidden;">
+
+                        <div class="page-header">
+                            <h2 id="employee-page-title"></h2>
+                        </div>
+
+                        <form class="form-horizontal">
+
+                            <div class="form-group no-margin">
+                                <label for="Name">Name</label>
+                                <input id="employee-model-name" value="" class="form-control"/>
+                            </div>
+
+                            <h3>Skills</h3>
+                            <div id="employee-details-skills"></div>
+                            <div id="employee-details-add-skills"></div>
+
+                            <!-- Read actions -->
+                            <a id="employee-edit-button" class="btn btn-primary" href="#">Edit</a>
+                            <button id="employee-delete-button" type="button" class="btn btn-danger">Delete</button>
+
+                            <!-- Edit actions -->
+                            <button id="employee-save-button" type="button" class="btn btn-primary">Save</button>
+                            <a id="employee-cancel-button" class="btn btn-default" href="#">Cancel</a>
+                        </form>
+                        
+                        <hr />
+                        <a href="#" onclick="Navigation.navigate('employees-list-section')" class="btn btn-default">
+                            Employees list
                         </a>
                     </div>
+
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-xs-12">
-                    <p>
-                        Suspendisse et metus ligula. Nulla laoreet imperdiet magna, quis egestas sem rhoncus vitae. In non maximus sem, eget accumsan risus. Nam porttitor lorem at purus mollis dictum. Vestibulum eleifend lorem non est consectetur, vel dignissim eros cursus. Aenean magna tortor, fringilla vitae vulputate sit amet, ornare et eros. Vestibulum eget suscipit elit
-                    </p>
-                </div>
-            </div>
-
-            <div id="employees-list-wrapper"></div>
-        </div>
-
-        <div id="employee-details-section" class="navigation-section">
-            <div class="dynamic-content">
-
-                <div id="employee-loader" class="loader"></div>
-
-                <div id="employee-view-wrapper" style="visibility: hidden;">
-
-                    <div class="page-header">
-                        <h2 id="employee-page-title"></h2>
+            <div id="skills-list-section" class="navigation-section">
+                <div class="page-header">
+                    <div class="row align-bottom">
+                        <div class="col-xs-6">
+                            <h2>Skills</h2>
+                        </div>
+                        <div class="col-xs-6 text-right m-bottom-10">
+                            <a class="btn btn-primary" href="#"
+                            onclick="Navigation.navigate('skill-details-section', {skillId: 0, readOnly: false})">
+                                Create
+                            </a>
+                        </div>
                     </div>
+                </div>
 
-                    <form class="form-horizontal">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <p>
+                            Suspendisse et metus ligula. Nulla laoreet imperdiet magna, quis egestas sem rhoncus vitae. In non maximus sem, eget accumsan risus. Nam porttitor lorem at purus mollis dictum. Vestibulum eleifend lorem non est consectetur, vel dignissim eros cursus. Aenean magna tortor, fringilla vitae vulputate sit amet, ornare et eros. Vestibulum eget suscipit elit
+                        </p>
+                    </div>
+                </div>
 
-                        <div class="form-group no-margin">
-                            <label for="Name">Name</label>
-                            <input id="employee-model-name" value="" class="form-control"/>
+                <div id="skills-list-wrapper"></div>
+            </div>
+
+            <div id="skill-details-section" class="navigation-section">
+                <div class="dynamic-content">
+
+                    <div id="skill-loader" class="loader"></div>
+
+                    <div id="skill-view-wrapper" style="visibility: hidden;">
+
+                        <div class="page-header">
+                            <h2 id="skill-page-title"></h2>
                         </div>
 
-                        <h3>Skills</h3>
-                        <div id="employee-details-skills"></div>
-                        <div id="employee-details-add-skills"></div>
+                        <form class="form-horizontal">
 
-                        <!-- Read actions -->
-                        <a id="employee-edit-button" class="btn btn-primary" href="#">Edit</a>
-                        <button id="employee-delete-button" type="button" class="btn btn-danger">Delete</button>
+                            <div class="form-group no-margin">
+                                <label for="Name">Name</label>
+                                <input id="skill-model-name" value="" class="form-control"/>
+                            </div>
 
-                        <!-- Edit actions -->
-                        <button id="employee-save-button" type="button" class="btn btn-primary">Save</button>
-                        <a id="employee-cancel-button" class="btn btn-default" href="#">Cancel</a>
-                    </form>
-                    
-                    <hr />
-                    <a href="#" onclick="Navigation.navigate('employees-list-section')" class="btn btn-default">
-                        Employees list
-                    </a>
-                </div>
+                            <h3>Employees</h3>
+                            <div id="skill-details-employees"></div>
+                            <div id="skill-details-add-employees"></div>
 
-            </div>
-        </div>
+                            <!-- Read actions -->
+                            <a id="skill-edit-button" class="btn btn-primary" href="#">Edit</a>
+                            <button id="skill-delete-button" type="button" class="btn btn-danger">Delete</button>
 
-        <div id="skills-list-section" class="navigation-section">
-            <div class="page-header">
-                <div class="row align-bottom">
-                    <div class="col-xs-6">
-                        <h2>Skills</h2>
-                    </div>
-                    <div class="col-xs-6 text-right m-bottom-10">
-                        <a class="btn btn-primary" href="#"
-                        onclick="Navigation.navigate('skill-details-section', {skillId: 0, readOnly: false})">
-                            Create
+                            <!-- Edit actions -->
+                            <button id="skill-save-button" type="button" class="btn btn-primary">Save</button>
+                            <a id="skill-cancel-button" class="btn btn-default" href="#">Cancel</a>
+                        </form>
+                        
+                        <hr />
+                        <a href="#" onclick="Navigation.navigate('skills-list-section')" class="btn btn-default">
+                            Skills list
                         </a>
                     </div>
+
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-xs-12">
-                    <p>
-                        Suspendisse et metus ligula. Nulla laoreet imperdiet magna, quis egestas sem rhoncus vitae. In non maximus sem, eget accumsan risus. Nam porttitor lorem at purus mollis dictum. Vestibulum eleifend lorem non est consectetur, vel dignissim eros cursus. Aenean magna tortor, fringilla vitae vulputate sit amet, ornare et eros. Vestibulum eget suscipit elit
-                    </p>
-                </div>
-            </div>
+            <!-- /SECTIONS -->
 
-            <div id="skills-list-wrapper"></div>
         </div>
-
-        <div id="skill-details-section" class="navigation-section">
-            <div class="dynamic-content">
-
-                <div id="skill-loader" class="loader"></div>
-
-                <div id="skill-view-wrapper" style="visibility: hidden;">
-
-                    <div class="page-header">
-                        <h2 id="skill-page-title"></h2>
-                    </div>
-
-                    <form class="form-horizontal">
-
-                        <div class="form-group no-margin">
-                            <label for="Name">Name</label>
-                            <input id="skill-model-name" value="" class="form-control"/>
-                        </div>
-
-                        <h3>Employees</h3>
-                        <div id="skill-details-employees"></div>
-                        <div id="skill-details-add-employees"></div>
-
-                        <!-- Read actions -->
-                        <a id="skill-edit-button" class="btn btn-primary" href="#">Edit</a>
-                        <button id="skill-delete-button" type="button" class="btn btn-danger">Delete</button>
-
-                        <!-- Edit actions -->
-                        <button id="skill-save-button" type="button" class="btn btn-primary">Save</button>
-                        <a id="skill-cancel-button" class="btn btn-default" href="#">Cancel</a>
-                    </form>
-                    
-                    <hr />
-                    <a href="#" onclick="Navigation.navigate('skills-list-section')" class="btn btn-default">
-                        Skills list
-                    </a>
-                </div>
-
-            </div>
-        </div>
-
-        <!-- /SECTIONS -->
 
         <hr />
         <footer>
@@ -230,7 +235,6 @@
     <script type="text/javascript" src="/plugins/redux-thunk-2.2.0/redux-thunk.js"></script>
     <script type="text/javascript" src="/js/utils/loader.js"></script>
     <script type="text/javascript" src="/js/utils/js-commons.js"></script>
-    <script type="text/javascript" src="/js/utils/navigation.js"></script>
     <script type="text/javascript" src="/js/utils/ajax.js"></script>
     <script type="text/javascript" src="/js/utils/paginated-list.js"></script>
 
@@ -254,9 +258,14 @@
     <script src="/js/skills/details-actions.js"></script>
     <script src="/js/skills/details-state.js"></script>
 
-    <!-- Ready. Every state event should be started from here except from the user triggered ones -->
+    <!-- Store creation -->
+    <script type="text/javascript" src="/js/store.js"></script>
+
+    <script type="text/javascript" src="/js/navigation.js"></script>
+
     <script type="text/javascript">
-        window.Navigation.navigate('home-section');
+        window.Navigate('home');
+        window.Loader.create();
     </script>
 </body>
 </html>

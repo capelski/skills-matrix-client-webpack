@@ -1,10 +1,90 @@
-﻿.dynamic-content {
-    min-height: 0;
-    max-height: 5000px;
+﻿html, body {
+    height: 100%;
+}
+
+.page-wrapper {
+    min-height: 100%;
+    position: relative;
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+.page-wrapper > .page-loader {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: white;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+}
+
+.page-wrapper > .page-content {
+    display: none;
+}
+
+.page-wrapper.loading > .page-loader {
+    -webkit-animation: fade-in 400ms;
+    animation: fade-in 400ms;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
+
+.page-wrapper.loaded > .page-loader {
+    -webkit-animation: fade-out 400ms;
+    animation: fade-out 400ms;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
+
+.page-wrapper.loaded > .page-content {
+    display: block;
+}
+
+.dynamic-content {
+    min-height: 100%;
     overflow: hidden;
     position: relative;
     -webkit-transition: min-height 1s, max-height 1s;
     transition: min-height 1s, max-height 1s;
+}
+
+@-webkit-keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes fade-out {
+    100% {
+        opacity: 0;
+    }
+    0% {
+        opacity: 1;
+    }
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes fade-out {
+    100% {
+        opacity: 0;
+    }
+    0% {
+        opacity: 1;
+    }
 }
 
 .dynamic-content > .loader {
@@ -35,48 +115,4 @@
     animation: fade-out 1s;
     -webkit-animation-fill-mode: forwards;
     animation-fill-mode: forwards;
-}
-
-@-webkit-keyframes fade-in {
-    0% {
-        visibility: hidden;
-        opacity: 0;
-    }
-    100% {
-        visibility: visible;
-        opacity: 1;
-    }
-}
-
-@-webkit-keyframes fade-out {
-    100% {
-        visibility: hidden;
-        opacity: 0;
-    }
-    0% {
-        visibility: visible;
-        opacity: 1;
-    }
-}
-
-@keyframes fade-in {
-    0% {
-        visibility: hidden;
-        opacity: 0;
-    }
-    100% {
-        visibility: visible;
-        opacity: 1;
-    }
-}
-
-@keyframes fade-out {
-    100% {
-        visibility: hidden;
-        opacity: 0;
-    }
-    0% {
-        visibility: visible;
-        opacity: 1;
-    }
 }

@@ -1,73 +1,100 @@
-(function(js, navigation, ajax, paginatedListService) {
+(function(ajax, paginatedListUtils) {
 
-    var employeesList = paginatedListService.create('employees', null, {
-        elementDrawer: function (employee) {
-            return '<li class="list-group-item"><a class="reset" href="/employees/details?id=' +
-            employee.Id + '">' + employee.Name +
-            '<span class="badge floating">' + employee.Skills.length + '</span></a></li>';
-        },
-        noResultsHtml: '<i>No employees found</i>'
-    });
-
-    var skillsList = paginatedListService.create('skills', null, {
-        elementDrawer: function (skill) {
-            return '<li class="list-group-item"><a class="reset" href="/skills/details?id=' + skill.Id + '">' + skill.Name +
-            '<span class="badge floating">' + skill.Employees.length + '</span></a></li>';
-        },
-        noResultsHtml: '<i>No skills found</i>'
-    });
-
-    var reducer = Redux.combineReducers({
-        employeesList: paginatedListService.getReducer(employeesList),
-        skillsList: paginatedListService.getReducer(skillsList)
-    });
-
-    function render(state) {
-        paginatedListService.render(employeesList, state, state.employeesList);
-        paginatedListService.render(skillsList, state, state.skillsList);
+    function viewDetails(state, action) {
+        if (typeof state === 'undefined') {
+            state = {
+                visible: false
+            };
+        }
+        switch (action.type) {
+            case 'navigation-loading':
+                return {
+                    ...state,
+                    visible: false
+                };
+            case 'navigation-changed':
+                return {
+                    ...state,
+                    visible: action.pageId == 'home'
+                };
+            default:
+                return state;
+        }
     };
 
-    var store = Redux.createStore(reducer, Redux.applyMiddleware(thunk));
-
-    store.subscribe(function() {
-        render(store.getState());
+    window.reducers = window.reducers || {};
+    window.reducers.home = Redux.combineReducers({
+        viewDetails,
+        employees: paginatedListUtils.getReducer('employees'),
+        skills: paginatedListUtils.getReducer('skills'),
     });
 
-    // Use this store declaration for Time Travel debug through DevTools Redux Extension
-    //var store = createTimeTravelStore(reducer, [thunk]);
+    var employeesListRenderer = paginatedListUtils.getRenderer('home-employees-list', '<i>No employees found</i>',
+    function (employee) {
+        return '<li class="list-group-item"><a class="reset" href="/employees/details?id=' +
+        employee.Id + '">' + employee.Name +
+        '<span class="badge floating">' + employee.Skills.length + '</span></a></li>';
+    });
+    var skillsListRenderer = paginatedListUtils.getRenderer('home-skills-list', '<i>No skills found</i>',
+    function (skill) {
+        return '<li class="list-group-item"><a class="reset" href="/skills/details?id=' + skill.Id + '">' + skill.Name +
+        '<span class="badge floating">' + skill.Employees.length + '</span></a></li>';
+    });
 
-    navigation.register('home-section', function(navigationData) {
-        store.dispatch(function(dispatch) {
+    window.renderers = window.renderers || {};
+    window.renderers.home = function(state) {
+        if (state.viewDetails.visible) {
+            $('#home-section').addClass('visible');
+            employeesListRenderer(state.employees);
+            skillsListRenderer(state.skills);
+        }
+        else {
+            $('#home-section').removeClass('visible');
+        }
+    };
+
+    // This view does not define action binders because it does not trigger events
+
+    window.pages = window.pages || [];
+    window.pages.push({
+        id: 'home',
+        loader: function(dispatch, pageData) {
+        
             dispatch({
-                type: employeesList.listId + ':initialize'
+                type: 'paginatedListInitialize',
+                listId: 'employees'
             });
-            js.stallPromise(ajax.get('/api/employee/getMostSkilled', {}, []), 1500)
+            dispatch({
+                type: 'paginatedListInitialize',
+                listId: 'skills'
+            });
+
+            var employeesPromise = ajax.get('/api/employee/getMostSkilled', {}, [])
             .then(function(employees) {
                 dispatch({
-                    type: employeesList.listId + ':updateResults',
-                    listResults: {
+                    type: 'paginatedListResults',
+                    listId: 'employees',
+                    results: {
                         Items: employees,
                         TotalPages: 0
                     }
                 });
             });
-        });
-        
-        store.dispatch(function(dispatch) {
-            dispatch({
-                type: skillsList.listId + ':initialize'
-            });
-            js.stallPromise(ajax.get('/api/skill/getRearest', {}, []), 1500)
+
+            var skillsPromise = ajax.get('/api/skill/getRearest', {}, [])
             .then(function(skills) {
                 dispatch({
-                    type: skillsList.listId + ':updateResults',
-                    listResults: {
+                    type: 'paginatedListResults',
+                    listId: 'skills',
+                    results: {
                         Items: skills,
                         TotalPages: 0
                     }
                 });
             });
-        });
+
+            return Promise.all([employeesPromise, skillsPromise]);
+        }
     });
 
-})(window.JsCommons, window.Navigation, window.Ajax, window.PaginatedListService);
+})(window.Ajax, window.PaginatedListUtils);
