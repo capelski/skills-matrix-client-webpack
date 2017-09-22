@@ -1,18 +1,23 @@
 (function(ajax, paginatedListUtils) {
 
+    var employeeslistReduxId = 'home-employees';
+    var employeeslistHtmlId = 'home-employees-list';
+    var skillsListReduxId = 'home-skills';
+    var skillsListHtmlId = 'home-skills-list';
+
     window.reducers = window.reducers || {};
     window.reducers.home = Redux.combineReducers({
-        employees: paginatedListUtils.getReducer('home-employees'),
-        skills: paginatedListUtils.getReducer('home-skills'),
+        employees: paginatedListUtils.getReducer(employeeslistReduxId),
+        skills: paginatedListUtils.getReducer(skillsListReduxId),
     });
 
-    var employeesListRenderer = paginatedListUtils.getRenderer('home-employees-list', '<i>No employees found</i>',
+    var employeesListRenderer = paginatedListUtils.getRenderer(employeeslistHtmlId, '<i>No employees found</i>',
         function (employee) {
             return '<li class="list-group-item"><a class="reset" href="/employees/details?id=' +
             employee.Id + '">' + employee.Name +
             '<span class="badge floating">' + employee.Skills.length + '</span></a></li>';
         });
-    var skillsListRenderer = paginatedListUtils.getRenderer('home-skills-list', '<i>No skills found</i>',
+    var skillsListRenderer = paginatedListUtils.getRenderer(skillsListHtmlId, '<i>No skills found</i>',
         function (skill) {
             return '<li class="list-group-item"><a class="reset" href="/skills/details?id=' +
             skill.Id + '">' + skill.Name +
@@ -34,18 +39,18 @@
         
             store.dispatch({
                 type: 'paginatedListInitialize',
-                listId: 'home-employees'
+                listId: employeeslistReduxId
             });
             store.dispatch({
                 type: 'paginatedListInitialize',
-                listId: 'home-skills'
+                listId: skillsListReduxId
             });
 
             var employeesPromise = ajax.get('/api/employee/getMostSkilled', {}, [])
             .then(function(employees) {
                 store.dispatch({
                     type: 'paginatedListResults',
-                    listId: 'home-employees',
+                    listId: employeeslistReduxId,
                     results: {
                         Items: employees,
                         TotalPages: 0
@@ -57,7 +62,7 @@
             .then(function(skills) {
                 store.dispatch({
                     type: 'paginatedListResults',
-                    listId: 'home-skills',
+                    listId: skillsListReduxId,
                     results: {
                         Items: skills,
                         TotalPages: 0

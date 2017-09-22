@@ -1,54 +1,63 @@
-(function(js, ajax, paginatedListService) {
-
-    function skillsFetcher(state) {
-        return js.stallPromise(ajax.get('/api/skill', {
-            keywords: state.keywords,
-            page: state.page + state.pageOffset,
-            pageSize: state.pageSize
-        }, paginatedListService.getDefaultData()), 1500);
-    }
-
-    var skillsList = paginatedListService.create('skills', skillsFetcher, {
-        elementDrawer: function (skill) {
-            return '<li class="list-group-item"><a class="reset" href="/skills/details?id=' + skill.Id + '">' + skill.Name + '</a></li>';
-        },
-        noResultsHtml: '<i>No skills found</i>'
-    });
-
-    var reducer = paginatedListService.getReducer(skillsList);
-    var store = Redux.createStore(reducer, Redux.applyMiddleware(thunk));
+(function (ajax, paginatedListUtils) {
     
-    // Use this store declaration for Time Travel debug through DevTools Redux Extension
-    //var store = createTimeTravelStore(reducer, [thunk]);
-
-    document.addEventListener("DOMContentLoaded", function() {
-
-        function render(state) {
-            paginatedListService.render(skillsList, state, state);
+        var skillslistReduxId = 'skills-list';
+        var skillslistHtmlId = 'skills-list-wrapper';
+    
+        function skillsFetcher(state) {
+            return ajax.get('/api/skill', {
+                keywords: state.keywords,
+                page: state.page + state.pageOffset,
+                pageSize: state.pageSize
+            }, paginatedListUtils.getDefaultResults());
         }
-
-        paginatedListService.attachActions(skillsList, store);
-
-        store.subscribe(function() {
-            render(store.getState());
+    
+        window.reducers = window.reducers || {};
+        window.reducers.skillsList = paginatedListUtils.getReducer(skillslistReduxId);
+    
+        var skillsListRenderer = paginatedListUtils.getRenderer(skillslistHtmlId, '<i>No skills found</i>',
+        function (skill) {
+            return '<li class="list-group-item"><a class="reset" href="/skills/details?id=' +
+            skill.Id + '">' + skill.Name + '</a></li>';
         });
-
-        store.dispatch(function(dispatch) {
-            dispatch({
-                type: skillsList.listId + ':initialize',
-                config: {
-                    hasSearcher: true,
-                    hasPagination: true
-                }
-            });
-            skillsList.fetcher(store.getState())
-            .then(function(listResults) {
-                dispatch({
-                    type: skillsList.listId + ':updateResults',
-                    listResults: listResults
+    
+        window.renderers = window.renderers || {};
+        window.renderers.skillsList = skillsListRenderer;
+    
+        window.actionBinders = window.actionBinders || [];
+        window.actionBinders.push(function(store) {
+            var htmlNodes = paginatedListUtils.getHtmlNodes(skillslistHtmlId);
+            var actionDispatchers = paginatedListUtils.getActionDispatchers(
+                store,
+                skillslistReduxId,
+                skillsFetcher,
+                'skillsList'
+            );
+            paginatedListUtils.bindDefaultEventHandlers(htmlNodes, actionDispatchers);
+        });
+    
+        window.pages = window.pages || [];
+        window.pages.push({
+            id: 'skills-list-section',
+            loader: function(pageData, store) {            
+                store.dispatch({
+                    type: 'paginatedListInitialize',
+                    listId: skillslistReduxId,
+                    config: {
+                        hasSearcher: true,
+                        hasPagination: true
+                    }
                 });
-            });
+    
+                return skillsFetcher(store.getState().skillsList)
+                .then(function(results) {
+                    store.dispatch({
+                        type: 'paginatedListResults',
+                        listId: skillslistReduxId,
+                        results
+                    });
+                });
+            }
         });
-    });
-
-})(window.JsCommons, window.Ajax, window.PaginatedListService);
+    
+    })(window.Ajax, window.PaginatedListUtils);
+    

@@ -317,7 +317,58 @@
 
 // })(window.Loader);
 
-(function() {
+(function(js, loader) {
+
+    function bindDefaultEventHandlers(htmlNodes, actionDispatchers) {
+        htmlNodes.keywords.on('keyup', js.eventDelayer(function(event) {
+            actionDispatchers.searcher({
+                keywords: event.target.value
+            });
+        }));
+        htmlNodes.pageSizeList.on('click', '.dropdown-option', function(event) {
+            actionDispatchers.pageSizeList({
+                pageSize: $(event.target).data('size')
+            });
+        });
+        htmlNodes.pages.on('click', '.enabled > .page-button', function(event) {
+            actionDispatchers.pageButtons({
+                movement: $(event.target).data('page-action')
+            });
+        });
+        htmlNodes.clearKeywords.on('click', function(event) {
+            actionDispatchers.initialize({
+                loadPhase: 'loading'
+            });
+        });
+    }
+
+    function getActionDispatcher(store, listReduxId, fetcher, viewName, actionType) {
+        return function (action) {
+            action.type = actionType;
+            action.listId = listReduxId;
+            store.dispatch(function(dispatch) {
+                dispatch(action);
+                fetcher(store.getState()[viewName])
+                .then(function(results) {
+                    store.dispatch({
+                        type: 'paginatedListResults',
+                        listId: listReduxId,
+                        results
+                    });
+                });
+            });
+        };
+    }
+
+    function getActionDispatchers(store, listReduxId, fetcher, viewName) {
+        var actionDispatchers = {
+            pageButtons: getActionDispatcher(store, listReduxId, fetcher, viewName, 'paginatedListButtons'),
+            pageSizeList: getActionDispatcher(store, listReduxId, fetcher, viewName, 'paginatedListSize'),
+            searcher: getActionDispatcher(store, listReduxId, fetcher, viewName, 'paginatedListSearcher'),
+            initialize: getActionDispatcher(store, listReduxId, fetcher, viewName, 'paginatedListInitialize')
+        };
+        return actionDispatchers;
+    }
 
     function getDefaultResults() {
         var defaultResults = {
@@ -327,7 +378,23 @@
         return defaultResults;
     }
 
-    function getReducer(listId) {
+    function getHtmlNodes(listHtmlId) {
+        var htmlNodes = {
+            clearKeywords: $('#' + listHtmlId + '-clear-keywords'),
+            keywords: $('#' + listHtmlId + '-keywords'),
+            list: $('#' + listHtmlId + '-list'),
+            loader: $('#' + listHtmlId + '-loader'),
+            pages: $('#' + listHtmlId + '-pages'),
+            pageSize: $('#' + listHtmlId + '-page-size'),
+            pageSizeList: $('#' + listHtmlId + '-page-size-dropdown'),
+            paginationBar: $('#' + listHtmlId + '-pagination'),
+            searcher: $('#' + listHtmlId + '-searcher'),
+            wrapper: $('#' + listHtmlId + '-wrapper')
+        };
+        return htmlNodes;
+    }
+
+    function getReducer(listReduxId) {
         return function(state, action) {
             if (typeof state === 'undefined') {
                 state = {
@@ -347,7 +414,7 @@
                 };
             }
 
-            if (action.listId != listId) {
+            if (action.listId != listReduxId) {
                 return state;
             }
 
@@ -420,31 +487,31 @@
         }
     }
 
-    function getRenderer(listId, noResultsHtml, elementDrawer) {
+    function getRenderer(listHtmlId, noResultsHtml, elementDrawer) {
         noResultsHtml = noResultsHtml || '<i>No results found</i>';
         elementDrawer = elementDrawer || function(element) {
             return '<li class= "list-group-item">' + element + '</li>';
         };
 
-        $('#' + listId).html(
-            '<div id="' + listId + '-wrapper" class="paginated-list">' +
-            '    <div id="' + listId + '-searcher" class="input-group" style="display: none;">' +
+        $('#' + listHtmlId).html(
+            '<div id="' + listHtmlId + '-wrapper" class="paginated-list">' +
+            '    <div id="' + listHtmlId + '-searcher" class="input-group" style="display: none;">' +
             '        <span class="input-group-addon"><i class="fa fa-search"></i></span>' +
-            '        <input id="' + listId + '-keywords" class="form-control" />' +
-            '        <span id="' + listId + '-clear-keywords" class="fa fa-times clear-icon"></span>' +
+            '        <input id="' + listHtmlId + '-keywords" class="form-control" />' +
+            '        <span id="' + listHtmlId + '-clear-keywords" class="fa fa-times clear-icon"></span>' +
             '    </div>' +
             '    <div class="dynamic-content">' +
-            '        <ul id="' + listId + '-list" class="list-group clickable"></ul>' +
-            '        <div id="' + listId + '-loader" class="loader"></div>' +
-            '        <div id="' + listId + '-pagination" class="pagination-bar" style="display: none;">' +
-            '            <ul id="' + listId + '-pages" class="pagination clickable">' +
+            '        <ul id="' + listHtmlId + '-list" class="list-group clickable"></ul>' +
+            '        <div id="' + listHtmlId + '-loader" class="loader"></div>' +
+            '        <div id="' + listHtmlId + '-pagination" class="pagination-bar" style="display: none;">' +
+            '            <ul id="' + listHtmlId + '-pages" class="pagination clickable">' +
             '            </ul>' +
             '            <div class="dropup pull-right">' +
             '                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">' +
-            '                    <span id="' + listId + '-page-size">10</span>' +
+            '                    <span id="' + listHtmlId + '-page-size">10</span>' +
             '                    <span class="caret"></span>' +
             '                </button>' +
-            '                <ul id="' + listId + '-page-size-dropdown" class="dropdown-menu" aria-labelledby="dropdownMenu1">' +
+            '                <ul id="' + listHtmlId + '-page-size-dropdown" class="dropdown-menu" aria-labelledby="dropdownMenu1">' +
             '                </ul>' +
             '            </div>' +
             '            <div class="clearfix"></div>' +
@@ -452,20 +519,9 @@
             '    </div>' +
             '</div>'
         );
-        // TODO loader.create();
+        loader.create();
 
-        var htmlNodes = {
-            clearKeywords: $('#' + listId + '-clear-keywords'),
-            keywords: $('#' + listId + '-keywords'),
-            list: $('#' + listId + '-list'),
-            loader: $('#' + listId + '-loader'),
-            pages: $('#' + listId + '-pages'),
-            pageSize: $('#' + listId + '-page-size'),
-            pageSizeList: $('#' + listId + '-page-size-dropdown'),
-            paginationBar: $('#' + listId + '-pagination'),
-            searcher: $('#' + listId + '-searcher'),
-            wrapper: $('#' + listId + '-wrapper')
-        };
+        var htmlNodes = getHtmlNodes(listHtmlId);
 
         return function(listState) {
                
@@ -542,8 +598,11 @@
     }
 
     window.PaginatedListUtils = {
+        bindDefaultEventHandlers,
+        getActionDispatchers,
         getDefaultResults,
+        getHtmlNodes,
         getReducer,
         getRenderer
     };
-})();
+})(window.JsCommons, window.Loader);

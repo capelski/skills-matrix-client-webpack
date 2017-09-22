@@ -45,8 +45,8 @@
         }
     });
 
-    // Provides the store dispatch function to each view, so they can dispatch actions on event handlers
-    actionBinders.forEach(binder => binder(store.dispatch.bind(store)));
+    // Provides the store to each view, so they can dispatch actions on event handlers
+    actionBinders.forEach(binder => binder(store));
 
     window.Store = store;
 
