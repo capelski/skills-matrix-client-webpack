@@ -1,79 +1,51 @@
 (function(ajax, paginatedListUtils) {
 
-    function viewDetails(state, action) {
-        if (typeof state === 'undefined') {
-            state = {
-                visible: false
-            };
-        }
-        switch (action.type) {
-            case 'navigation-loading':
-                return {
-                    ...state,
-                    visible: false
-                };
-            case 'navigation-changed':
-                return {
-                    ...state,
-                    visible: action.pageId == 'home'
-                };
-            default:
-                return state;
-        }
-    };
-
     window.reducers = window.reducers || {};
     window.reducers.home = Redux.combineReducers({
-        viewDetails,
-        employees: paginatedListUtils.getReducer('employees'),
-        skills: paginatedListUtils.getReducer('skills'),
+        employees: paginatedListUtils.getReducer('home-employees'),
+        skills: paginatedListUtils.getReducer('home-skills'),
     });
 
     var employeesListRenderer = paginatedListUtils.getRenderer('home-employees-list', '<i>No employees found</i>',
-    function (employee) {
-        return '<li class="list-group-item"><a class="reset" href="/employees/details?id=' +
-        employee.Id + '">' + employee.Name +
-        '<span class="badge floating">' + employee.Skills.length + '</span></a></li>';
-    });
+        function (employee) {
+            return '<li class="list-group-item"><a class="reset" href="/employees/details?id=' +
+            employee.Id + '">' + employee.Name +
+            '<span class="badge floating">' + employee.Skills.length + '</span></a></li>';
+        });
     var skillsListRenderer = paginatedListUtils.getRenderer('home-skills-list', '<i>No skills found</i>',
-    function (skill) {
-        return '<li class="list-group-item"><a class="reset" href="/skills/details?id=' + skill.Id + '">' + skill.Name +
-        '<span class="badge floating">' + skill.Employees.length + '</span></a></li>';
-    });
+        function (skill) {
+            return '<li class="list-group-item"><a class="reset" href="/skills/details?id=' +
+            skill.Id + '">' + skill.Name +
+            '<span class="badge floating">' + skill.Employees.length + '</span></a></li>';
+        });
 
     window.renderers = window.renderers || {};
     window.renderers.home = function(state) {
-        if (state.viewDetails.visible) {
-            $('#home-section').addClass('visible');
-            employeesListRenderer(state.employees);
-            skillsListRenderer(state.skills);
-        }
-        else {
-            $('#home-section').removeClass('visible');
-        }
+        employeesListRenderer(state.employees);
+        skillsListRenderer(state.skills);
     };
 
     // This view does not define action binders because it does not trigger events
 
     window.pages = window.pages || [];
     window.pages.push({
-        id: 'home',
-        loader: function(dispatch, pageData) {
+        id: 'home-section',
+        loader: function(pageData, store) {
         
-            dispatch({
+            store.dispatch({
                 type: 'paginatedListInitialize',
-                listId: 'employees'
+                listId: 'home-employees'
             });
-            dispatch({
+            store.dispatch({
                 type: 'paginatedListInitialize',
-                listId: 'skills'
+                listId: 'home-skills'
             });
 
             var employeesPromise = ajax.get('/api/employee/getMostSkilled', {}, [])
             .then(function(employees) {
-                dispatch({
+                store.dispatch({
                     type: 'paginatedListResults',
-                    listId: 'employees',
+                    listId: 'home-employees',
                     results: {
                         Items: employees,
                         TotalPages: 0
@@ -83,9 +55,9 @@
 
             var skillsPromise = ajax.get('/api/skill/getRearest', {}, [])
             .then(function(skills) {
-                dispatch({
+                store.dispatch({
                     type: 'paginatedListResults',
-                    listId: 'skills',
+                    listId: 'home-skills',
                     results: {
                         Items: skills,
                         TotalPages: 0

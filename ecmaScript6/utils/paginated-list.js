@@ -319,6 +319,14 @@
 
 (function() {
 
+    function getDefaultResults() {
+        var defaultResults = {
+            Items: [],
+            TotalPages: 0
+        };
+        return defaultResults;
+    }
+
     function getReducer(listId) {
         return function(state, action) {
             if (typeof state === 'undefined') {
@@ -534,6 +542,7 @@
     }
 
     window.PaginatedListUtils = {
+        getDefaultResults,
         getReducer,
         getRenderer
     };

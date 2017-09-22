@@ -53,36 +53,44 @@
 
 @-webkit-keyframes fade-in {
     0% {
+        visibility: hidden;
         opacity: 0;
     }
     100% {
+        visibility: visible;
         opacity: 1;
     }
 }
 
 @-webkit-keyframes fade-out {
     100% {
+        visibility: hidden;
         opacity: 0;
     }
     0% {
+        visibility: visible;
         opacity: 1;
     }
 }
 
 @keyframes fade-in {
     0% {
+        visibility: hidden;
         opacity: 0;
     }
     100% {
+        visibility: visible;
         opacity: 1;
     }
 }
 
 @keyframes fade-out {
     100% {
+        visibility: hidden;
         opacity: 0;
     }
     0% {
+        visibility: visible;
         opacity: 1;
     }
 }

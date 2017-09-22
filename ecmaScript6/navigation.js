@@ -5,7 +5,7 @@
             type: 'navigation-loading'
         });
         var page = pages.find(page => page.id == pageId);
-        js.stallPromise(page.loader(store.dispatch.bind(store), pageData), 500)
+        js.stallPromise(page.loader(pageData, store), 500)
         .then(() => {
             store.dispatch({
                 type: 'navigation-changed',

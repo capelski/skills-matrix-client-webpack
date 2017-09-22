@@ -2,24 +2,35 @@
 
     reducers.loader = function(state, action) {        
         if (typeof state ==='undefined') {
-            state = true;
+            state = {
+                loading: true,
+                pageId: 'home-section'
+            };
         }
         switch(action.type) {
             case 'navigation-loading':
-                return true;
+                return {
+                    loading: true,
+                    pageId: state.pageId
+                };
             case 'navigation-changed':
-                return false;
+                return {
+                    loading: false,
+                    pageId: action.pageId
+                };
             default:
                 return state;
         }
     };
 
     renderers.loader = function(state) {
-        if (state) {
+        if (state.loading) {
+            $('.navigation-section').removeClass('visible');
             $('#page-wrapper').removeClass('loaded').addClass('loading');
         }
         else {
             $('#page-wrapper').removeClass('loading').addClass('loaded');
+            $('#' + state.pageId).addClass('visible');
         }
     };
 
