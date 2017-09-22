@@ -1,5 +1,6 @@
 (function (ajax, paginatedListUtils) {
 
+    var viewName = 'employeesList';
     var employeeslistReduxId = 'employees-list';
     var employeeslistHtmlId = 'employees-list-wrapper';
 
@@ -11,52 +12,54 @@
         }, paginatedListUtils.getDefaultResults());
     }
 
-    window.reducers = window.reducers || {};
-    window.reducers.employeesList = paginatedListUtils.getReducer(employeeslistReduxId);
+    var viewReducer = paginatedListUtils.getReducer(employeeslistReduxId);
 
-    var employeesListRenderer = paginatedListUtils.getRenderer(employeeslistHtmlId, '<i>No employees found</i>',
+    var viewRenderer = paginatedListUtils.getRenderer(employeeslistHtmlId, '<i>No employees found</i>',
     function (employee) {
         return '<li class="list-group-item"><a class="reset" href="/employees/details?id=' +
         employee.Id + '">' + employee.Name + '</a></li>';
     });
 
-    window.renderers = window.renderers || {};
-    window.renderers.employeesList = employeesListRenderer;
-
-    window.actionBinders = window.actionBinders || [];
-    window.actionBinders.push(function(store) {
+    var actionBinders = function(store) {
         var htmlNodes = paginatedListUtils.getHtmlNodes(employeeslistHtmlId);
         var actionDispatchers = paginatedListUtils.getActionDispatchers(
             store,
             employeeslistReduxId,
             employeesFetcher,
-            'employeesList'
+            viewName
         );
         paginatedListUtils.bindDefaultEventHandlers(htmlNodes, actionDispatchers);
-    });
+    };
 
-    window.pages = window.pages || [];
-    window.pages.push({
-        id: 'employees-list-section',
-        loader: function(pageData, store) {            
+    
+    var viewLoader = function(pageData, store) {            
+        store.dispatch({
+            type: 'paginatedListInitialize',
+            listId: employeeslistReduxId,
+            config: {
+                hasSearcher: true,
+                hasPagination: true
+            }
+        });
+
+        return employeesFetcher(store.getState()[viewName])
+        .then(function(results) {
             store.dispatch({
-                type: 'paginatedListInitialize',
+                type: 'paginatedListResults',
                 listId: employeeslistReduxId,
-                config: {
-                    hasSearcher: true,
-                    hasPagination: true
-                }
+                results
             });
-
-            return employeesFetcher(store.getState().employeesList)
-            .then(function(results) {
-                store.dispatch({
-                    type: 'paginatedListResults',
-                    listId: employeeslistReduxId,
-                    results
-                });
-            });
-        }
+        });
+    };
+    
+    window.Views = window.Views || [];
+    window.Views.push({
+        name: viewName,
+        htmlNodeId: 'employees-list-section',
+        reducer: viewReducer,
+        renderer: viewRenderer,
+        actionBinders,
+        loader: viewLoader
     });
 
 })(window.Ajax, window.PaginatedListUtils);

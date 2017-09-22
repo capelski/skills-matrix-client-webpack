@@ -1,19 +1,19 @@
-(function (js, store, pages) {
+(function (js, store, views) {
 
-    function navigate(pageId, pageData) {
+    function navigate(htmlNodeId, viewData) {
         store.dispatch({
             type: 'navigation-loading'
         });
-        var page = pages.find(page => page.id == pageId);
-        js.stallPromise(page.loader(pageData, store), 500)
+        var view = views.find(view => view.htmlNodeId == htmlNodeId);
+        js.stallPromise(view.loader(viewData, store), 500)
         .then(() => {
             store.dispatch({
                 type: 'navigation-changed',
-                pageId
+                htmlNodeId
             });
         });
     };
 
     window.Navigate = navigate;
 
-})(window.JsCommons, window.Store, window.pages || []);
+})(window.JsCommons, window.Store, window.Views || []);

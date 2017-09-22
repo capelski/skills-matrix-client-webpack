@@ -1,36 +1,29 @@
-(function (reducers, renderers, actionBinders) {
+(function (views) {
 
+    var reducers = views.reduce((reduced, view) => {
+        reduced[view.name] = view.reducer;
+        return reduced;
+    }, {});
     reducers.loader = function(state, action) {        
         if (typeof state ==='undefined') {
             state = {
                 loading: true,
-                pageId: 'home-section'
+                htmlNodeId: views[0].htmlNodeId
             };
         }
         switch(action.type) {
             case 'navigation-loading':
                 return {
                     loading: true,
-                    pageId: state.pageId
+                    htmlNodeId: state.htmlNodeId
                 };
             case 'navigation-changed':
                 return {
                     loading: false,
-                    pageId: action.pageId
+                    htmlNodeId: action.htmlNodeId
                 };
             default:
                 return state;
-        }
-    };
-
-    renderers.loader = function(state) {
-        if (state.loading) {
-            $('.navigation-section').removeClass('visible');
-            $('#page-wrapper').removeClass('loaded').addClass('loading');
-        }
-        else {
-            $('#page-wrapper').removeClass('loading').addClass('loaded');
-            $('#' + state.pageId).addClass('visible');
         }
     };
 
@@ -38,16 +31,28 @@
     // Use this store declaration for Time Travel debug through DevTools Redux Extension
     var store = createTimeTravelStore(Redux.combineReducers(reducers), [thunk]);
 
+    function renderLoader(state) {
+        if (state.loading) {
+            $('.navigation-section').removeClass('visible');
+            $('#page-wrapper').removeClass('loaded').addClass('loading');
+        }
+        else {
+            $('#page-wrapper').removeClass('loading').addClass('loaded');
+            $('#' + state.htmlNodeId).addClass('visible');
+        }
+    };
+
     store.subscribe(function() {
         var state = store.getState();
-        for (var key in renderers) {
-            renderers[key](state[key]);
-        }
+        views.forEach(view => view.renderer(state[view.name]));
+        renderLoader(state.loader);
     });
 
-    // Provides the store to each view, so they can dispatch actions on event handlers
-    actionBinders.forEach(binder => binder(store));
+    views
+    .filter(view => view.actionBinders != null)
+    .map(view => view.actionBinders)
+    .forEach(actionBinders => actionBinders(store));
 
     window.Store = store;
 
-})(window.reducers || {}, window.renderers || {}, window.actionBinders || []);
+})(window.Views || []);
