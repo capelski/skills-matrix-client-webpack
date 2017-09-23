@@ -12,15 +12,15 @@
             };
         }
         switch(action.type) {
-            case 'navigation-loading':
+            case 'loading':
                 return {
                     loading: true,
                     htmlNodeId: state.htmlNodeId
                 };
-            case 'navigation-changed':
+            case 'loaded':
                 return {
                     loading: false,
-                    htmlNodeId: action.htmlNodeId
+                    htmlNodeId: action.reason == 'navigation-finished' ? action.htmlNodeId : state.htmlNodeId
                 };
             default:
                 return state;

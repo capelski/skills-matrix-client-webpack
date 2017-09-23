@@ -110,7 +110,7 @@
             store.dispatch(actions.addSkillsListFill(elements.employeeSkillsList.listId, skills));
         });
 
-        paginatedListService.attachActions(elements.addSkillsList, store)
+        paginatedListService.attachActions(elements.addSkillsList, store);
 
         store.subscribe(function() {
             render(store.getState());

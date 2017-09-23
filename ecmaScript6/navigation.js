@@ -2,13 +2,15 @@
 
     function navigate(htmlNodeId, viewData) {
         store.dispatch({
-            type: 'navigation-loading'
+            type: 'loading',
+            reason: 'navigation-started'
         });
         var view = views.find(view => view.htmlNodeId == htmlNodeId);
         js.stallPromise(view.loader(viewData, store), 500)
         .then(() => {
             store.dispatch({
-                type: 'navigation-changed',
+                type: 'loaded',
+                reason: 'navigation-finished',
                 htmlNodeId
             });
         });
