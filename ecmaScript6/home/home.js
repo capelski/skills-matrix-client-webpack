@@ -13,15 +13,23 @@
 
     var employeesListRenderer = paginatedListUtils.getRenderer(employeeslistHtmlId, '<i>No employees found</i>',
         function (employee) {
-            return '<li class="list-group-item"><a class="reset" href="/employees/details?id=' +
-            employee.Id + '">' + employee.Name +
-            '<span class="badge floating">' + employee.Skills.length + '</span></a></li>';
+            return `<li class="list-group-item">
+                        <a class="reset" onclick="window.Navigate('employee-details-section',
+                        { employeeId: ${ employee.Id }, readOnly: true });" href="#">
+                            ${ employee.Name }
+                            <span class="badge floating">${ employee.Skills.length }</span>
+                        </a>
+                    </li>`;
         });
     var skillsListRenderer = paginatedListUtils.getRenderer(skillsListHtmlId, '<i>No skills found</i>',
         function (skill) {
-            return '<li class="list-group-item"><a class="reset" href="/skills/details?id=' +
-            skill.Id + '">' + skill.Name +
-            '<span class="badge floating">' + skill.Employees.length + '</span></a></li>';
+            return `<li class="list-group-item">
+                        <a class="reset" onclick="window.Navigate('skill-details-section',
+                        { skillId: ${ skill.Id }, readOnly: true});" href="#">
+                            ${ skill.Name }
+                            <span class="badge floating">${ skill.Employees.length }</span>
+                        </a>
+                    </li>`;
         });
 
     var viewRenderer = function(state) {

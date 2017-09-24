@@ -5,43 +5,39 @@
     var employeesSkillsListHtmlId = 'employee-details-skills';
     var addSkillsListReduxId = 'employeeDetailsAddSkills';
     var addSkillsListHtmlId = 'employee-details-add-skills';
-    var readOnly = 'Initialized on view load'; // TODO Should this variable exist?
+    var htmlNodes = 'Initialized on view load';
 
-    function viewDetails(state, action) {
+    function employeeReducer(state, action) {
         if (typeof state === "undefined") {
-            state = {
-                employee: {
-                    Id: -1,
-                    Name: '',
-                    Skills: []
-                },
-                readOnly: true
-            };
+            state = {};
         }
 
         switch (action.type) {
-            case 'employeeLoaded':
-                return {
-                    ...state,
-                    readOnly: action.readOnly,
-                    employee: action.employee
-                };
+            case 'employeeData':
+                return action.employee;
             case 'employeeName':
                 return {
                     ...state,
-                    employee: {
-                        ...state.employee,
-                        Name: action.name
-                    }
+                    Name: action.name
                 };
             case 'employeeSkills':
                 return {
                     ...state,
-                    employee: {
-                        ...state.employee,
-                        Skills: action.skills
-                    }
+                    Skills: action.skills
                 };
+            default:
+                return state;
+        }
+    }
+
+    function readOnlyReducer(state, action) {
+        if (typeof state === "undefined") {
+            state = true;
+        }
+
+        switch (action.type) {
+            case 'employeeReadOnly':
+                return action.readOnly;
             default:
                 return state;
         }
@@ -50,19 +46,9 @@
     var viewReducer = Redux.combineReducers({
         employeeSkillsList: paginatedListUtils.getReducer(employeesSkillsListReduxId),
         addSkillsList: paginatedListUtils.getReducer(addSkillsListReduxId),
-        viewDetails
+        employee: employeeReducer,
+        readOnly: readOnlyReducer
     });
-
-    var htmlNodes = {
-        addSkillsList: paginatedListUtils.getHtmlNodes(addSkillsListHtmlId),
-        pageTitle : $('#employee-page-title'),
-        elementName : $('#employee-model-name'),
-        employeeSkillsList : paginatedListUtils.getHtmlNodes(employeesSkillsListHtmlId),
-        editButton : $('#employee-edit-button'),
-        deleteButton : $('#employee-delete-button'),
-        saveButton : $('#employee-save-button'),
-        cancelButton : $('#employee-cancel-button')
-    };
 
     function viewRenderer(state) {
         viewRenderer.readOnly(state);
@@ -73,64 +59,101 @@
 
     var addSkillsListRenderer = paginatedListUtils.getRenderer(addSkillsListHtmlId, '<i>No skills found</i>',
     function (skill) {
-        return '<li class="list-group-item"><span class="add-skill" data-skill-id="' + skill.Id +
-        '"><i class="fa fa-plus text-success"></i> ' + skill.Name + '</span></li>';
+        return `<li class="list-group-item">
+                    <span class="add-skill" data-skill-id="${ skill.Id }">
+                        <i class="fa fa-plus text-success"></i>${ skill.Name }
+                    </span>
+                </li>`;
     });
     viewRenderer.foundSkills = state => addSkillsListRenderer(state.addSkillsList);
 
     viewRenderer.employeeName = function(state) {
-        htmlNodes.pageTitle.html(state.viewDetails.employee.Name);
-        htmlNodes.elementName.val(state.viewDetails.employee.Name);
+        htmlNodes.pageTitle.html(state.employee.Name);
+        htmlNodes.elementName.val(state.employee.Name);
     };
 
     var employeeSkillsListRenderer = paginatedListUtils.getRenderer(employeesSkillsListHtmlId,
-    '<i>No employees found</i>', function (employee) {
-        var html = '<li class="list-group-item"><a class="reset" href="/skills/details?id=' +
-        employee.Id + '">' + employee.Name + '</a></li>';
-        if (!readOnly) {
-            html = '<li class="list-group-item"><span class="remove-skill" data-skill-id="' +
-            employee.Id + '"><i class="fa fa-times text-danger"></i> ' + employee.Name + '</span></li>';
+    '<i>No skills found</i>', function (skill, viewState) {
+        var html = `<li class="list-group-item">
+                        <a class="reset" onclick="window.Navigate('skill-details-section',
+                        { skillId: ${ skill.Id }, readOnly: true});" href="#">
+                            ${ skill.Name }
+                        </a>
+                    </li>`;
+        if (!viewState.readOnly) {
+            html = `<li class="list-group-item">
+                        <span class="remove-skill" data-skill-id="${skill.Id}">
+                            <i class="fa fa-times text-danger"></i> ${ skill.Name }
+                        </span>
+                    </li>`;
         }
         return html;
     });
-    viewRenderer.employeeSkills = state => employeeSkillsListRenderer(state.employeeSkillsList);
+    viewRenderer.employeeSkills = state => employeeSkillsListRenderer(state.employeeSkillsList, state);
 
     viewRenderer.readOnly = function(state) {
         htmlNodes.addSkillsList.wrapper.hide();
         htmlNodes.editButton.hide();
-        htmlNodes.editButton.attr('href', '#');
+        htmlNodes.editButton.removeAttr('onclick');
         htmlNodes.deleteButton.hide();
         htmlNodes.pageTitle.text('Employee not found');            
         htmlNodes.saveButton.hide();
         htmlNodes.cancelButton.hide();
-        htmlNodes.cancelButton.attr('href', '#');
+        htmlNodes.cancelButton.removeAttr('onclick');
 
-        if (state.viewDetails.readOnly) {
+        if (state.readOnly) {
             htmlNodes.elementName.attr('disabled', 'disabled');
-            if (state.viewDetails.employee.Id > 0) {
-                htmlNodes.pageTitle.text(state.viewDetails.employee.Name);
-                htmlNodes.editButton.attr('href', '/employees/edit?id=' + state.viewDetails.employee.Id);
+            if (state.employee.Id > 0) {
+                htmlNodes.pageTitle.text(state.employee.Name);
+                htmlNodes.editButton.attr('onclick', `window.Navigate('employee-details-section',
+                { employeeId: ${ state.employee.Id }, readOnly: false });`);
                 htmlNodes.editButton.show();
                 htmlNodes.deleteButton.show();
             }
         }
         else {
             htmlNodes.elementName.removeAttr('disabled');                
-            if (state.viewDetails.employee.Id >= 0) {
+            if (state.employee.Id >= 0) {
                 htmlNodes.pageTitle.text('New employee');
                 htmlNodes.addSkillsList.wrapper.show();
                 htmlNodes.saveButton.show();
                 htmlNodes.cancelButton.show();
-                htmlNodes.cancelButton.attr('href', '/employees/');
+                htmlNodes.cancelButton.attr('onclick', 'window.Navigate(\'employees-list-section\')');
 
-                if (state.viewDetails.employee.Id > 0) {
-                    htmlNodes.pageTitle.text(state.viewDetails.employee.Name);
-                    htmlNodes.cancelButton.attr('href', '/employees/details?id=' +
-                    state.viewDetails.employee.Id);
+                if (state.employee.Id > 0) {
+                    htmlNodes.pageTitle.text(state.employee.Name);
+                    htmlNodes.cancelButton.attr('onclick', `window.Navigate('employee-details-section',
+                    { employeeId: ${ state.employee.Id }, readOnly: true });`);
                 }
             }
         }
     };
+
+    // Nodes must be initialized once the paginated lists renderers have been defined
+    htmlNodes = {
+        addSkillsList: paginatedListUtils.getHtmlNodes(addSkillsListHtmlId),
+        pageTitle : $('#employee-page-title'),
+        elementName : $('#employee-model-name'),
+        employeeSkillsList : paginatedListUtils.getHtmlNodes(employeesSkillsListHtmlId),
+        editButton : $('#employee-edit-button'),
+        deleteButton : $('#employee-delete-button'),
+        saveButton : $('#employee-save-button'),
+        cancelButton : $('#employee-cancel-button')
+    };
+
+    function addSkillsFetcher(state) {
+        var skillsPromise = Promise.resolve(paginatedListUtils.getDefaultResults());
+        if (state.addSkillsList.keywords.length > 0) {
+            skillsPromise = js.stallPromise(ajax.get('/api/skill', {
+                keywords: state.addSkillsList.keywords
+            }, paginatedListUtils.getDefaultResults()), 1500);
+        }
+        return skillsPromise
+        .then(function(results) {
+            results.Items = js.arrayDifference(results.Items, state.employee.Skills, 'Id');
+            return results;
+        });
+    }
 
     var actionBinders = function(store) {
         function getSkillId(event) {
@@ -153,18 +176,18 @@
             store.dispatch(function (dispatch) {
                 var state = store.getState()[viewName];
     
-                js.actionModal('<div>Are you sure you want to delete ' + state.viewDetails.employee.Name + '?</div>',
+                js.actionModal('<div>Are you sure you want to delete ' + state.employee.Name + '?</div>',
                 'Delete')
                 .then(function() {
                     dispatch({
                         type: 'loading',
                         reason: 'removing-employee'
                     });
-                    return ajax.remove('/api/employee?id=' + state.viewDetails.employee.Id);
+                    return ajax.remove('/api/employee?id=' + state.employee.Id);
                 })
                 .then(function (employee) {
                     if (employee) {
-                        document.location.href = '/employees/';
+                        window.Navigate('employees-list-section');
                     }
                     else {
                         basicModal.close();
@@ -185,10 +208,13 @@
                 });
                 var state = store.getState()[viewName];
                 
-                ajax.save('/api/employee', state.viewDetails.employee)
+                ajax.save('/api/employee', state.employee)
                 .then(function (employee) {
                     if (employee) {
-                        document.location.href = '/employees/details/' + employee.Id;
+                        window.Navigate('employee-details-section', {
+                            employeeId: employee.Id,
+                            readOnly: true
+                        });
                     }
                     else {
                         dispatch({
@@ -207,7 +233,7 @@
                 return skill.Id === skillId;
             });
             if (skill) {
-                var skills = state.viewDetails.employee.Skills.concat([skill]);
+                var skills = state.employee.Skills.concat([skill]);
                 store.dispatch({
                     type: 'employeeSkills',
                     skills
@@ -232,7 +258,7 @@
         htmlNodes.employeeSkillsList.list.on('click', '.remove-skill', function(event) {
             var state = store.getState()[viewName];
             var skillId = getSkillId(event);
-            var skills = state.viewDetails.employee.Skills.filter(function(skill) {
+            var skills = state.employee.Skills.filter(function(skill) {
                 return skill.Id !== skillId;
             });
             store.dispatch({
@@ -249,15 +275,34 @@
             });
         });
 
-        // TODO List actions
-        // paginatedListService.attachActions(elements.addSkillsList, store);
+        var actionDispatchers = paginatedListUtils.getActionDispatchers(
+            store,
+            addSkillsListReduxId,
+            addSkillsFetcher,
+            viewName
+        );
+        paginatedListUtils.bindDefaultEventHandlers(htmlNodes.addSkillsList, actionDispatchers);
     };
 
     var viewLoader = function(viewData, store) {
         store.dispatch({
+            type: 'employeeData',
+            employee: {
+                Id: viewData.employeeId,
+                Name: 'New employee',
+                Skills: []
+            }
+        });
+        store.dispatch({
+            type: 'employeeReadOnly',
+            readOnly: viewData.readOnly
+        });
+
+        store.dispatch({
             type: 'paginatedListInitialize',
             listId: employeesSkillsListReduxId,
-            loadPhase: 'none'
+            loadPhase: 'none',
+            results: paginatedListUtils.getDefaultResults()
         });
         store.dispatch({
             type: 'paginatedListInitialize',
@@ -266,44 +311,48 @@
                 hasSearcher: true,
                 searcherPlaceholder: 'Add skills...'
             },
-            loadPhase: 'none'
+            loadPhase: 'none',
+            results: paginatedListUtils.getDefaultResults()
         });
     
         var state = store.getState()[viewName];
-        readOnly = viewData.readOnly;
-    
-        var employeePromise = Promise.resolve(state.viewDetails.employee);
-        if (viewData.employeeId > 0) {
-            employeePromise = ajax.get('/api/employee/getById', {
-                id: viewData.employeeId
-            }, state.viewDetails.employee);
-        }
-    
-        employeePromise
-        .then(function(employee) {
-            if (viewData.employeeId == 0 && !readOnly) {
-                employee.Id = viewData.employeeId;
-                employee.Name = 'New employee';
-            }
-            else if (employee.Id == -1) {
-                employee.Name = 'Employee not found';
-                readOnly = true;
-            }
-            store.dispatch({
-                type: 'employeeLoaded',
-                employee,
-                readOnly
-            });
-            store.dispatch({
-                type: 'paginatedListResults',
-                listId: employeesSkillsListReduxId,
-                results: {
-                    Items: employee.Skills,
-                    TotalPages: 0
-                },
-                loadPhase: 'none'
-            });
-        });  
+
+        if (state.employee.Id != 0) {
+            ajax.get('/api/employee/getById', {
+                id: state.employee.Id
+            }, null)
+            .then(employee => {
+                if (employee) {
+                    store.dispatch({
+                        type: 'employeeData',
+                        employee
+                    });
+                    store.dispatch({
+                        type: 'paginatedListResults',
+                        listId: employeesSkillsListReduxId,
+                        results: {
+                            Items: employee.Skills,
+                            TotalPages: 0
+                        },
+                        loadPhase: 'none'
+                    });
+                }
+                else {
+                    store.dispatch({
+                        type: 'employeeData',
+                        employee: {
+                            Id: -1,
+                            Name: 'Employee not found',
+                            Skills: []
+                        }
+                    });
+                    store.dispatch({
+                        type: 'employeeReadOnly',
+                        readOnly: true
+                    });
+                }
+            })
+        } 
     };
     
     window.Views = window.Views || [];

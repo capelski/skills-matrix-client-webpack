@@ -18,4 +18,6 @@
 
     window.Navigate = navigate;
 
+    navigate(views[0].htmlNodeId);
+
 })(window.JsCommons, window.Store, window.Views || []);

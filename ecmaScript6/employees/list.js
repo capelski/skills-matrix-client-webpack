@@ -16,8 +16,12 @@
 
     var viewRenderer = paginatedListUtils.getRenderer(employeeslistHtmlId, '<i>No employees found</i>',
     function (employee) {
-        return '<li class="list-group-item"><a class="reset" href="/employees/details?id=' +
-        employee.Id + '">' + employee.Name + '</a></li>';
+        return `<li class="list-group-item">
+                    <a class="reset" onclick="window.Navigate('employee-details-section',
+                    { employeeId: ${ employee.Id }, readOnly: true });" href="#">
+                        ${ employee.Name }
+                    </a>
+                </li>`;
     });
 
     var actionBinders = function(store) {

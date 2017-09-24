@@ -108,11 +108,13 @@
                         action.config.hasPagination :
                         state.hasPagination;
                     var loadPhase = action.loadPhase != null ? action.loadPhase : state.loadPhase;
+                    var results = action.results != null ? action.results : state.results;
                     return {
                         ...state,
                         hasSearcher,
                         hasPagination,
                         loadPhase,
+                        results,
                         keywords: '',
                         page: 0,
                         pageOffset: 0
@@ -204,7 +206,7 @@
 
         var htmlNodes = getHtmlNodes(listHtmlId);
 
-        return function(listState) {
+        return function(listState, globalState) {
                
             htmlNodes.loader.parent().removeClass(listState.loadPhases.join(' ')).addClass(listState.loadPhase);
             htmlNodes.keywords.attr('placeholder', listState.searcherPlaceholder);
@@ -268,7 +270,7 @@
                 }
                 else {
                     listState.results.map(function(element) {
-                        return elementDrawer(element);
+                        return elementDrawer(element, globalState);
                     })
                     .forEach(function(element) {
                         htmlNodes.list.append(element);

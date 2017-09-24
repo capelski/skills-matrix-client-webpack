@@ -16,8 +16,12 @@
 
     var viewRenderer = paginatedListUtils.getRenderer(skillslistHtmlId, '<i>No skills found</i>',
     function (skill) {
-        return '<li class="list-group-item"><a class="reset" href="/skills/details?id=' +
-        skill.Id + '">' + skill.Name + '</a></li>';
+        return `<li class="list-group-item">
+                    <a class="reset" onclick="window.Navigate('skill-details-section',
+                    { skillId: ${ skill.Id }, readOnly: true });" href="#">
+                        ${ skill.Name }
+                    </a>
+                </li>`;
     });
 
     var actionBinders = function(store) {
