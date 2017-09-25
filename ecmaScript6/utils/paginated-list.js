@@ -173,34 +173,36 @@
     function getRenderer(listHtmlId, noResultsHtml, elementDrawer) {
         noResultsHtml = noResultsHtml || '<i>No results found</i>';
         elementDrawer = elementDrawer || function(element) {
-            return '<li class= "list-group-item">' + element + '</li>';
+            return `<li class= "list-group-item"> ${element} </li>`;
         };
 
         $('#' + listHtmlId).html(
-            '<div id="' + listHtmlId + '-wrapper" class="paginated-list">' +
-            '    <div id="' + listHtmlId + '-searcher" class="input-group" style="display: none;">' +
-            '        <span class="input-group-addon"><i class="fa fa-search"></i></span>' +
-            '        <input id="' + listHtmlId + '-keywords" class="form-control" />' +
-            '        <span id="' + listHtmlId + '-clear-keywords" class="fa fa-times clear-icon"></span>' +
-            '    </div>' +
-            '    <div class="dynamic-content">' +
-            '        <ul id="' + listHtmlId + '-list" class="list-group clickable"></ul>' +
-            '        <div id="' + listHtmlId + '-loader" class="loader"></div>' +
-            '        <div id="' + listHtmlId + '-pagination" class="pagination-bar" style="display: none;">' +
-            '            <ul id="' + listHtmlId + '-pages" class="pagination clickable">' +
-            '            </ul>' +
-            '            <div class="dropup pull-right">' +
-            '                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">' +
-            '                    <span id="' + listHtmlId + '-page-size">10</span>' +
-            '                    <span class="caret"></span>' +
-            '                </button>' +
-            '                <ul id="' + listHtmlId + '-page-size-dropdown" class="dropdown-menu" aria-labelledby="dropdownMenu1">' +
-            '                </ul>' +
-            '            </div>' +
-            '            <div class="clearfix"></div>' +
-            '        </div>' +
-            '    </div>' +
-            '</div>'
+            `<div id="${listHtmlId}-wrapper" class="paginated-list">
+                <div id="${listHtmlId}-searcher" class="input-group" style="display: none;">
+                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                    <input id="${listHtmlId}-keywords" class="form-control" />
+                    <span id="${listHtmlId}-clear-keywords" class="fa fa-times clear-icon"></span>
+                </div>
+                <div class="dynamic-content">
+                    <ul id="${listHtmlId}-list" class="list-group clickable"></ul>
+                    <div id="${listHtmlId}-loader" class="loader"></div>
+                    <div id="${listHtmlId}-pagination" class="pagination-bar" style="display: none;">
+                        <ul id="${listHtmlId}-pages" class="pagination clickable">
+                        </ul>
+                        <div class="dropup pull-right">
+                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                <span id="${listHtmlId}-page-size">10</span>
+                                <span class="caret"></span>
+                            </button>
+                            <ul id="${listHtmlId}-page-size-dropdown" class="dropdown-menu"
+                            aria-labelledby="dropdownMenu1">
+                            </ul>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>`
         );
         loader.create();
 

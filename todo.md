@@ -1,4 +1,3 @@
-- Remove Views folder
 - Add a parameter in bindDefaultEventHandlers to choose what event handlers to bind
 - Use redux-thunk
 - ? Oops! The view is not available
