@@ -1,4 +1,4 @@
-(function(js, loader) {
+(function(js) {
 
     function bindDefaultEventHandlers(htmlNodes, actionDispatchers) {
         htmlNodes.clearKeywords.on('click', function(event) {
@@ -204,7 +204,7 @@
                 </div>
             </div>`
         );
-        loader.create();
+        js.injectLoader();
 
         var htmlNodes = getHtmlNodes(listHtmlId);
 
@@ -290,4 +290,4 @@
         getReducer,
         getRenderer
     };
-})(window.JsCommons, window.Loader);
+})(window.JsCommons);
