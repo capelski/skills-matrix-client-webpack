@@ -61,7 +61,7 @@
     function (skill) {
         return `<li class="list-group-item">
                     <span class="add-skill" data-skill-id="${ skill.Id }">
-                        <i class="fa fa-plus text-success"></i>${ skill.Name }
+                        <i class="fa fa-plus text-success"></i> ${ skill.Name }
                     </span>
                 </li>`;
     });
@@ -186,11 +186,11 @@
                     return ajax.remove('/api/employee?id=' + state.employee.Id);
                 })
                 .then(function (employee) {
+                    basicModal.close();
                     if (employee) {
                         window.Navigate('employees-list-section');
                     }
                     else {
-                        basicModal.close();
                         dispatch({
                             type: 'loaded',
                             reason: 'removed-employee'
