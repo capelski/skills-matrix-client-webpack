@@ -3,10 +3,10 @@
     var loadMinimumTime = 500;
     var previousPage;
 
-    function _navigate(view, viewData) {
-        js.stallPromise(view.loader(viewData, store), loadMinimumTime)
+    function _navigate(view, viewData, dispatch) {
+        js.stallPromise(view.loader(viewData, dispatch, () => store.getState()[view.name]), loadMinimumTime)
         .then(() => {
-            store.dispatch({
+            dispatch({
                 type: 'loaded',
                 reason: 'navigation-finished',
                 htmlNodeId: view.htmlNodeId
@@ -14,9 +14,9 @@
         });
     }
 
-    function _navigationError() {
+    function _navigationError(dispatch) {
         setTimeout(() => {
-            store.dispatch({
+            dispatch({
                 type: 'loaded',
                 reason: 'navigation-finished',
                 htmlNodeId: 'error-page'
@@ -26,26 +26,28 @@
 
     function navigate(htmlNodeId, viewData) {
 
-        store.dispatch({
-            type: 'loading',
-            reason: 'navigation-started'
+        store.dispatch(function(dispatch) {
+            dispatch({
+                type: 'loading',
+                reason: 'navigation-started'
+            });
+    
+            if (htmlNodeId == '_previous' && previousPage) {
+                return _navigate(previousPage.view, previousPage.viewData, dispatch);
+            }
+            
+            try {
+                var view = views.find(view => view.htmlNodeId == htmlNodeId);
+                _navigate(view, viewData, dispatch);
+                previousPage = {
+                    view,
+                    viewData
+                };
+            }
+            catch (exception) {
+                _navigationError(dispatch);
+            }
         });
-
-        if (htmlNodeId == '_previous' && previousPage) {
-            return _navigate(previousPage.view, previousPage.viewData);
-        }
-        
-        var view = views.find(view => view.htmlNodeId == htmlNodeId);
-        if (view) {
-            _navigate(view, viewData);
-            previousPage = {
-                view,
-                viewData
-            };
-        }
-        else {
-            _navigationError();
-        }
     };
 
     window.Navigate = navigate;

@@ -36,8 +36,8 @@
     };
 
     
-    var viewLoader = function(pageData, store) {            
-        store.dispatch({
+    var viewLoader = function(pageData, dispatch, getState) {            
+        dispatch({
             type: 'paginatedListInitialize',
             listId: employeeslistReduxId,
             config: {
@@ -46,9 +46,9 @@
             }
         });
 
-        return employeesFetcher(store.getState()[viewName])
+        return employeesFetcher(getState())
         .then(function(results) {
-            store.dispatch({
+            dispatch({
                 type: 'paginatedListResults',
                 listId: employeeslistReduxId,
                 results

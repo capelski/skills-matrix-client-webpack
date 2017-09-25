@@ -284,8 +284,8 @@
         paginatedListUtils.bindDefaultEventHandlers(htmlNodes.addSkillsList, actionDispatchers);
     };
 
-    var viewLoader = function(viewData, store) {
-        store.dispatch({
+    var viewLoader = function(viewData, dispatch) {
+        dispatch({
             type: 'employeeData',
             employee: {
                 Id: viewData.employeeId,
@@ -293,18 +293,18 @@
                 Skills: []
             }
         });
-        store.dispatch({
+        dispatch({
             type: 'employeeReadOnly',
             readOnly: viewData.readOnly
         });
 
-        store.dispatch({
+        dispatch({
             type: 'paginatedListInitialize',
             listId: employeesSkillsListReduxId,
             loadPhase: 'none',
             results: paginatedListUtils.getDefaultResults()
         });
-        store.dispatch({
+        dispatch({
             type: 'paginatedListInitialize',
             listId: addSkillsListReduxId,
             config: {
@@ -314,20 +314,18 @@
             loadPhase: 'none',
             results: paginatedListUtils.getDefaultResults()
         });
-    
-        var state = store.getState()[viewName];
 
-        if (state.employee.Id != 0) {
+        if (viewData.employeeId != 0) {
             ajax.get('/api/employee/getById', {
-                id: state.employee.Id
+                id: viewData.employeeId
             }, null)
             .then(employee => {
                 if (employee) {
-                    store.dispatch({
+                    dispatch({
                         type: 'employeeData',
                         employee
                     });
-                    store.dispatch({
+                    dispatch({
                         type: 'paginatedListResults',
                         listId: employeesSkillsListReduxId,
                         results: {
@@ -338,7 +336,7 @@
                     });
                 }
                 else {
-                    store.dispatch({
+                    dispatch({
                         type: 'employeeData',
                         employee: {
                             Id: -1,
@@ -346,7 +344,7 @@
                             Skills: []
                         }
                     });
-                    store.dispatch({
+                    dispatch({
                         type: 'employeeReadOnly',
                         readOnly: true
                     });

@@ -284,8 +284,8 @@
         paginatedListUtils.bindDefaultEventHandlers(htmlNodes.addEmployeesList, actionDispatchers);
     };
 
-    var viewLoader = function(viewData, store) {
-        store.dispatch({
+    var viewLoader = function(viewData, dispatch) {
+        dispatch({
             type: 'skillData',
             skill: {
                 Id: viewData.skillId,
@@ -293,18 +293,18 @@
                 Employees: []
             }
         });
-        store.dispatch({
+        dispatch({
             type: 'skillReadOnly',
             readOnly: viewData.readOnly
         });
 
-        store.dispatch({
+        dispatch({
             type: 'paginatedListInitialize',
             listId: skillsEmployeesListReduxId,
             loadPhase: 'none',
             results: paginatedListUtils.getDefaultResults()
         });
-        store.dispatch({
+        dispatch({
             type: 'paginatedListInitialize',
             listId: addEmployeesListReduxId,
             config: {
@@ -314,20 +314,18 @@
             loadPhase: 'none',
             results: paginatedListUtils.getDefaultResults()
         });
-    
-        var state = store.getState()[viewName];
 
-        if (state.skill.Id != 0) {
+        if (viewData.skillId != 0) {
             ajax.get('/api/skill/getById', {
-                id: state.skill.Id
+                id: viewData.skillId
             }, null)
             .then(skill => {
                 if (skill) {
-                    store.dispatch({
+                    dispatch({
                         type: 'skillData',
                         skill
                     });
-                    store.dispatch({
+                    dispatch({
                         type: 'paginatedListResults',
                         listId: skillsEmployeesListReduxId,
                         results: {
@@ -338,7 +336,7 @@
                     });
                 }
                 else {
-                    store.dispatch({
+                    dispatch({
                         type: 'skillData',
                         skill: {
                             Id: -1,
@@ -346,7 +344,7 @@
                             Employees: []
                         }
                     });
-                    store.dispatch({
+                    dispatch({
                         type: 'skillReadOnly',
                         readOnly: true
                     });

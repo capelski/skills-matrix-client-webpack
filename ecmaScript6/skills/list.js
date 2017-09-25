@@ -36,8 +36,8 @@
     };
 
     
-    var viewLoader = function(pageData, store) {            
-        store.dispatch({
+    var viewLoader = function(pageData, dispatch, getState) {            
+        dispatch({
             type: 'paginatedListInitialize',
             listId: skillslistReduxId,
             config: {
@@ -46,9 +46,9 @@
             }
         });
 
-        return skillsFetcher(store.getState()[viewName])
+        return skillsFetcher(getState())
         .then(function(results) {
-            store.dispatch({
+            dispatch({
                 type: 'paginatedListResults',
                 listId: skillslistReduxId,
                 results

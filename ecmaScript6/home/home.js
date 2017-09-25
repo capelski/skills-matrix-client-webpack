@@ -37,19 +37,19 @@
         skillsListRenderer(state.skills);
     };
 
-    var viewLoader = function(viewData, store) {
-        store.dispatch({
+    var viewLoader = function(viewData, dispatch) {
+        dispatch({
             type: 'paginatedListInitialize',
             listId: employeeslistReduxId
         });
-        store.dispatch({
+        dispatch({
             type: 'paginatedListInitialize',
             listId: skillsListReduxId
         });
 
         var employeesPromise = ajax.get('/api/employee/getMostSkilled', {}, [])
         .then(function(employees) {
-            store.dispatch({
+            dispatch({
                 type: 'paginatedListResults',
                 listId: employeeslistReduxId,
                 results: {
@@ -61,7 +61,7 @@
 
         var skillsPromise = ajax.get('/api/skill/getRearest', {}, [])
         .then(function(skills) {
-            store.dispatch({
+            dispatch({
                 type: 'paginatedListResults',
                 listId: skillsListReduxId,
                 results: {
