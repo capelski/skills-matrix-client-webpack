@@ -1,4 +1,8 @@
-(function (js, store, views) {
+import js from './js-commons';
+
+export default defineNavigation;
+
+function defineNavigation(store, views) {
 
     var loadMinimumTime = 500;
     var previousPage;
@@ -50,8 +54,7 @@
         });
     };
 
-    window.Navigate = navigate;
-
     navigate(views[0].htmlNodeId);
 
-})(window.JsCommons, window.Store, window.Views || []);
+    return navigate;
+}
