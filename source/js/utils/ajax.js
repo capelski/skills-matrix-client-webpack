@@ -7,6 +7,8 @@ export default {
 function get(url, parameters, defaultValue) {
     return new Promise(function(resolve, reject) {
         var result = defaultValue;
+        parameters = parameters || {};
+        parameters.$modena = 'skills-matrix-api-node';
         url += '?';
         for (var key in parameters) {
             var parameter = parameters[key];
@@ -33,7 +35,7 @@ function remove(url) {
         var result = null;
         $.ajax({
             type: 'DELETE',
-            url: url
+            url: url + '&$modena=skills-matrix-api-node'
         })
         .then(function(data) {
             result = data;
@@ -52,7 +54,7 @@ function save(url, entitity) {
         var result = null;
         var request = {
             type: 'POST',
-            url: url,
+            url: url + '?$modena=skills-matrix-api-node',
             contentType: 'application/json',
             data: JSON.stringify(entitity)
         };

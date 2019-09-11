@@ -1,6 +1,16 @@
 {
+  "name": "skills-matrix-client-webpack",
+  "version": "1.0.0",
+  "description": "Skills matrix web application client implemented with jQuery and Redux, bundled with Webpack",
+  "main": "index.js",
+  "author": "Carles Capellas <capellas.carles@gmail.com>",
+  "license": "MIT",
   "scripts": {
-    "build": "webpack"
+    "build": "webpack",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

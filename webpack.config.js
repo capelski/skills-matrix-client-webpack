@@ -7,7 +7,7 @@ module.exports = {
 	entry: './source/js/index.js',
 	output: {
 		path: path.resolve(__dirname, 'public'),
-		filename: 'main.js'
+		filename: 'main.js?$modena=skills-matrix-client-webpack'
 	},
 	module: {
 		rules: [{
@@ -23,9 +23,6 @@ module.exports = {
 		new webpack.optimize.UglifyJsPlugin(),
 		new HtmlWebpackPlugin({template: './source/index.html'}),
 		new CopyWebpackPlugin([{
-			from: './source/favicon.ico',
-			to: 'favicon.ico'
-		}, {
 			from: './source/css',
 			to: 'css/[name].[ext]'
 		}, {
