@@ -1,6 +1,6 @@
 # Skills matrix
 
-![Skills matrix logo](https://github.com/L3bowski/skills-matrix-client-webpack/blob/master/public/images/skills.png)
+![Skills matrix logo](https://github.com/L3bowski/skills-matrix-client-webpack/blob/master/source/images/skills.png)
 
 Open source web application built in .NET Core for companies to keep tracking of their employees skills/abilities.
 
